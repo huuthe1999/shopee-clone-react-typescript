@@ -1,7 +1,8 @@
 {
   "env": {
     "browser": true,
-    "es2021": true
+    "es2021": true,
+    "node": true
   },
   "extends": [
     "eslint:recommended",
@@ -12,6 +13,7 @@
     "plugin:react/jsx-runtime",
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended",
+    "eslint-config-prettier",
     "prettier"
   ],
   "overrides": [],
@@ -30,26 +32,17 @@
     "import/no-named-as-default-member": "off",
     "import/no-named-as-default": "off",
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-unused-vars": "warn",
     "prettier/prettier": ["error", {}, { "usePrettierrc": true }],
     "react/react-in-jsx-scope": "off",
+    "react/jsx-no-target-blank": "warn",
+    "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/no-empty-interface": [
-      "error",
-      {
-        "allowSingleExtends": true
-      }
-    ],
     "prefer-const": ["error", { "ignoreReadBeforeAssign": true }],
-    "padding-line-between-statements": [
-      "error",
-      { "blankLine": "always", "prev": ["*"], "next": ["*"] },
-      { "blankLine": "never", "prev": ["const", "let"], "next": ["const", "let"] }
-    ],
     "import/order": [
       "error",
       {

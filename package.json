@@ -7,8 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "prepare": "husky install",
+    "lint:check": "eslint --ext .ts,.tsx,.js,.jsx src/ --ignore-path .gitignore",
     "lint:fix": "eslint --fix --ext .ts,.tsx,.js,.jsx src/ --ignore-path .gitignore",
-    "prettier:fix": "prettier --ignore-path .gitignore -w \"src/**/*.+{js,jsx,ts,tsx,css,scss}\"",
+    "prettier:fix": "prettier --ignore-path .gitignore -w \"src/**/*.{js,jsx,ts,tsx,css,scss}\"",
     "lint": "yarn lint:fix && yarn prettier:fix",
     "preview": "vite preview"
   },
@@ -30,7 +31,8 @@
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.9.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
@@ -41,6 +43,7 @@
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.54.1",
     "@vitejs/plugin-react": "^3.1.0",
+    "autoprefixer": "^10.4.14",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.7.0",
     "eslint-config-standard-with-typescript": "^34.0.0",
@@ -56,7 +59,9 @@
     "eslint-plugin-testing-library": "^5.10.2",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.0",
+    "postcss": "^8.4.21",
     "prettier": "^2.8.4",
+    "tailwindcss": "^3.2.7",
     "typescript": "*",
     "vite": "^4.1.0"
   },
