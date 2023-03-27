@@ -1,9 +1,11 @@
+import { lazy } from 'react'
+
 import { useRoutes } from 'react-router-dom'
 
-import { AuthLayout } from '@/layouts/Auth'
-import { HomePage } from '@/pages/Home'
-import { LoginPage } from '@/pages/Login'
-import { RegisterPage } from '@/pages/Register'
+const HomePage = lazy(() => import('@/pages/Home'))
+const LoginPage = lazy(() => import('@/pages/Login'))
+const RegisterPage = lazy(() => import('@/pages/Register'))
+const GuestLayout = lazy(() => import('@/layouts/Guest'))
 
 const useRouteElements = () => {
   const element = useRoutes([
@@ -12,20 +14,14 @@ const useRouteElements = () => {
       element: <HomePage />
     },
     {
-      path: '/login',
-      element: (
-        <AuthLayout>
-          <LoginPage />
-        </AuthLayout>
-      )
-    },
-    {
-      path: '/register',
-      element: (
-        <AuthLayout>
-          <RegisterPage />
-        </AuthLayout>
-      )
+      element: <GuestLayout />,
+      children: [
+        {
+          path: '/login',
+          element: <LoginPage />
+        },
+        { path: '/register', element: <RegisterPage /> }
+      ]
     },
     { path: '*', element: <h1>Error page</h1> }
   ])
