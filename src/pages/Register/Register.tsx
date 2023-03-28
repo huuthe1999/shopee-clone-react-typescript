@@ -5,7 +5,6 @@ interface RegisterProps {}
 const Register = (props: RegisterProps) => {
   return (
     <>
-      <div>Register</div>
       <Link to="/login">Login</Link>
     </>
   )

@@ -2,6 +2,7 @@ import React from 'react'
 
 import { Outlet } from 'react-router-dom'
 
+import { LayoutForm } from '@/components/form'
 import { Footer } from '@/layouts/Footer'
 import { Header } from '@/layouts/Header'
 
@@ -14,7 +15,9 @@ const Guest = (props: HeaderProps) => {
         <Header />
         <div className="flex-1">
           <React.Suspense fallback={<h1>Loading Outlet</h1>}>
-            <Outlet />
+            <LayoutForm>
+              <Outlet />
+            </LayoutForm>
           </React.Suspense>
         </div>
         <Footer />

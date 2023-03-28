@@ -15,7 +15,7 @@ const FooterCard = ({ cardItem, isLastItem }: Props) => {
         'mx-auto': isLastItem,
         'flex p-1 bg-white gap-2': item.image,
         'flex basis-full': !item.image,
-        'basis-full bg-inherit': item.image && item.title
+        'basis-full bg-transparent': item.image && item.title
       })}>
       {item.image && <img src={item.image} alt="social" className="max-w-full max-h-full" />}
       {item.title && (

@@ -4,31 +4,32 @@ import React from 'react'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
+import { PATHS } from '@/constants'
+
 const HomePage = React.lazy(() => import('@/pages/Home'))
-const LoginPage = React.lazy(() => import('@/pages/Login'))
-const RegisterPage = React.lazy(() => import('@/pages/Register'))
+const CredentialPage = React.lazy(() => import('@/pages/Credential'))
 const GuestLayout = React.lazy(() => import('@/layouts/Guest'))
 
 function App() {
   const router = createBrowserRouter([
     {
-      path: '/',
+      path: PATHS.HOME_PATH,
       element: <HomePage />
     },
     {
       element: <GuestLayout />,
       children: [
         {
-          path: '/login',
-          element: <LoginPage />
+          path: PATHS.LOGIN_PATH,
+          element: <CredentialPage />
         },
         {
-          path: '/register',
-          element: <RegisterPage />
+          path: PATHS.REGISTER_PATH,
+          element: <CredentialPage />
         }
       ]
     },
-    { path: '*', element: <h1>Error page</h1> }
+    { path: PATHS.NOTFOUND_PATH, element: <h1>Error page</h1> }
   ])
 
   return (

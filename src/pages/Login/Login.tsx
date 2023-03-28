@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { CredentialForm } from '@/components/form'
 
 interface LoginProps {}
 
@@ -7,8 +7,7 @@ const Login = (props: LoginProps) => {
 
   return (
     <>
-      <div>Login</div>
-      <Link to="/register">Register</Link>
+      <CredentialForm />
     </>
   )
 }

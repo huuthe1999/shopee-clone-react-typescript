@@ -4,7 +4,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        orange: '#ee4d2d'
+        primary: '#ee4d2d'
+      },
+      backgroundImage: {
+        'advertising-panel': "url('/src/assets/images/advertisingPanel.png')"
       }
     }
   },
