@@ -1,16 +1,22 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-import { EyeSlashIcon } from '@heroicons/react/24/solid'
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useMutation } from '@tanstack/react-query'
+import { isAxiosError } from 'axios'
 import classNames from 'classnames'
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useMatch } from 'react-router-dom'
 
-import { TCredentialForm, credentialFormSchema } from '@/components/form/validate'
+import { TCredentialForm, credentialFormSchema, loginFormSchema } from '@/components/form/validate'
 import { PATHS } from '@/constants'
+import { authServices } from '@/services'
 
 const CredentialForm = () => {
   const matchLogin = useMatch(PATHS.LOGIN_PATH)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const loginMutation = useMutation({ mutationFn: authServices.loginUser })
 
   const {
     register,
@@ -18,8 +24,18 @@ const CredentialForm = () => {
     unregister,
     handleSubmit,
     formState: { errors, isValid, isSubmitting, dirtyFields }
-  } = useForm<TCredentialForm>({
-    resolver: yupResolver(credentialFormSchema),
+  } = useForm<TCredentialForm, { isLoginForm: boolean }>({
+    defaultValues: {
+      email: '',
+      password: '',
+      confirmPassword: ''
+    },
+    resolver: async (data, context, options) => {
+      if (matchLogin) {
+        return await yupResolver(loginFormSchema)(data, context, options)
+      }
+      return await yupResolver(credentialFormSchema)(data, context, options)
+    },
     mode: 'all',
     shouldUnregister: true,
     resetOptions: {
@@ -27,30 +43,51 @@ const CredentialForm = () => {
     }
   })
 
-  console.log('🚀 ~ CredentialForm ~ isValid:', isValid)
-
   useEffect(() => {
-    console.log('CredentialForm')
-    if (matchLogin) {
-      console.log('🚀 ~ useEffect ~ unregister:')
-      unregister('confirmPassword')
-    }
     reset()
-  }, [matchLogin, reset, unregister])
+  }, [matchLogin, reset])
 
-  const handleSubmitForm: SubmitHandler<TCredentialForm> = (data, e) => {
-    console.log('🚀 ~ CredentialForm ~ data:', data)
+  const handleSubmitForm: SubmitHandler<TCredentialForm> = async (data) => {
+    if (matchLogin) {
+      const { confirmPassword, ...credentials } = data
+      try {
+        const res = await loginMutation.mutateAsync(credentials)
+        console.log('🚀 ~ consthandleSubmitForm:SubmitHandler<TCredentialForm>= ~ res:', res)
+        alert('loginMutation', res)
+      } catch (error) {
+        if (isAxiosError(error)) {
+          console.log('🚀 ~ consthandleSubmitForm:SubmitHandler<TCredentialForm>= ~ error:', error)
+        }
+      }
+    }
   }
 
-  const handleErrorSubmitForm: SubmitErrorHandler<TCredentialForm> = (errors, e) => {
+  const handleErrorSubmitForm: SubmitErrorHandler<TCredentialForm> = (errors) => {
     console.log('🚀 ~ CredentialForm ~ errors:', errors)
   }
 
+  const handleShowPassword = () => setShowPassword((prev) => !prev)
+
+  const handleShowConfirmPassword = () => setShowConfirmPassword((prev) => !prev)
+
   const renderError = (name: keyof TCredentialForm) => {
     return (
-      <span className="text-red-500 text-sm block min-h-[1.2rem]">{errors[name]?.message}</span>
+      <span className="text-red-500 text-sm block min-h-[1.25rem]">{errors[name]?.message}</span>
     )
   }
+
+  const renderShowPassword = (flag: boolean, cb: () => void) =>
+    !flag ? (
+      <EyeSlashIcon
+        className="absolute w-6 h-6 right-2 top-1/2 -translate-x-2 -translate-y-1/2 cursor-pointer"
+        onClick={cb}
+      />
+    ) : (
+      <EyeIcon
+        className="absolute w-6 h-6 right-2 top-1/2 -translate-x-2 -translate-y-1/2 cursor-pointer"
+        onClick={cb}
+      />
+    )
 
   const styleInput = (name: keyof TCredentialForm) =>
     classNames(
@@ -64,7 +101,8 @@ const CredentialForm = () => {
   return (
     <form
       className="p-8 bg-white rounded-sm shadow-md flex flex-col gap-3"
-      onSubmit={handleSubmit(handleSubmitForm, handleErrorSubmitForm)}>
+      onSubmit={handleSubmit(handleSubmitForm, handleErrorSubmitForm)}
+      noValidate>
       <h2 className="font-medium text-xl py-3">{matchLogin ? 'Đăng nhập' : 'Đăng ký'}</h2>
       <div>
         <input
@@ -78,12 +116,13 @@ const CredentialForm = () => {
       <div>
         <div className="relative">
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="Mật khẩu"
             className={styleInput('password')}
+            autoComplete="on"
             {...register('password')}
           />
-          <EyeSlashIcon className="absolute w-6 h-6 right-2 top-1/2 -translate-x-2 -translate-y-1/2 cursor-pointer" />
+          {renderShowPassword(showPassword, handleShowPassword)}
         </div>
         {renderError('password')}
       </div>
@@ -91,12 +130,13 @@ const CredentialForm = () => {
         <div>
           <div className="relative">
             <input
-              type="password"
+              type={showConfirmPassword ? 'text' : 'password'}
               placeholder="Nhập lại mật khẩu"
               className={styleInput('confirmPassword')}
+              autoComplete="on"
               {...register('confirmPassword')}
             />
-            <EyeSlashIcon className="absolute w-6 h-6 right-2 top-1/2 -translate-x-2 -translate-y-1/2 cursor-pointer" />
+            {renderShowPassword(showConfirmPassword, handleShowConfirmPassword)}
           </div>
           {renderError('confirmPassword')}
         </div>

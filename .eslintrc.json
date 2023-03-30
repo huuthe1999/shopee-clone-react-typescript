@@ -6,15 +6,15 @@
   },
   "extends": [
     "eslint:recommended",
+    "plugin:import/recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:import/typescript",
     "plugin:jsx-a11y/recommended",
     "plugin:react/jsx-runtime",
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
-    "eslint-config-prettier",
-    "prettier"
+    "plugin:@tanstack/eslint-plugin-query/recommended",
+    "plugin:prettier/recommended"
   ],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
@@ -25,15 +25,20 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint", "import", "react-hooks", "prettier"],
+  "plugins": ["react", "@typescript-eslint", "@tanstack/query", "react-hooks"],
   "ignorePatterns": ["*.d.ts"],
   "rules": {
-    "import/default": "off",
-    "import/no-named-as-default-member": "off",
-    "import/no-named-as-default": "off",
     "no-unused-vars": "off",
+    "@tanstack/query/exhaustive-deps": "error",
+    "@tanstack/query/prefer-query-object-syntax": "error",
     "@typescript-eslint/no-unused-vars": "warn",
-    "prettier/prettier": ["error", {}, { "usePrettierrc": true }],
+    "prettier/prettier": [
+      "error",
+      {
+        "arrowParens": "always"
+      },
+      { "usePrettierrc": true }
+    ],
     "react/react-in-jsx-scope": "off",
     "react/jsx-no-target-blank": "warn",
     "@typescript-eslint/no-empty-interface": "off",
@@ -43,6 +48,9 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "prefer-const": ["error", { "ignoreReadBeforeAssign": true }],
+    "import/default": "off",
+    "import/no-named-as-default-member": "off",
+    "import/no-named-as-default": "off",
     "import/order": [
       "error",
       {
@@ -70,7 +78,8 @@
       "version": "detect"
     },
     "import/resolver": {
-      "typescript": {}
+      "typescript": true,
+      "node": true
     }
   }
 }

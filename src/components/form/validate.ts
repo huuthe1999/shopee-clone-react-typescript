@@ -29,7 +29,6 @@ export const credentialFormSchema = yup
       .test({
         name: 'isRegisterForm',
         test: (value, context) => {
-          console.log('🚀 ~ value, context:', value, value?.length, typeof value, context)
           if (!value) {
             return context.createError({
               message: 'Vui lòng nhập lại mật khẩu'
@@ -48,5 +47,6 @@ export const credentialFormSchema = yup
   .required('Form không được rỗng')
   .strict(true)
 
+export const loginFormSchema = credentialFormSchema.omit(['confirmPassword'])
 export type TCredentialForm = yup.InferType<typeof credentialFormSchema>
-export type TCredentialForm1 = Omit<TCredentialForm, 'confirmPassword'>
+export type TCredentialFormRequest = yup.InferType<typeof loginFormSchema>
