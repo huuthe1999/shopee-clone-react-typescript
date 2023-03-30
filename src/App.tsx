@@ -4,6 +4,7 @@ import React from 'react'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
+import { Spinner } from '@/components/spinner'
 import { PATHS } from '@/constants'
 
 const HomePage = React.lazy(() => import('@/pages/Home'))
@@ -29,12 +30,12 @@ function App() {
         }
       ]
     },
-    { path: PATHS.NOTFOUND_PATH, element: <h1>Error page</h1> }
+    { path: PATHS.NOTFOUND_PATH, element: <h1>404 Not Found page</h1> }
   ])
 
   return (
     <div className="h-screen">
-      <React.Suspense fallback={<h1>Loading</h1>}>
+      <React.Suspense fallback={<Spinner />}>
         <RouterProvider router={router} />
       </React.Suspense>
     </div>
