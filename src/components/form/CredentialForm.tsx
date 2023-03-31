@@ -3,12 +3,19 @@ import { useEffect, useState } from 'react'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
-import { isAxiosError } from 'axios'
 import classNames from 'classnames'
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useMatch } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
-import { TCredentialForm, credentialFormSchema, loginFormSchema } from '@/components/form/validate'
+import {
+  TCredentialFormRegister as TCredentialForm,
+  TCredentialFormLogin,
+  credentialFormSchema,
+  loginFormSchema
+} from '@/components/Form/validate'
+import { LoadingIcon } from '@/components/Icon'
+import { formatErrorData } from '@/components/utils'
 import { PATHS } from '@/constants'
 import { authServices } from '@/services'
 
@@ -21,20 +28,20 @@ const CredentialForm = () => {
   const {
     register,
     reset,
-    unregister,
+    setError,
     handleSubmit,
     formState: { errors, isValid, isSubmitting, dirtyFields }
-  } = useForm<TCredentialForm, { isLoginForm: boolean }>({
+  } = useForm<TCredentialForm>({
     defaultValues: {
       email: '',
       password: '',
       confirmPassword: ''
     },
-    resolver: async (data, context, options) => {
+    resolver: (data, context, options) => {
       if (matchLogin) {
-        return await yupResolver(loginFormSchema)(data, context, options)
+        return yupResolver(loginFormSchema)(data, context, options)
       }
-      return await yupResolver(credentialFormSchema)(data, context, options)
+      return yupResolver(credentialFormSchema)(data, context, options)
     },
     mode: 'all',
     shouldUnregister: true,
@@ -52,12 +59,9 @@ const CredentialForm = () => {
       const { confirmPassword, ...credentials } = data
       try {
         const res = await loginMutation.mutateAsync(credentials)
-        console.log('🚀 ~ consthandleSubmitForm:SubmitHandler<TCredentialForm>= ~ res:', res)
-        alert('loginMutation', res)
+        toast.success(res.data.message)
       } catch (error) {
-        if (isAxiosError(error)) {
-          console.log('🚀 ~ consthandleSubmitForm:SubmitHandler<TCredentialForm>= ~ error:', error)
-        }
+        formatErrorData<TCredentialFormLogin>(error, setError)
       }
     }
   }
@@ -145,10 +149,14 @@ const CredentialForm = () => {
       {/* Button */}
       <button
         disabled={!isValid || isSubmitting}
-        className={classNames('bg-primary uppercase py-3 text-white rounded-sm', {
-          'cursor-not-allowed opacity-80': !isValid,
-          'cursor-pointer hover:opacity-90': isValid
-        })}>
+        className={classNames(
+          'bg-primary uppercase py-3 text-white rounded-sm flex justify-center items-center',
+          {
+            'cursor-not-allowed opacity-80': !isValid || isSubmitting,
+            'cursor-pointer hover:opacity-90': isValid && !isSubmitting
+          }
+        )}>
+        {isSubmitting && <LoadingIcon />}
         {matchLogin ? 'Đăng nhập' : 'Đăng ký'}
       </button>
 

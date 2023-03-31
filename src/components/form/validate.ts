@@ -48,5 +48,5 @@ export const credentialFormSchema = yup
   .strict(true)
 
 export const loginFormSchema = credentialFormSchema.omit(['confirmPassword'])
-export type TCredentialForm = yup.InferType<typeof credentialFormSchema>
-export type TCredentialFormRequest = yup.InferType<typeof loginFormSchema>
+export type TCredentialFormRegister = yup.InferType<typeof credentialFormSchema>
+export type TCredentialFormLogin = yup.InferType<typeof loginFormSchema>

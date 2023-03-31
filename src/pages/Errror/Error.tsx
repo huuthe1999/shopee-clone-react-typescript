@@ -1,8 +1,6 @@
 import { isRouteErrorResponse, useRouteError } from 'react-router-dom'
 
-interface ErrorProps {}
-
-const Error = (props: ErrorProps) => {
+const Error = () => {
   const error = useRouteError() as Error
   console.error(error)
 

@@ -15,5 +15,8 @@ body {
 input,
 button {
   outline: none;
+}
+
+input {
   width: 100%;
 }

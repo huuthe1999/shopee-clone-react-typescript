@@ -3,8 +3,7 @@ import { lazy } from 'react'
 import { useRoutes } from 'react-router-dom'
 
 const HomePage = lazy(() => import('@/pages/Home'))
-const LoginPage = lazy(() => import('@/pages/Login'))
-const RegisterPage = lazy(() => import('@/pages/Register'))
+const CredentialPagePage = lazy(() => import('@/pages/Credential'))
 const GuestLayout = lazy(() => import('@/layouts/Guest'))
 
 const useRouteElements = () => {
@@ -18,9 +17,9 @@ const useRouteElements = () => {
       children: [
         {
           path: '/login',
-          element: <LoginPage />
+          element: <CredentialPagePage />
         },
-        { path: '/register', element: <RegisterPage /> }
+        { path: '/register', element: <CredentialPagePage /> }
       ]
     },
     { path: '*', element: <h1>Error page</h1> }

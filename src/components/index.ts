@@ -1,2 +1,4 @@
-export * from './form'
-export * from './spinner'
+export * from './ErrorBoundary'
+export * from './Form'
+export * from './Icon'
+export * from './Spinner'

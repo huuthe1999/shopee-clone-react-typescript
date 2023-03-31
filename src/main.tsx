@@ -1,8 +1,8 @@
-import './index.css'
-
 import React from 'react'
 
 import ReactDOM from 'react-dom/client'
+import 'react-toastify/dist/ReactToastify.min.css'
+import './index.css'
 
 import App from '@/App'
 

@@ -1,8 +1,6 @@
-import { CredentialForm } from '@/components/form'
+import { CredentialForm } from '@/components/Form'
 
-interface CredentialProps {}
-
-const Credential = (props: CredentialProps) => {
+const Credential = () => {
   return (
     <>
       <CredentialForm />
