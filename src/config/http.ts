@@ -15,6 +15,8 @@ class Http {
 }
 
 const httpService = new Http().instance
+console.log('🚀 ~ httpService:', import.meta.env.VITE_BASE_URL)
+console.log('🚀 ~ httpService:', JSON.stringify(import.meta.env))
 
 httpService.interceptors.response.use(
   (response) => response,
