@@ -1,1 +1,2 @@
-export { default as RouterElementProvider } from './RouterElementProvider'
+import RouterElementProvider from './RouterElementProvider'
+export default RouterElementProvider

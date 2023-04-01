@@ -1,4 +1,4 @@
-import { CredentialForm } from '@/components/Form'
+import { CredentialForm } from '@/components'
 
 const Credential = () => {
   return (

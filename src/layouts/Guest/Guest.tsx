@@ -3,8 +3,7 @@ import React from 'react'
 import { Outlet } from 'react-router-dom'
 
 import { LayoutForm, MyErrorBoundary, Spinner } from '@/components'
-import { Footer } from '@/layouts/Footer'
-import { Header } from '@/layouts/Header'
+import { Footer, Header } from '@/layouts'
 
 const Guest = () => {
   return (

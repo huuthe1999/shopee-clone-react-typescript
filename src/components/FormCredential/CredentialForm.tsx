@@ -8,16 +8,17 @@ import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useMatch } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { LoadingIcon } from '@/components/Icon'
+import { PATHS } from '@/constants'
+import { authServices } from '@/services'
+import { formatErrorData } from '@/utils'
+
 import {
   TCredentialFormRegister as TCredentialForm,
   TCredentialFormLogin,
   credentialFormSchema,
   loginFormSchema
-} from '@/components/Form/validate'
-import { LoadingIcon } from '@/components/Icon'
-import { formatErrorData } from '@/components/utils'
-import { PATHS } from '@/constants'
-import { authServices } from '@/services'
+} from './validate'
 
 const CredentialForm = () => {
   const matchLogin = useMatch(PATHS.LOGIN_PATH)

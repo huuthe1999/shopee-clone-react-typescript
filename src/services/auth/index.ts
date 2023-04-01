@@ -1,4 +1,4 @@
-import { TCredentialFormLogin } from '@/components/Form/validate'
+import { TCredentialFormLogin } from '@/components/FormCredential/validate'
 import httpService from '@/config/http'
 import { ENDPOINTS } from '@/constants'
 import { LoginSuccessResponse } from '@/types/credential-form'

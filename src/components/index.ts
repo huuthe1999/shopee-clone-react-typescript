@@ -1,4 +1,4 @@
-export * from './ErrorBoundary'
-export * from './Form'
+export { default as MyErrorBoundary } from './ErrorBoundary'
+export * from './FormCredential'
 export * from './Icon'
-export * from './Spinner'
+export { default as Spinner } from './Spinner'

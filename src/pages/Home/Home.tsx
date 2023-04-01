@@ -1,8 +1,6 @@
 import { Outlet } from 'react-router-dom'
 
-interface HomeProps {}
-
-const Home = (props: HomeProps) => {
+const Home = () => {
   return (
     <>
       <div>Home Page</div>
