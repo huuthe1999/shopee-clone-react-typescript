@@ -8,7 +8,11 @@ export const credentialFormSchema = yup
       .required('Email không được rỗng')
       .trim('Email không được chứa kí tự rỗng')
       .default('')
-      .email('Email phải hợp lệ')
+      .matches(
+        // This is the regular expression that follows the RFC for email validation
+        /^([a-zA-Z0-9_\-\\.]+)@([a-zA-Z0-9_\-\\.]+)\.([a-zA-Z]{2,5})$/,
+        'Email không hợp lệ'
+      )
       .typeError('Loại email phải hợp lệ'),
     password: yup
       .string()
@@ -48,5 +52,5 @@ export const credentialFormSchema = yup
   .strict(true)
 
 export const loginFormSchema = credentialFormSchema.omit(['confirmPassword'])
-export type TCredentialFormRegister = yup.InferType<typeof credentialFormSchema>
-export type TCredentialFormLogin = yup.InferType<typeof loginFormSchema>
+export type TCredentialFormSchema = yup.InferType<typeof credentialFormSchema>
+export type TCredentialForm = yup.InferType<typeof loginFormSchema>

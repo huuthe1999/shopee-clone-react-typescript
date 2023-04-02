@@ -1,12 +1,12 @@
-import { TCredentialFormLogin } from '@/components/FormCredential/validate'
+import { TCredentialForm } from '@/components/FormCredential/validate'
 import httpService from '@/config/http'
 import { ENDPOINTS } from '@/constants'
-import { LoginSuccessResponse } from '@/types/credential-form'
+import { LoginSuccessResponse, RegisterSuccessResponse } from '@/types/credential-form'
 
-export const loginUser = (data: TCredentialFormLogin) => {
+export const loginUser = (data: TCredentialForm) => {
   return httpService.post<LoginSuccessResponse>(ENDPOINTS.LOGIN_END_POINT, data)
 }
 
-export const registerUser = (data: TCredentialFormLogin) => {
-  return httpService.post<LoginSuccessResponse>(ENDPOINTS.LOGIN_END_POINT, data)
+export const registerUser = (data: TCredentialForm) => {
+  return httpService.post<RegisterSuccessResponse>(ENDPOINTS.REGISTER_END_POINT, data)
 }
