@@ -1,2 +1,4 @@
 import Header from './Header'
-export default Header
+import MainHeader from './MainHeader'
+
+export { Header, MainHeader }

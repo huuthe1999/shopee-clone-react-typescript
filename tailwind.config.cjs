@@ -4,7 +4,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#ee4d2d'
+        primary: '#ee4d2d',
+        secondary: '#f63'
       },
       backgroundImage: {
         'advertising-panel': "url('/src/assets/images/advertisingPanel.png')"

@@ -1,4 +1,5 @@
 export { default as MyErrorBoundary } from './ErrorBoundary'
 export * from './FormCredential'
 export * from './Icon'
+export { default as NavItem } from './NavItem'
 export { default as Spinner } from './Spinner'

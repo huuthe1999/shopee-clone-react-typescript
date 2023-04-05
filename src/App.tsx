@@ -5,8 +5,6 @@ import { ToastContainer } from 'react-toastify'
 import { MyErrorBoundary } from '@/components'
 import { RouterElementProvider } from '@/contexts'
 
-import './App.css'
-
 function App() {
   const queryClient = new QueryClient({
     defaultOptions: {

@@ -4,7 +4,7 @@ import { useRoutes } from 'react-router-dom'
 
 const HomePage = lazy(() => import('@/pages/Home'))
 const CredentialPagePage = lazy(() => import('@/pages/Credential'))
-const GuestLayout = lazy(() => import('@/layouts/Guest'))
+const GuestLayout = lazy(() => import('@/layouts/GuestLayout'))
 
 const useRouteElements = () => {
   const element = useRoutes([

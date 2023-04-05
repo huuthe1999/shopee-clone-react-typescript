@@ -3,7 +3,8 @@ import React from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 const HomePage = React.lazy(() => import('@/pages/Home'))
 const CredentialPage = React.lazy(() => import('@/pages/Credential'))
-const GuestLayout = React.lazy(() => import('@/layouts/Guest'))
+const GuestLayout = React.lazy(() => import('@/layouts/GuestLayout'))
+const MainLayout = React.lazy(() => import('@/layouts/MainLayout'))
 
 import { Spinner } from '@/components'
 import { PATHS } from '@/constants'
@@ -11,8 +12,13 @@ import { PATHS } from '@/constants'
 const RouterElementProvider = () => {
   const router = createBrowserRouter([
     {
-      path: PATHS.HOME_PATH,
-      element: <HomePage />
+      element: <MainLayout />,
+      children: [
+        {
+          path: PATHS.HOME_PATH,
+          element: <HomePage />
+        }
+      ]
     },
     {
       element: <GuestLayout />,

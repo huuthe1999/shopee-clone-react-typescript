@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
+import { Eye, EyeOff } from 'react-feather'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useMatch, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -92,13 +92,13 @@ const CredentialForm = () => {
 
   const renderShowPassword = (flag: boolean, cb: () => void) =>
     !flag ? (
-      <EyeSlashIcon
-        className="absolute w-6 h-6 right-2 top-1/2 -translate-x-2 -translate-y-1/2 cursor-pointer  bg-inherit"
+      <EyeOff
+        className="absolute w-5 h-5 right-2 top-1/2 -translate-x-2 -translate-y-1/2 cursor-pointer  bg-inherit"
         onClick={cb}
       />
     ) : (
-      <EyeIcon
-        className="absolute w-6 h-6 right-2 top-1/2 -translate-x-2 -translate-y-1/2 cursor-pointer"
+      <Eye
+        className="absolute w-5 h-5 right-2 top-1/2 -translate-x-2 -translate-y-1/2 cursor-pointer"
         onClick={cb}
       />
     )
