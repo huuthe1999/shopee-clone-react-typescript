@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom'
 
-interface Props {
-  className?: string
-  to?: string
-  leftIcon?: React.ReactNode
-  rightIcon?: React.ReactNode
-  text?: string
-  children?: React.ReactNode
-}
+import { INavItem } from './type'
 
-const NavItem = ({ to, leftIcon, rightIcon, text, className, children }: Props) => {
+const NavItem = ({
+  to,
+  leftIcon,
+  rightIcon,
+  text,
+  className,
+  children
+}: Omit<INavItem, 'menuItems'>) => {
   const content = (
     <>
       {leftIcon}
@@ -27,7 +27,9 @@ const NavItem = ({ to, leftIcon, rightIcon, text, className, children }: Props) 
       ) : children ? (
         <>{children}</>
       ) : (
-        <span className="flex gap-1 hover:text-neutral-200 items-center">{content}</span>
+        <span className="flex gap-1 hover:text-neutral-200 items-center cursor-pointer">
+          {content}
+        </span>
       )}
     </li>
   )

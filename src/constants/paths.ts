@@ -1,4 +1,5 @@
 export const HOME_PATH = '/' as const
 export const LOGIN_PATH = '/login'
 export const REGISTER_PATH = '/register'
+export const CART_PATH = '/cart'
 export const NOTFOUND_PATH = '*'

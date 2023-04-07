@@ -40,6 +40,7 @@
       },
       { "usePrettierrc": true }
     ],
+    "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
     "react/jsx-no-target-blank": "warn",
     "@typescript-eslint/no-empty-interface": "off",
