@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 
+import { EmptyCartIcon } from '@/components/Icon'
+
 import { DropItemMenu } from './type'
 
 interface Props {
@@ -7,34 +9,40 @@ interface Props {
 }
 
 const DropdownMenu = ({ data }: Props) => {
-  const renderData = data.map(({ to, text }, index) => {
-    const Comp = to ? Link : 'span'
+  const renderMenuItem = data.map(({ to, text }, index) => {
     return (
       <li key={index}>
-        {Comp === 'span' ? (
-          <Comp className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-ellipsis cursor-pointer">
-            {text}
-          </Comp>
-        ) : to ? (
-          <Comp
+        {to ? (
+          <Link
             to={to}
-            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-ellipsis">
+            className="block px-4 py-2 hover:bg-gray-100 hover:text-teal-500 text-ellipsis">
             {text}
-          </Comp>
-        ) : null}
+          </Link>
+        ) : (
+          <span className="block px-4 py-2 hover:bg-gray-100 hover:text-primary text-ellipsis cursor-pointer">
+            {text}
+          </span>
+        )}
       </li>
     )
   })
 
+  const renderData =
+    data.length === 0 ? (
+      <div className="py-14 overflow-hidden text-center w-full">
+        <EmptyCartIcon width="25rem" />
+      </div>
+    ) : (
+      <ul className="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
+        {renderMenuItem}
+      </ul>
+    )
+
   return (
     <div
       id="dropdown"
-      className="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-      <ul
-        className="py-2 text-sm text-gray-700 dark:text-gray-200"
-        aria-labelledby="dropdownDefaultButton">
-        {renderData}
-      </ul>
+      className="z-10 bg-white divide-y divide-gray-100 rounded-sm shadow-md overflow-hidden min-w-[11rem]">
+      {renderData}
     </div>
   )
 }

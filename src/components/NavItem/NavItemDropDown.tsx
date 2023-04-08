@@ -1,22 +1,8 @@
-import { useRef, useState } from 'react'
-
-import {
-  FloatingArrow,
-  FloatingFocusManager,
-  FloatingPortal,
-  arrow,
-  autoUpdate,
-  flip,
-  offset,
-  safePolygon,
-  shift,
-  useFloating,
-  useHover,
-  useInteractions
-} from '@floating-ui/react'
+import classNames from 'classnames'
 import { Link } from 'react-router-dom'
 
-import DropdownMenu from '@/components/DropdownMenu'
+import { DropdownMenu } from '@/components'
+import { TooltipContent, TooltipProvider, TooltipTrigger } from '@/contexts'
 
 import { INavItem } from './type'
 
@@ -29,31 +15,6 @@ const NavItemDropDown = ({
   children,
   menuItems
 }: INavItem) => {
-  const arrowRef = useRef(null)
-  const [isOpen, setIsOpen] = useState(false)
-  const { x, y, strategy, refs, context } = useFloating({
-    open: isOpen,
-    onOpenChange: setIsOpen,
-    whileElementsMounted: autoUpdate,
-    placement: 'bottom-start',
-    middleware: [
-      offset(10),
-      flip(),
-      shift(),
-      arrow({
-        element: arrowRef
-      })
-    ]
-  })
-  const hover = useHover(context, {
-    handleClose: safePolygon({
-      restMs: 500,
-      blockPointerEvents: true
-    })
-  })
-
-  const { getReferenceProps, getFloatingProps } = useInteractions([hover])
-
   const content = (
     <>
       {leftIcon}
@@ -64,7 +25,7 @@ const NavItemDropDown = ({
 
   return (
     <>
-      <li className={`px-2 ${className ?? ''}`} ref={refs.setReference} {...getReferenceProps()}>
+      {/* <li className={`px-2 ${className ?? ''}`} ref={refs.setReference} {...getReferenceProps()}>
         {to ? (
           <Link className="flex gap-1 hover:text-neutral-200" to={to}>
             {content}
@@ -95,7 +56,29 @@ const NavItemDropDown = ({
             </div>
           </FloatingFocusManager>
         )}
-      </FloatingPortal>
+      </FloatingPortal> */}
+
+      <TooltipProvider placement="bottom">
+        <TooltipTrigger asChild>
+          <li
+            className={classNames('px-2', {
+              [className ?? '']: className
+            })}>
+            {to ? (
+              <Link className="flex gap-1 hover:text-neutral-200" to={to}>
+                {content}
+              </Link>
+            ) : children ? (
+              <>{children}</>
+            ) : (
+              <span className="flex gap-1 hover:text-neutral-200 items-center cursor-pointer">
+                {content}
+              </span>
+            )}
+          </li>
+        </TooltipTrigger>
+        <TooltipContent>{menuItems && <DropdownMenu data={menuItems} />}</TooltipContent>
+      </TooltipProvider>
     </>
   )
 }

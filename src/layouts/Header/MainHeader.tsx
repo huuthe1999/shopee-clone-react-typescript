@@ -1,35 +1,21 @@
-import { useMemo } from 'react'
+import { Fragment, useCallback } from 'react'
 
 import { Home, Search, ShoppingCart } from 'react-feather'
 import { Link } from 'react-router-dom'
 
-import { LogoIcon, NavItem, NavItemDropDown } from '@/components'
+import { DropdownMenu, INavItem, LogoIcon, NavItem } from '@/components'
 import { PATHS } from '@/constants'
+import { TooltipContent, TooltipProvider, TooltipTrigger } from '@/contexts'
 import { LEFT_NAV, RIGHT_NAV } from '@/data/header'
-const MainHeader = () => {
-  const renderLeftNav = useMemo(
-    () =>
-      LEFT_NAV.map(({ children, ...rest }, index) => {
-        return (
-          <NavItem key={index} {...rest}>
-            {children}
-          </NavItem>
-        )
-      }),
-    []
-  )
 
-  const renderRightNav = useMemo(
-    () =>
-      RIGHT_NAV.map(({ children, menuItems, ...rest }, index) => {
-        return menuItems ? (
-          <NavItemDropDown key={index} menuItems={menuItems} {...rest}>
-            {children}
-          </NavItemDropDown>
-        ) : (
-          <NavItem key={index} {...rest}>
-            {children}
-          </NavItem>
+const MainHeader = () => {
+  const renderNav = useCallback(
+    (data: INavItem[]) =>
+      data.map(({ children, ...rest }, index) => {
+        return (
+          <Fragment key={index}>
+            <NavItem {...rest}>{children}</NavItem>
+          </Fragment>
         )
       }),
     []
@@ -38,12 +24,12 @@ const MainHeader = () => {
   return (
     <header className="py-2 px-4 bg-gradient-to-b from-primary to-secondary text-white">
       {/* Navbar */}
-      <nav className="mx-auto max-w-6xl flex flex-row items-center justify-between text-xs font-semibold mb-2 overflow-hidden">
+      <nav className="max-sm:hidden mx-auto max-w-6xl flex flex-row items-center justify-between text-xs font-semibold mb-2 overflow-hidden">
         {/* Left Nav */}
-        <ul className="flex divide-x divide-slate-400 ">{renderLeftNav}</ul>
+        <ul className="flex divide-x divide-slate-400 ">{renderNav(LEFT_NAV)}</ul>
         {/* Right Nav */}
         <ul className="flex divide-x divide-slate-400 items-center">
-          {renderRightNav}
+          {renderNav(RIGHT_NAV)}
           {/* <NavItem
             to={PATHS.HOME_PATH}
             text="Tiếng việt"
@@ -66,10 +52,9 @@ const MainHeader = () => {
         <div className="px-2 self-start max-sm:self-center">
           <Link to={PATHS.HOME_PATH}>
             <Home className="max-sm:block hidden" size={28} />
-            <LogoIcon className="sm:h-14 max-sm:h-8 fill-white max-sm:hidden" />
+            <LogoIcon className="sm:h-14 fill-white max-sm:hidden" />
           </Link>
         </div>
-
         {/* Search Container*/}
         <div className="w-full">
           {/* Search */}
@@ -126,13 +111,19 @@ const MainHeader = () => {
             </ul>
           </div>
         </div>
-
         {/* Shopping cart */}
-        <div className="flex-shrink-0 p-4 max-sm:p-2">
-          <Link to={PATHS.CART_PATH}>
-            <ShoppingCart className="cursor-pointer" size={28} />
-          </Link>
-        </div>
+        <TooltipProvider placement="bottom-end" mainAxis={-4}>
+          <TooltipTrigger asChild>
+            <div className="flex-shrink-0 p-4 max-sm:p-2">
+              <Link to={PATHS.CART_PATH} className="block -translate-x-1">
+                <ShoppingCart className="cursor-pointer" size={28} />
+                <TooltipContent>
+                  <DropdownMenu data={[]} />
+                </TooltipContent>
+              </Link>
+            </div>
+          </TooltipTrigger>
+        </TooltipProvider>
       </div>
     </header>
   )

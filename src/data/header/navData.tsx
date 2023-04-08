@@ -50,6 +50,10 @@ export const RIGHT_NAV: INavItem[] = [
     rightIcon: <ChevronDown size={16} />
   },
   {
+    menuItems: [
+      { text: 'Profile', to: PATHS.HOME_PATH },
+      { text: 'Log out', to: PATHS.HOME_PATH }
+    ],
     text: 'gamecaro',
     leftIcon: (
       <div className="w-5 h-5 rounded-full overflow-hidden bg-[url('https://down-vn.img.susercontent.com/file/mx-11134226-23020-6nbhtbltvynvfb_tn')] bg-no-repeat bg-center bg-contain" />

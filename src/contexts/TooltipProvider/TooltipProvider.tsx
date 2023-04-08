@@ -1,11 +1,14 @@
 import * as React from 'react'
 
 import {
+  FloatingArrow,
   FloatingPortal,
   Placement,
+  arrow,
   autoUpdate,
   flip,
   offset,
+  safePolygon,
   shift,
   useDismiss,
   useFloating,
@@ -15,8 +18,10 @@ import {
   useMergeRefs,
   useRole
 } from '@floating-ui/react'
+import { AnimatePresence, motion } from 'framer-motion'
 
 interface TooltipOptions {
+  mainAxis?: number
   initialOpen?: boolean
   placement?: Placement
   open?: boolean
@@ -24,11 +29,13 @@ interface TooltipOptions {
 }
 
 export function useTooltip({
+  mainAxis,
   initialOpen = false,
   placement = 'top',
   open: controlledOpen,
   onOpenChange: setControlledOpen
 }: TooltipOptions = {}) {
+  const arrowRef = React.useRef(null)
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(initialOpen)
 
   const open = controlledOpen ?? uncontrolledOpen
@@ -40,11 +47,14 @@ export function useTooltip({
     onOpenChange: setOpen,
     whileElementsMounted: autoUpdate,
     middleware: [
-      offset(5),
+      offset(mainAxis ?? 10),
       flip({
         fallbackAxisSideDirection: 'start'
       }),
-      shift({ padding: 5 })
+      shift({ padding: 5 }),
+      arrow({
+        element: arrowRef
+      })
     ]
   })
 
@@ -52,7 +62,11 @@ export function useTooltip({
 
   const hover = useHover(context, {
     move: false,
-    enabled: controlledOpen == null
+    enabled: controlledOpen == null,
+    handleClose: safePolygon({
+      restMs: 25,
+      blockPointerEvents: true
+    })
   })
   const focus = useFocus(context, {
     enabled: controlledOpen == null
@@ -66,6 +80,7 @@ export function useTooltip({
     () => ({
       open,
       setOpen,
+      arrowRef,
       ...interactions,
       ...data
     }),
@@ -130,25 +145,63 @@ export const TooltipTrigger = React.forwardRef<
 })
 
 export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElement>>(
-  function TooltipContent(props, propRef) {
-    const context = useTooltipContext()
+  function TooltipContent({ children, ...props }, propRef) {
+    const { arrowRef, context: floatingContext, ...context } = useTooltipContext()
+    console.log('🚀 ~ TooltipContent ~ floatingContext:', floatingContext)
+
     const ref = useMergeRefs([context.refs.setFloating, propRef])
 
     return (
       <FloatingPortal>
-        {context.open && (
-          <div
-            ref={ref}
-            className={props.className}
-            style={{
-              position: context.strategy,
-              top: context.y ?? 0,
-              left: context.x ?? 0,
-              visibility: context.x == null ? 'hidden' : 'visible'
-            }}
-            {...context.getFloatingProps(props)}
-          />
-        )}
+        <AnimatePresence initial={false}>
+          {context.open && (
+            <motion.div
+              ref={ref}
+              style={{
+                position: context.strategy,
+                top: context.y ?? 0,
+                left: context.x ?? 0,
+                width: 'max-content',
+                visibility: context.x == null ? 'hidden' : 'visible'
+              }}
+              initial={{
+                opacity: 0,
+                scale: 0,
+                transformOrigin: context.middlewareData.arrow?.x
+                  ? `${context.middlewareData.arrow?.x + 14}px -10px`
+                  : '95% top'
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                transformOrigin: context.middlewareData.arrow?.x
+                  ? `${context.middlewareData.arrow?.x + 14}px -10px`
+                  : undefined
+              }}
+              exit={{
+                opacity: 0,
+                scale: 0,
+                transformOrigin: context.middlewareData.arrow?.x
+                  ? `${context.middlewareData.arrow?.x + 14}px -10px`
+                  : undefined
+              }}
+              transition={{
+                type: 'tween',
+                ease: [0.4, 0, 0.6, 1],
+                duration: 0.2
+              }}
+              {...context.getFloatingProps(props)}>
+              {children}
+              <FloatingArrow
+                ref={arrowRef}
+                context={floatingContext}
+                width={28}
+                height={10}
+                className="fill-white [&>path:last-of-type]:stroke-white"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </FloatingPortal>
     )
   }

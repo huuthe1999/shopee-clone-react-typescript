@@ -1,15 +1,12 @@
+import classNames from 'classnames'
 import { Link } from 'react-router-dom'
+
+import { DropdownMenu } from '@/components'
+import { TooltipContent, TooltipProvider, TooltipTrigger } from '@/contexts'
 
 import { INavItem } from './type'
 
-const NavItem = ({
-  to,
-  leftIcon,
-  rightIcon,
-  text,
-  className,
-  children
-}: Omit<INavItem, 'menuItems'>) => {
+const NavItem = ({ to, leftIcon, rightIcon, text, className, children, menuItems }: INavItem) => {
   const content = (
     <>
       {leftIcon}
@@ -18,8 +15,11 @@ const NavItem = ({
     </>
   )
 
-  return (
-    <li className={`px-2 ${className ?? ''}`}>
+  const renderElement = (
+    <li
+      className={classNames('px-2', {
+        [className ?? '']: className
+      })}>
       {to ? (
         <Link className="flex gap-1 hover:text-neutral-200" to={to}>
           {content}
@@ -32,6 +32,17 @@ const NavItem = ({
         </span>
       )}
     </li>
+  )
+
+  return !menuItems ? (
+    renderElement
+  ) : (
+    <TooltipProvider placement="bottom-end">
+      <TooltipTrigger asChild>{renderElement}</TooltipTrigger>
+      <TooltipContent>
+        <DropdownMenu data={menuItems} />
+      </TooltipContent>
+    </TooltipProvider>
   )
 }
 
