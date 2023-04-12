@@ -8,6 +8,7 @@ const EmptyCartIcon = ({ width = '100%', height = '10rem' }: Props) => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       data-name="Layer 1"
+      style={{ width: '100%' }}
       width={width}
       height={height}
       viewBox="0 0 896 747.97143"

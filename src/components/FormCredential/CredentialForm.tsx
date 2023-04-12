@@ -10,6 +10,7 @@ import { toast } from 'react-toastify'
 
 import { LoadingIcon } from '@/components/Icon'
 import { PATHS } from '@/constants'
+import { useAuthContext } from '@/contexts'
 import { authServices } from '@/services'
 import { formatErrorData } from '@/utils'
 
@@ -21,8 +22,9 @@ import {
 } from './validate'
 
 const CredentialForm = () => {
-  const navigate = useNavigate()
+  const { handleLogin } = useAuthContext()
   const matchLogin = useMatch(PATHS.LOGIN_PATH)
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const loginMutation = useMutation({
@@ -37,7 +39,7 @@ const CredentialForm = () => {
     reset,
     setError,
     handleSubmit,
-    formState: { errors, isValid, isSubmitting, dirtyFields, touchedFields }
+    formState: { errors, isValid, isSubmitting, dirtyFields }
   } = useForm<TCredentialFormSchema>({
     defaultValues: {
       email: '',
@@ -58,23 +60,37 @@ const CredentialForm = () => {
     reset()
     showPassword && setShowPassword(false)
     showConfirmPassword && setShowConfirmPassword(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matchLogin, reset])
 
   const handleSubmitForm: SubmitHandler<TCredentialFormSchema> = async (data) => {
     const { email, password } = data
 
     try {
-      const res = matchLogin
-        ? await loginMutation.mutateAsync({ email, password })
-        : await registerMutation.mutateAsync({ email, password })
+      matchLogin
+        ? await loginMutation.mutateAsync(
+            { email, password },
+            {
+              onSuccess(data) {
+                handleLogin(data.data.data)
+                toast.success(data.data.message)
+                reset()
 
-      toast.success(res.data.message)
-      reset()
-      if (matchLogin) {
-        navigate(PATHS.HOME_PATH)
-      } else {
-        navigate(PATHS.LOGIN_PATH)
-      }
+                // Already handle redirect into ProtectedRoute
+              }
+            }
+          )
+        : await registerMutation.mutateAsync(
+            { email, password },
+            {
+              onSuccess(data) {
+                toast.success(data.data.message)
+                reset()
+                // Redirect to login page
+                navigate(PATHS.LOGIN_PATH, { replace: true })
+              }
+            }
+          )
     } catch (error) {
       formatErrorData<TCredentialForm>(error, setError)
     }
@@ -104,7 +120,6 @@ const CredentialForm = () => {
     )
 
   const styleInput = (name: keyof TCredentialFormSchema) => {
-    console.log('🚀 ~ CredentialForm ~ errors[name]:', dirtyFields[name], touchedFields[name])
     return classNames('p-3 pr-12 border rounded-sm focus:drop-shadow-md', {
       'border-neutral-400 focus:border-neutral-600': !errors[name],
       'bg-red-50 border-red-600': errors[name],

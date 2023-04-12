@@ -1,3 +1,4 @@
+export { default as Button } from './Button'
 export { default as DropdownMenu } from './DropdownMenu'
 export { default as MyErrorBoundary } from './ErrorBoundary'
 export * from './FormCredential'

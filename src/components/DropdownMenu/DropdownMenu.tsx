@@ -1,39 +1,29 @@
-import { Link } from 'react-router-dom'
+import React from 'react'
 
 import { EmptyCartIcon } from '@/components/Icon'
 
+import MenuItem from './MenuItem'
 import { DropItemMenu } from './type'
 
 interface Props {
+  title?: string
   data: DropItemMenu[]
+  footer?: React.ReactNode
 }
 
-const DropdownMenu = ({ data }: Props) => {
-  const renderMenuItem = data.map(({ to, text }, index) => {
-    return (
-      <li key={index}>
-        {to ? (
-          <Link
-            to={to}
-            className="block px-4 py-2 hover:bg-gray-100 hover:text-teal-500 text-ellipsis">
-            {text}
-          </Link>
-        ) : (
-          <span className="block px-4 py-2 hover:bg-gray-100 hover:text-primary text-ellipsis cursor-pointer">
-            {text}
-          </span>
-        )}
-      </li>
-    )
+const DropdownMenu = ({ data, title, footer }: Props) => {
+  const renderMenuItem = data.map((props, index) => {
+    return <MenuItem key={index} {...props} />
   })
 
   const renderData =
     data.length === 0 ? (
-      <div className="py-14 overflow-hidden text-center w-full">
+      <div className="px-2 py-14 overflow-hidden text-center w-full">
         <EmptyCartIcon width="25rem" />
+        <p className="mt-4 text-gray-700 text-sm p-2">Chưa Có Sản Phẩm</p>
       </div>
     ) : (
-      <ul className="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
+      <ul className="text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
         {renderMenuItem}
       </ul>
     )
@@ -41,8 +31,15 @@ const DropdownMenu = ({ data }: Props) => {
   return (
     <div
       id="dropdown"
-      className="z-10 bg-white divide-y divide-gray-100 rounded-sm shadow-md overflow-hidden min-w-[11rem]">
+      className="bg-white divide-y divide-gray-100 rounded-sm shadow-md overflow-hidden min-w-[11rem] max-w-sm h-fit pt-2">
+      {title && <p className="text-black/50 p-2">Sản Phẩm Mới Thêm</p>}
       {renderData}
+      {data.length > 0 && footer && (
+        <div className="p-2 flex justify-between items-center">
+          <p className="text-xs text-black/70 capitalize">2 sản phầm nữa trong giỏ hàng</p>
+          {footer}
+        </div>
+      )}
     </div>
   )
 }

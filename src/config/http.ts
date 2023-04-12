@@ -6,7 +6,6 @@ class Http {
     this.instance = axios.create({
       baseURL: import.meta.env.VITE_BASE_URL,
       timeout: 10000,
-      withCredentials: true,
       headers: {
         'Content-Type': 'application/json'
       }
@@ -15,16 +14,38 @@ class Http {
 }
 
 const httpService = new Http().instance
+const authService = new Http().instance
+
+authService.defaults.withCredentials = true
+
+authService.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (typeof error.response === 'undefined') {
+      toast.error(
+        'Đã có lỗi xảy ra tại authService. Điều này có thể là vấn đề CORS hoặc mất kết nối internet.',
+        {
+          theme: 'colored'
+        }
+      )
+    }
+    return Promise.reject(error)
+  }
+)
 
 httpService.interceptors.response.use(
   (response) => response,
   (error) => {
     if (typeof error.response === 'undefined') {
-      toast.error('Đã có lỗi xảy ra. Điều này có thể là vấn đề CORS hoặc mất kết nối internet.', {
-        theme: 'colored'
-      })
+      toast.error(
+        'Đã có lỗi xảy ra tại httpService. Điều này có thể là vấn đề CORS hoặc mất kết nối internet.',
+        {
+          theme: 'colored'
+        }
+      )
     }
     return Promise.reject(error)
   }
 )
+export { authService }
 export default httpService

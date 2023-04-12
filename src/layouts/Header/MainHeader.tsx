@@ -3,7 +3,7 @@ import { Fragment, useCallback } from 'react'
 import { Home, Search, ShoppingCart } from 'react-feather'
 import { Link } from 'react-router-dom'
 
-import { DropdownMenu, INavItem, LogoIcon, NavItem } from '@/components'
+import { Button, DropdownMenu, INavItem, LogoIcon, NavItem } from '@/components'
 import { PATHS } from '@/constants'
 import { TooltipContent, TooltipProvider, TooltipTrigger } from '@/contexts'
 import { LEFT_NAV, RIGHT_NAV } from '@/data/header'
@@ -50,10 +50,16 @@ const MainHeader = () => {
       <div className="mx-auto max-w-6xl bg-transparent py-2 flex flex-nowrap gap-4 justify-between items-center">
         {/* Logo */}
         <div className="px-2 self-start max-sm:self-center">
-          <Link to={PATHS.HOME_PATH}>
-            <Home className="max-sm:block hidden" size={28} />
-            <LogoIcon className="sm:h-14 fill-white max-sm:hidden" />
-          </Link>
+          <NavItem
+            className="list-none"
+            to={PATHS.HOME_PATH}
+            leftIcon={
+              <>
+                <Home className="max-sm:block hidden" size={28} />
+                <LogoIcon className="sm:h-14 fill-white max-sm:hidden" />
+              </>
+            }
+          />
         </div>
         {/* Search Container*/}
         <div className="w-full">
@@ -72,9 +78,8 @@ const MainHeader = () => {
           {/* Category */}
           <div className="max-sm:hidden overflow-hidden h-6 mt-1">
             <ul className="flex flex-wrap justify-between text-sm text-gray-50">
-              <li className="px-2 py-1">
-                <Link to={PATHS.HOME_PATH}>Dép Nam</Link>
-              </li>
+              {/* Call api later */}
+              <NavItem text="Dép Nam" className="py-1" />
               <li className="px-2 py-1">
                 <Link to={PATHS.HOME_PATH}>Tai Nghe</Link>
               </li>
@@ -115,14 +120,94 @@ const MainHeader = () => {
         <TooltipProvider placement="bottom-end" mainAxis={-4}>
           <TooltipTrigger asChild>
             <div className="flex-shrink-0 p-4 max-sm:p-2">
-              <Link to={PATHS.CART_PATH} className="block -translate-x-1">
+              <Link to={PATHS.CART_PATH} className="block -translate-x-1 relative">
                 <ShoppingCart className="cursor-pointer" size={28} />
-                <TooltipContent>
-                  <DropdownMenu data={[]} />
-                </TooltipContent>
+                {/* Badge */}
+                <div className="absolute -right-2/3 -top-1/3 bg-white h-fit min-w-fit rounded-full border-primary border-2 text-primary text-xs text-center px-1 overflow-hidden">
+                  10
+                  <sup>+</sup>
+                </div>
               </Link>
             </div>
           </TooltipTrigger>
+          <TooltipContent>
+            <DropdownMenu
+              data={[
+                {
+                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+                  image:
+                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+                  price: 1213213,
+                  to: PATHS.HOME_PATH
+                },
+                {
+                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+                  image:
+                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+                  price: 1213213,
+                  to: PATHS.HOME_PATH
+                },
+                {
+                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+                  image:
+                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+                  price: 1213213,
+                  to: PATHS.HOME_PATH
+                },
+                {
+                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+                  image:
+                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+                  price: 1213213,
+                  to: PATHS.HOME_PATH
+                },
+                {
+                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+                  image:
+                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+                  price: 1213213,
+                  to: PATHS.HOME_PATH
+                },
+                {
+                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+                  image:
+                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+                  price: 1213213,
+                  to: PATHS.HOME_PATH
+                },
+                {
+                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+                  image:
+                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+                  price: 1213213,
+                  to: PATHS.HOME_PATH
+                },
+                {
+                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+                  image:
+                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+                  price: 1213213,
+                  to: PATHS.HOME_PATH
+                },
+                {
+                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+                  image:
+                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+                  price: 1213213,
+                  to: PATHS.HOME_PATH
+                },
+                {
+                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+                  image:
+                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+                  price: 1213213,
+                  to: PATHS.HOME_PATH
+                }
+              ]}
+              title="Sản Phẩm Mới Thêm"
+              footer={<Button text="Xem giỏ hàng" />}
+            />
+          </TooltipContent>
         </TooltipProvider>
       </div>
     </header>
