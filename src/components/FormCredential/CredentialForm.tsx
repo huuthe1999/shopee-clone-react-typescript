@@ -22,7 +22,7 @@ import {
 } from './validate'
 
 const CredentialForm = () => {
-  const { handleLogin } = useAuthContext()
+  const { handleSetUser, handleSetAccessToken } = useAuthContext()
   const matchLogin = useMatch(PATHS.LOGIN_PATH)
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
@@ -72,7 +72,8 @@ const CredentialForm = () => {
             { email, password },
             {
               onSuccess(data) {
-                handleLogin(data.data.data)
+                handleSetUser(data.data.data.user)
+                handleSetAccessToken(data.data.data.accessToken)
                 toast.success(data.data.message)
                 reset()
 
@@ -84,10 +85,10 @@ const CredentialForm = () => {
             { email, password },
             {
               onSuccess(data) {
-                toast.success(data.data.message)
                 reset()
                 // Redirect to login page
                 navigate(PATHS.LOGIN_PATH, { replace: true })
+                toast.success(data.data.message)
               }
             }
           )

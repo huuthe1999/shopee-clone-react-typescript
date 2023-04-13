@@ -1,20 +1,34 @@
 import React from 'react'
 
-import { LoginDataResponse } from '@/types/credential-form'
+import { LoginDataResponse, UserResponse } from '@/types/credential-form'
 
 interface AuthProviderProps {
   children: React.ReactNode
 }
 
 const useAuth = () => {
-  const [auth, setAuth] = React.useState<LoginDataResponse>(null!)
+  const [currentUser, setCurrentUser] = React.useState<Pick<LoginDataResponse, 'user'>>(null!)
+  const [accessToken, setAccessToken] = React.useState<string>(null!)
 
-  const handleLogin = React.useCallback(
-    (data: LoginDataResponse) => setAuth((prev) => ({ ...prev, ...data })),
-    [setAuth]
+  const handleSetUser = React.useCallback((data: UserResponse) => {
+    setCurrentUser((prev) => ({ ...prev, ...data }))
+  }, [])
+
+  const handleSetAccessToken = React.useCallback((token: string) => {
+    setAccessToken(token)
+  }, [])
+
+  const contextValue = React.useMemo(
+    () => ({
+      currentUser,
+      accessToken,
+      handleSetUser,
+      handleSetAccessToken
+    }),
+    [currentUser, accessToken, handleSetUser, handleSetAccessToken]
   )
 
-  return { auth, handleLogin }
+  return contextValue
 }
 
 type AuthContextType = ReturnType<typeof useAuth>

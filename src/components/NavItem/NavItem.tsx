@@ -6,7 +6,15 @@ import { TooltipContent, TooltipProvider, TooltipTrigger } from '@/contexts'
 
 import { INavItem } from './type'
 
-const NavItem = ({ to, leftIcon, rightIcon, text, className, children, menuItems }: INavItem) => {
+const NavItem = ({
+  to,
+  leftIcon,
+  rightIcon,
+  text,
+  className,
+  children,
+  menuItems
+}: Omit<INavItem, 'id'>) => {
   const content = (
     <>
       {leftIcon}

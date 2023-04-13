@@ -4,10 +4,10 @@ import { PATHS } from '@/constants'
 import { useAuthContext } from '@/contexts'
 
 const ProtectedRoute = () => {
-  const authContext = useAuthContext()
+  const { accessToken } = useAuthContext()
   const location = useLocation()
 
-  return authContext.auth ? (
+  return accessToken ? (
     <Outlet />
   ) : (
     // Redirect them to the /login page, but save the current location they were

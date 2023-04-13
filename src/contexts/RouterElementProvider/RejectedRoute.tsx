@@ -4,8 +4,9 @@ import { PATHS } from '@/constants'
 import { useAuthContext } from '@/contexts'
 
 const RejectedRoute = () => {
-  const authContext = useAuthContext()
+  const { accessToken } = useAuthContext()
   const location = useLocation()
+
   const matchLogin = useMatch(PATHS.LOGIN_PATH)
 
   const from = location.state?.from?.pathname
@@ -19,7 +20,7 @@ const RejectedRoute = () => {
   // when they get to the protected page and click the back button, they
   // won't end up back on the login page, which is also really nice for the
   // user experience.
-  return !authContext.auth ? <Outlet /> : <Navigate to={from} replace />
+  return !accessToken ? <Outlet /> : <Navigate to={from} replace />
 }
 
 export default RejectedRoute

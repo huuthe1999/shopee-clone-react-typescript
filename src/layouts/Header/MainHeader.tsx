@@ -5,20 +5,25 @@ import { Link } from 'react-router-dom'
 
 import { Button, DropdownMenu, INavItem, LogoIcon, NavItem } from '@/components'
 import { PATHS } from '@/constants'
-import { TooltipContent, TooltipProvider, TooltipTrigger } from '@/contexts'
+import { TooltipContent, TooltipProvider, TooltipTrigger, useAuthContext } from '@/contexts'
 import { LEFT_NAV, RIGHT_NAV } from '@/data/header'
 
 const MainHeader = () => {
+  const { accessToken } = useAuthContext()
+
   const renderNav = useCallback(
     (data: INavItem[]) =>
-      data.map(({ children, ...rest }, index) => {
+      data.slice(0, data.length - 1).map(({ children, id, isVisible, ...rest }) => {
         return (
-          <Fragment key={index}>
-            <NavItem {...rest}>{children}</NavItem>
-          </Fragment>
+          // isVisible === 'undefined' ==> Mặc định luôn show
+          (typeof isVisible === 'undefined' || isVisible === !!accessToken) && (
+            <Fragment key={id}>
+              <NavItem {...rest}>{children}</NavItem>
+            </Fragment>
+          )
         )
       }),
-    []
+    [accessToken]
   )
 
   return (
@@ -35,14 +40,22 @@ const MainHeader = () => {
             text="Tiếng việt"
             leftIcon={<Globe size={16} />}
             rightIcon={<ChevronDown size={16} />}
-          />
-          <NavItem
-            className="cursor-pointer"
-            text="gamecaro"
-            leftIcon={
-              <div className="w-5 h-5 rounded-full overflow-hidden bg-[url('https://down-vn.img.susercontent.com/file/mx-11134226-23020-6nbhtbltvynvfb_tn')] bg-no-repeat bg-center bg-contain" />
-            }
           /> */}
+          {!!accessToken && (
+            <TooltipProvider placement="bottom-end">
+              <TooltipTrigger>
+                <li className="px-2 cursor-pointer">
+                  <span className="flex gap-1 hover:text-neutral-200 items-center">
+                    {RIGHT_NAV[RIGHT_NAV.length - 1].leftIcon}
+                    {RIGHT_NAV[RIGHT_NAV.length - 1].text}
+                  </span>
+                </li>
+              </TooltipTrigger>
+              <TooltipContent>
+                <DropdownMenu data={RIGHT_NAV[RIGHT_NAV.length - 1].menuItems!} />
+              </TooltipContent>
+            </TooltipProvider>
+          )}
         </ul>
       </nav>
 

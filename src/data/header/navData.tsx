@@ -6,18 +6,22 @@ import { PATHS } from '@/constants'
 
 export const LEFT_NAV: INavItem[] = [
   {
+    id: 1,
     to: PATHS.HOME_PATH,
     text: 'Kênh Người Bán'
   },
   {
+    id: 2,
     to: PATHS.HOME_PATH,
     text: 'Tải ứng dụng'
   },
   {
+    id: 3,
     to: PATHS.HOME_PATH,
     text: 'Kết nối'
   },
   {
+    id: 4,
     className: 'flex gap-2',
     children: (
       <>
@@ -34,26 +38,43 @@ export const LEFT_NAV: INavItem[] = [
 
 export const RIGHT_NAV: INavItem[] = [
   {
+    id: 1,
     to: PATHS.HOME_PATH,
     text: 'Thông báo',
     leftIcon: <Bell size={16} />
   },
   {
+    id: 2,
     to: PATHS.HOME_PATH,
     text: 'Hỗ trợ',
     leftIcon: <HelpCircle size={16} />
   },
   {
+    id: 3,
     menuItems: [{ text: 'Tiếng việt' }, { text: 'English' }],
     text: 'Tiếng việt',
     leftIcon: <Globe size={16} />,
     rightIcon: <ChevronDown size={16} />
   },
   {
+    id: 4,
+    to: PATHS.LOGIN_PATH,
+    text: 'Đăng nhập',
+    isVisible: false //Hiện lên nếu isVisible = false && isVisible # undefined
+  },
+  {
+    id: 5,
+    to: PATHS.REGISTER_PATH,
+    text: 'Đăng kí',
+    isVisible: false //Hiện lên nếu isVisible = false && isVisible # undefined
+  },
+  {
+    id: 6,
     menuItems: [
       { text: 'Profile', to: PATHS.HOME_PATH },
       { text: 'Log out', to: PATHS.HOME_PATH }
     ],
+    isVisible: true, //Hiện lên nếu isVisible = true && isVisible # undefined
     text: 'gamecaro',
     leftIcon: (
       <div className="w-5 h-5 rounded-full overflow-hidden bg-[url('https://down-vn.img.susercontent.com/file/mx-11134226-23020-6nbhtbltvynvfb_tn')] bg-no-repeat bg-center bg-contain" />
