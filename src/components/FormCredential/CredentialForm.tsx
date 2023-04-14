@@ -9,10 +9,10 @@ import { Link, useMatch, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { LoadingIcon } from '@/components/Icon'
-import { PATHS } from '@/constants'
+import { AUTH, PATHS } from '@/constants'
 import { useAuthContext } from '@/contexts'
 import { authServices } from '@/services'
-import { formatErrorData } from '@/utils'
+import { authUtils, formatErrorData } from '@/utils'
 
 import {
   TCredentialForm,
@@ -72,6 +72,8 @@ const CredentialForm = () => {
             { email, password },
             {
               onSuccess(data) {
+                // isLogging dùng để xác nhận người dùng đang logging ==> giúp lấy lại token
+                authUtils.setItem(AUTH.IS_LOGGING, true)
                 handleSetUser(data.data.data.user)
                 handleSetAccessToken(data.data.data.accessToken)
                 toast.success(data.data.message)

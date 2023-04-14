@@ -1,13 +1,12 @@
-import { AUTH } from '@/constants'
-
-export const setAccessToken = (token: string) => {
-  window.localStorage.setItem(AUTH.ACCESS_TOKEN, token)
+export const setItem = (key: string, value: any) => {
+  window.localStorage.setItem(key, JSON.stringify(value))
 }
 
-export const getAccessToken = () => {
-  return window.localStorage.getItem(AUTH.ACCESS_TOKEN)
+export const getItem = (key: string) => {
+  const item = window.localStorage.getItem(key)
+  return item && JSON.parse(item)
 }
 
-export const removeAccessToken = () => {
-  window.localStorage.removeItem(AUTH.ACCESS_TOKEN)
+export const removeItem = (key: string) => {
+  window.localStorage.removeItem(key)
 }

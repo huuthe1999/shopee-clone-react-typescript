@@ -1,21 +1,19 @@
 import { useEffect, useRef } from 'react'
 
 import { AxiosError, AxiosResponse, HttpStatusCode, isAxiosError } from 'axios'
-import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { authService } from '@/config/http'
-import { ISSERVER } from '@/constants'
+import { AUTH, ISSERVER } from '@/constants'
 import { useAuthContext } from '@/contexts'
 import { authServices } from '@/services'
 import { BaseResponse } from '@/types'
 import { RefreshTokenSuccessResponse } from '@/types/token.response'
+import { authUtils } from '@/utils'
 
 import useRefreshToken from './useRefreshToken'
 
 function useAxiosPrivate() {
-  const location = useLocation()
-  const navigate = useNavigate()
   const isRefreshTokenExpired = useRef(true) // Chỉ toast 1 lần duy nhất khi RefreshToken hết hạn
   const refreshingToken = useRef<Promise<AxiosResponse<RefreshTokenSuccessResponse>> | null>(null)
   const refresh = useRefreshToken()
@@ -72,13 +70,12 @@ function useAxiosPrivate() {
           } catch (err) {
             if (isAxiosError<BaseResponse>(err) && isRefreshTokenExpired.current) {
               // Reset context
+              authUtils.removeItem(AUTH.IS_LOGGING)
               handleSetAccessToken(null!)
               handleSetUser(null!)
               isRefreshTokenExpired.current = false
               // Xử lí refresh token hết hạn, cho log out, auto redirect về trang login được set trong protected route
-              toast.info(err.response?.data.message, {
-                theme: 'colored'
-              })
+              toast.info(err.response?.data.message)
             }
             // return Promise.reject(error)
           }

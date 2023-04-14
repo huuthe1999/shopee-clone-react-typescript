@@ -1,2 +1,2 @@
-import GuestLayout from './Guest'
+import GuestLayout from './GuestLayout'
 export default GuestLayout

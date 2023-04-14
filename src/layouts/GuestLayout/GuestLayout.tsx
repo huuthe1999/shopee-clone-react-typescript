@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom'
 import { LayoutForm, MyErrorBoundary, Spinner } from '@/components'
 import { Footer, Header } from '@/layouts'
 
-const Guest = () => {
+const GuestLayout = () => {
   return (
     <>
       <div className="flex flex-col h-full">
@@ -25,4 +25,4 @@ const Guest = () => {
   )
 }
 
-export default Guest
+export default GuestLayout
