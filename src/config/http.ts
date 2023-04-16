@@ -27,6 +27,7 @@ class Http {
 }
 
 const httpService = new Http().instance
+
 export const authService = new Http().instance
 
 httpService.interceptors.response.use(

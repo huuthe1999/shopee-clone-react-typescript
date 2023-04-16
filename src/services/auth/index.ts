@@ -1,6 +1,7 @@
 import { TCredentialForm } from '@/components/FormCredential/validate'
 import httpService from '@/config/http'
 import { ENDPOINTS } from '@/constants'
+import { BaseResponse } from '@/types'
 import { LoginSuccessResponse, RegisterSuccessResponse } from '@/types/credential-form'
 import { RefreshTokenSuccessResponse } from '@/types/token.response'
 
@@ -14,4 +15,8 @@ export const registerUser = (data: TCredentialForm) => {
 
 export const getRefreshToken = () => {
   return httpService.get<RefreshTokenSuccessResponse>(ENDPOINTS.REFRESH_END_POINT)
+}
+
+export const logoutUser = () => {
+  return httpService.post<BaseResponse>(ENDPOINTS.LOGOUT_END_POINT)
 }

@@ -49,7 +49,7 @@ export function useTooltip({
     middleware: [
       offset(mainAxis ?? 10),
       flip({
-        fallbackAxisSideDirection: 'start'
+        fallbackAxisSideDirection: 'end'
       }),
       shift({ padding: 5 }),
       arrow({
@@ -61,16 +61,16 @@ export function useTooltip({
   const context = data.context
 
   const hover = useHover(context, {
-    move: false,
     enabled: controlledOpen == null,
     handleClose: safePolygon({
-      restMs: 25,
       blockPointerEvents: true
     })
   })
+
   const focus = useFocus(context, {
     enabled: controlledOpen == null
   })
+
   const dismiss = useDismiss(context)
   const role = useRole(context, { role: 'tooltip' })
 
@@ -80,9 +80,9 @@ export function useTooltip({
     () => ({
       open,
       setOpen,
-      arrowRef,
       ...interactions,
-      ...data
+      ...data,
+      arrowRef
     }),
     [open, setOpen, interactions, data]
   )
@@ -134,13 +134,13 @@ export const TooltipTrigger = React.forwardRef<
   }
 
   return (
-    <button
+    <li
       ref={ref}
       // The user can style the trigger based on the state
       data-state={context.open ? 'open' : 'closed'}
       {...context.getReferenceProps(props)}>
       {children}
-    </button>
+    </li>
   )
 })
 

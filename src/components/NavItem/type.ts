@@ -10,4 +10,5 @@ export interface INavItem {
   text?: string
   children?: React.ReactNode
   isVisible?: boolean
+  hasPopup?: boolean
 }

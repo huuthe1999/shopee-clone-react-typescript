@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { EmptyCartIcon } from '@/components/Icon'
+import { EmptyCartIcon } from '@/components'
 
 import MenuItem from './MenuItem'
 import { DropItemMenu } from './type'

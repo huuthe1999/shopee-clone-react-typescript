@@ -1,4 +1,4 @@
-import { Fragment, useCallback } from 'react'
+import { useCallback } from 'react'
 
 import { Home, Search, ShoppingCart } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -13,14 +13,27 @@ const MainHeader = () => {
 
   const renderNav = useCallback(
     (data: INavItem[]) =>
-      data.slice(0, data.length - 1).map(({ children, id, isVisible, ...rest }) => {
+      data.map(({ children, id, isVisible, ...rest }) => {
         return (
-          // isVisible === 'undefined' ==> Mặc định luôn show
+          // isVisible === 'undefined' ==> Mặc định luôn show, item không cần check authentication
           (typeof isVisible === 'undefined' || isVisible === !!accessToken) && (
-            <Fragment key={id}>
-              <NavItem {...rest}>{children}</NavItem>
-            </Fragment>
+            <NavItem {...rest} key={id}>
+              {children}
+            </NavItem>
           )
+
+          // isVisible === 'undefined' ==> Mặc định luôn show
+          // typeof isVisible === 'undefined' || isVisible === !!accessToken ? (
+          //   !menuItems ? (
+          //     <NavItem {...rest} key={id}>
+          //       {children}
+          //     </NavItem>
+          //   ) : menuItems ? (
+          //     <ModalProvider initialState={false} key={id}>
+          //       <NavItemWithPopup {...rest}>{children}</NavItemWithPopup>
+          //     </ModalProvider>
+          //   ) : null
+          // ) : null
         )
       }),
     [accessToken]
@@ -41,9 +54,9 @@ const MainHeader = () => {
             leftIcon={<Globe size={16} />}
             rightIcon={<ChevronDown size={16} />}
           /> */}
-          {!!accessToken && (
+          {/* {!!accessToken && (
             <TooltipProvider placement="bottom-end">
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <li className="px-2 cursor-pointer">
                   <span className="flex gap-1 hover:text-neutral-200 items-center">
                     {RIGHT_NAV[RIGHT_NAV.length - 1].leftIcon}
@@ -55,7 +68,7 @@ const MainHeader = () => {
                 <DropdownMenu data={RIGHT_NAV[RIGHT_NAV.length - 1].menuItems!} />
               </TooltipContent>
             </TooltipProvider>
-          )}
+          )} */}
         </ul>
       </nav>
 
@@ -132,7 +145,7 @@ const MainHeader = () => {
         {/* Shopping cart */}
         <TooltipProvider placement="bottom-end" mainAxis={-4}>
           <TooltipTrigger asChild>
-            <div className="flex-shrink-0 p-4 max-sm:p-2">
+            <div className="flex-shrink-0 p-4 max-sm:p-2 max-sm:pb-4 max-sm:translate-y-2">
               <Link to={PATHS.CART_PATH} className="block -translate-x-1 relative">
                 <ShoppingCart className="cursor-pointer" size={28} />
                 {/* Badge */}

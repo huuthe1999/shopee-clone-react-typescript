@@ -39,8 +39,6 @@ function useAxiosPrivate() {
         return response
       },
       async (error: AxiosError<BaseResponse>) => {
-        console.log('🚀 ~ error responseInterceptor:', error)
-
         // Lấy lại config mà request failed
         const originalRequest = error.config
 
@@ -50,7 +48,6 @@ function useAxiosPrivate() {
           originalRequest &&
           !originalRequest.isRetryAttempt &&
           error.response?.data.message === 'TOKEN_EXPIRED'
-          // !originalRequest?.url?.includes(ENDPOINTS.REFRESH_END_POINT)
         ) {
           // Đánh dấu đã có request gọi để lấy lại token
           originalRequest.isRetryAttempt = true

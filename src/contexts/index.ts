@@ -1,4 +1,5 @@
 export * from './AuthProvider'
+export * from './ModalProvider'
 export * from './RouterElementProvider'
 export { default as RouterElementProvider } from './RouterElementProvider'
 export * from './TooltipProvider'

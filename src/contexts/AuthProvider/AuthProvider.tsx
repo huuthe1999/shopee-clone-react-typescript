@@ -18,14 +18,20 @@ const useAuth = () => {
     setAccessToken(token)
   }, [])
 
+  const handleResetAuth = React.useCallback(() => {
+    setAccessToken(null!)
+    setCurrentUser(null!)
+  }, [])
+
   const contextValue = React.useMemo(
     () => ({
       currentUser,
       accessToken,
       handleSetUser,
-      handleSetAccessToken
+      handleSetAccessToken,
+      handleResetAuth
     }),
-    [currentUser, accessToken, handleSetUser, handleSetAccessToken]
+    [currentUser, accessToken, handleSetUser, handleSetAccessToken, handleResetAuth]
   )
 
   return contextValue
