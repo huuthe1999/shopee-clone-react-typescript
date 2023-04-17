@@ -147,7 +147,6 @@ export const TooltipTrigger = React.forwardRef<
 export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElement>>(
   function TooltipContent({ children, ...props }, propRef) {
     const { arrowRef, context: floatingContext, ...context } = useTooltipContext()
-
     const ref = useMergeRefs([context.refs.setFloating, propRef])
 
     return (

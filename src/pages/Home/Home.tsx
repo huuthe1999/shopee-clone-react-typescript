@@ -25,6 +25,7 @@ const Home = () => {
       <div className="min-h-[500px]">Home Page</div>
       <button onClick={handleRefetch}>Refetch1</button>
       <button onClick={handleRefetch2}>Refetch2</button>
+
       <Outlet />
     </>
   )

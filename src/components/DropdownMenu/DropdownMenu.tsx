@@ -1,8 +1,7 @@
 import React from 'react'
 
-import { EmptyCartIcon } from '@/components'
+import { EmptyCartIcon, MenuItem, MenuItemWithModal } from '@/components'
 
-import MenuItem from './MenuItem'
 import { DropItemMenu } from './type'
 
 interface Props {
@@ -13,7 +12,11 @@ interface Props {
 
 const DropdownMenu = ({ data, title, footer }: Props) => {
   const renderMenuItem = data.map((props, index) => {
-    return <MenuItem key={index} {...props} />
+    return props.hasPopup ? (
+      <MenuItemWithModal key={index} {...props} />
+    ) : (
+      <MenuItem key={index} {...props} />
+    )
   })
 
   const renderData =

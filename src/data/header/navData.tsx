@@ -70,7 +70,6 @@ export const RIGHT_NAV: INavItem[] = [
   },
   {
     id: 6,
-    hasPopup: true,
     menuItems: [
       { text: 'Cá nhân', to: PATHS.HOME_PATH, className: 'hover:text-teal-500' },
       {
@@ -78,6 +77,7 @@ export const RIGHT_NAV: INavItem[] = [
         className: 'hover:text-teal-500',
         hasPopup: true,
         heading: 'Đăng xuất',
+        buttonText: 'Đăng xuất',
         description: 'Bạn có muốn đăng xuất không ?',
         eventModal: EVENT_MODALS.LOGOUT_EVENT
       }

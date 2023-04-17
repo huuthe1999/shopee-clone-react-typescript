@@ -4,6 +4,7 @@ export interface DropItemMenu {
   eventModal?: string
   heading?: string
   description?: string
+  buttonText?: string
   hasPopup?: boolean
   className?: string
   image?: string

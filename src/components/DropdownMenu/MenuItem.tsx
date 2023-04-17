@@ -1,47 +1,27 @@
 import classNames from 'classnames'
 import { Link } from 'react-router-dom'
 
-import { useModalContext, useTooltipContext } from '@/contexts'
+import { useTooltipContext } from '@/contexts'
+import { withModal, WithModalProps } from '@/hoc'
 import { formatCurrency } from '@/utils'
 
 import { DropItemMenu } from './type'
 
 const MenuItem = ({
-  hasPopup,
   to,
   text,
   image,
   price,
   className,
-  heading,
-  description,
-  eventModal
-}: DropItemMenu) => {
+  setShowModal
+}: Omit<DropItemMenu, 'hasPopup'> & WithModalProps) => {
   const { setOpen } = useTooltipContext()
 
-  const {
-    setTrue,
-    handleSetHeading,
-    handleSetDescription,
-    handleSetButtonText,
-    handleSetEventType
-  } = useModalContext()
-  const handleToggle = () => {
-    if (hasPopup) {
-      setTrue()
-      handleSetHeading(heading)
-      handleSetDescription(description)
-      handleSetButtonText(text)
-      handleSetEventType(eventModal)
-      setOpen(false)
-    }
-  }
   return (
     <>
       <li
         className={classNames('hover:bg-gray-200 hover:text-primary cursor-pointer', {
-          [className ?? '']: className,
-          'p-2': !to && !hasPopup
+          [className ?? '']: className
         })}>
         {to ? (
           <Link to={to} className="p-2 flex flex-nowrap justify-between gap-2">
@@ -59,10 +39,15 @@ const MenuItem = ({
               )}
             </div>
           </Link>
-        ) : !hasPopup ? (
-          <span className="block">{text}</span>
         ) : (
-          <button className="p-2 w-full text-left" type="button" onClick={handleToggle}>
+          <button
+            className="w-full p-2 text-left"
+            onClick={async () => {
+              if (setShowModal) {
+                setOpen(true)
+                setShowModal(true)
+              }
+            }}>
             {text}
           </button>
         )}
@@ -71,4 +56,5 @@ const MenuItem = ({
   )
 }
 
+export const MenuItemWithModal = withModal(MenuItem)
 export default MenuItem

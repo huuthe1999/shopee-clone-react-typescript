@@ -3,7 +3,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ToastContainer } from 'react-toastify'
 
 import { queryClientConfig } from '@/config/query'
-import { ModalProvider, RouterElementProvider } from '@/contexts'
+import { RouterElementProvider } from '@/contexts'
 
 function App() {
   const queryClient = new QueryClient(queryClientConfig)
@@ -11,9 +11,7 @@ function App() {
     <div className="h-screen">
       {/* Provide the client to your App */}
       <QueryClientProvider client={queryClient}>
-        <ModalProvider>
-          <RouterElementProvider />
-        </ModalProvider>
+        <RouterElementProvider />
         <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       </QueryClientProvider>
       <ToastContainer

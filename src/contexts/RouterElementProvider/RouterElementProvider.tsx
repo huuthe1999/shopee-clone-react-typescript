@@ -1,11 +1,10 @@
 import React from 'react'
 
-import { AnimatePresence } from 'framer-motion'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-import { Modal, MyErrorBoundary, Spinner } from '@/components'
+import { MyErrorBoundary, Spinner } from '@/components'
 import { PATHS } from '@/constants'
-import { AuthProvider, ProtectedRoute, RejectedRoute, useModalContext } from '@/contexts'
+import { AuthProvider, ProtectedRoute, RejectedRoute } from '@/contexts'
 
 const HomePage = React.lazy(() => import('@/pages/Home'))
 const CredentialPage = React.lazy(() => import('@/pages/Credential'))
@@ -14,7 +13,6 @@ const MainLayout = React.lazy(() => import('@/layouts/MainLayout'))
 const CartPage = React.lazy(() => import('@/pages/Cart'))
 
 const RouterElementProvider = () => {
-  const { value } = useModalContext()
   const router = createBrowserRouter([
     {
       element: (
@@ -63,11 +61,11 @@ const RouterElementProvider = () => {
     },
     { path: PATHS.NOTFOUND_PATH, element: <h1>404 Not Found page</h1> }
   ])
+
   return (
     <AuthProvider>
       <React.Suspense fallback={<Spinner />}>
         <RouterProvider router={router} />
-        <AnimatePresence initial={false}>{value && <Modal />}</AnimatePresence>
       </React.Suspense>
     </AuthProvider>
   )
