@@ -231,7 +231,11 @@ const MainHeader = () => {
                 }
               ]}
               title="Sản Phẩm Mới Thêm"
-              footer={<Button text="Xem giỏ hàng" />}
+              footer={
+                <Button className="px-4 py-2 text-white bg-primary rounded-sm hover:opacity-90">
+                  Xem giỏ hàng
+                </Button>
+              }
             />
           </TooltipContent>
         </TooltipProvider>

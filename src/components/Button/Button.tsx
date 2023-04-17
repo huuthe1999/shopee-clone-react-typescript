@@ -1,17 +1,16 @@
-import classNames from 'classnames'
+import { ButtonHTMLAttributes } from 'react'
 
-interface Props {
-  text: string
-  className?: string
+import { LoadingIcon } from '@/components/Icon'
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  isLoading?: boolean
 }
-
-const Button = ({ text, className }: Props) => {
+const Button = ({ className, children, disabled, isLoading, ...rest }: ButtonProps) => {
+  const customClassName = disabled ? className + ' cursor-not-allowed' : className
   return (
-    <button
-      className={classNames('px-4 py-2 text-white bg-primary rounded-sm hover:opacity-90', {
-        [className ?? '']: className
-      })}>
-      {text}
+    <button className={customClassName} disabled={disabled} {...rest}>
+      {isLoading && <LoadingIcon />}
+      {children}
     </button>
   )
 }

@@ -12,10 +12,10 @@ interface Props {
 
 const DropdownMenu = ({ data, title, footer }: Props) => {
   const renderMenuItem = data.map((props, index) => {
-    return props.hasPopup ? (
-      <MenuItemWithModal key={index} {...props} />
-    ) : (
+    return !props.hasPopup ? (
       <MenuItem key={index} {...props} />
+    ) : (
+      <MenuItemWithModal key={index} {...props} />
     )
   })
 

@@ -2,10 +2,11 @@ import { useCallback, useState } from 'react'
 
 import { FloatingOverlay } from '@floating-ui/react'
 import { useMutation } from '@tanstack/react-query'
+import classNames from 'classnames'
 import { AnimatePresence, Variants, motion } from 'framer-motion'
 import { toast } from 'react-toastify'
 
-import { DropItemMenu } from '@/components'
+import { DropItemMenu, LoadingIcon } from '@/components'
 import { AUTH, EVENT_MODALS } from '@/constants'
 import { useAuthContext } from '@/contexts'
 import { authServices } from '@/services'
@@ -62,6 +63,8 @@ const backdropVariants: Variants = {
 
 export const withModal = <T extends WithModalProps>(WrappedComponent: React.ComponentType<T>) => {
   const WithModal = (props: T) => {
+    console.log('🚀 ~ WithModal ~ props:')
+
     const { handleResetAuth } = useAuthContext()
     const [showModal, setShowModal] = useState(false)
     const handleShowModal = useCallback((value: boolean) => setShowModal(value), [])
@@ -150,15 +153,28 @@ export const withModal = <T extends WithModalProps>(WrappedComponent: React.Comp
                       {/* Start Footer */}
                       <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                         <button
+                          disabled={logoutMutation.isLoading}
                           onClick={handleSubmit}
                           type="button"
-                          className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">
+                          className={classNames(
+                            'inline-flex w-full justify-center items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto',
+                            {
+                              'cursor-not-allowed': logoutMutation.isLoading
+                            }
+                          )}>
+                          {logoutMutation.isLoading && <LoadingIcon />}
                           {props.buttonText}
                         </button>
                         <button
+                          disabled={logoutMutation.isLoading}
                           type="button"
                           onClick={() => handleShowModal(false)}
-                          className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
+                          className={classNames(
+                            'mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto',
+                            {
+                              'cursor-not-allowed': logoutMutation.isLoading
+                            }
+                          )}>
                           Cancel
                         </button>
                       </div>

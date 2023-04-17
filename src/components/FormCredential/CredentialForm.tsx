@@ -8,7 +8,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useMatch, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { LoadingIcon } from '@/components/Icon'
+import { Button } from '@/components'
 import { AUTH, PATHS } from '@/constants'
 import { useAuthContext } from '@/contexts'
 import { authServices } from '@/services'
@@ -175,7 +175,8 @@ const CredentialForm = () => {
       )}
 
       {/* Button */}
-      <button
+      <Button
+        isLoading={isSubmitting}
         disabled={!isValid || isSubmitting}
         className={classNames(
           'bg-primary uppercase py-3 text-white rounded-sm flex justify-center items-center',
@@ -184,9 +185,8 @@ const CredentialForm = () => {
             'cursor-pointer hover:opacity-90': isValid && !isSubmitting
           }
         )}>
-        {isSubmitting && <LoadingIcon />}
         {matchLogin ? 'Đăng nhập' : 'Đăng ký'}
-      </button>
+      </Button>
 
       {/* Divide */}
       <div className="bg-neutral-300 h-[1px] mt-1 relative text-neutral-400">

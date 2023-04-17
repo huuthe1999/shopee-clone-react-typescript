@@ -10,7 +10,7 @@ import { authUtils } from '@/utils'
 
 const useRefreshTokenQuery = () => {
   const isLogging = authUtils.getItem(AUTH.IS_LOGGING)
-  const { accessToken, handleSetAccessToken } = useAuthContext()
+  const { accessToken, handleSetAccessToken, handleResetAuth } = useAuthContext()
   return useQuery({
     queryKey: [ENDPOINTS.REFRESH_END_POINT],
     queryFn: authServices.getRefreshToken,
@@ -19,6 +19,7 @@ const useRefreshTokenQuery = () => {
       handleSetAccessToken(data.data.accessToken)
     },
     onError(err: AxiosError<BaseResponse>) {
+      handleResetAuth()
       authUtils.removeItem(AUTH.IS_LOGGING)
       toast.info(err.response?.data.message)
     }
