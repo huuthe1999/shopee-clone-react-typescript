@@ -2,17 +2,15 @@ import { useQuery } from '@tanstack/react-query'
 
 import { ENDPOINTS } from '@/constants'
 import { useAuthContext } from '@/contexts'
-import { useAxiosPrivate } from '@/hooks'
-import { ProfileSuccessResponse } from '@/types/user.response'
+import { userServices } from '@/services'
 
 const useProfileQuery = () => {
   const { accessToken } = useAuthContext()
-  const axiosPrivate = useAxiosPrivate()
 
   return useQuery({
     queryKey: [ENDPOINTS.PROFILE_END_POINT],
     queryFn: ({ signal }) => {
-      return axiosPrivate.get<ProfileSuccessResponse>(ENDPOINTS.PROFILE_END_POINT, { signal })
+      return userServices.getProfile(signal)
     },
     enabled: !!accessToken,
     staleTime: Infinity

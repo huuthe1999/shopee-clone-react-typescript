@@ -9,6 +9,9 @@ module.exports = {
       },
       backgroundImage: {
         'advertising-panel': "url('/src/assets/images/advertisingPanel.png')"
+      },
+      scale: {
+        55: '0.55'
       }
     }
   },

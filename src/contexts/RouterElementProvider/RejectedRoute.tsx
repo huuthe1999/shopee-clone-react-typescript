@@ -14,6 +14,7 @@ const RejectedRoute = () => {
     : matchLogin
     ? PATHS.HOME_PATH
     : PATHS.LOGIN_PATH
+
   // Send them back to the page they tried to visit when they were
   // redirected to the login page. Use { replace: true } so we don't create
   // another entry in the history stack for the login page.  This means that

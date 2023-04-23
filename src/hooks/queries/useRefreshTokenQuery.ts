@@ -8,13 +8,16 @@ import { authServices } from '@/services'
 import { BaseResponse } from '@/types'
 import { authUtils } from '@/utils'
 
+// Gọi lấy lại new access token khi page reload, vẫn còn trong status logging
 const useRefreshTokenQuery = () => {
   const isLogging = authUtils.getItem(AUTH.IS_LOGGING)
+
   const { accessToken, handleSetAccessToken, handleResetAuth } = useAuthContext()
+
   return useQuery({
     queryKey: [ENDPOINTS.REFRESH_END_POINT],
     queryFn: authServices.getRefreshToken,
-    enabled: Boolean(isLogging) && isLogging === 'true' && !accessToken,
+    enabled: Boolean(isLogging) && !accessToken,
     onSuccess({ data }) {
       handleSetAccessToken(data.data.accessToken)
     },

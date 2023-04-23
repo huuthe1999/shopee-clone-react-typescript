@@ -1,13 +1,17 @@
 import React from 'react'
 
-import { LoginDataResponse, UserResponse } from '@/types/credential-form'
+import { AUTH } from '@/constants'
+import { UserResponse } from '@/types/credential-form'
+import { authUtils } from '@/utils'
 
 interface AuthProviderProps {
   children: React.ReactNode
 }
 
 const useAuth = () => {
-  const [currentUser, setCurrentUser] = React.useState<Pick<LoginDataResponse, 'user'>>(null!)
+  const [currentUser, setCurrentUser] = React.useState<UserResponse>(
+    authUtils.getItem(AUTH.USER_INFO)
+  )
   const [accessToken, setAccessToken] = React.useState<string>(null!)
 
   const handleSetUser = React.useCallback((data: UserResponse) => {

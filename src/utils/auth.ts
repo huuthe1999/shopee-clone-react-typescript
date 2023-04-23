@@ -4,7 +4,7 @@ export const setItem = (key: string, value: any) => {
 
 export const getItem = (key: string) => {
   const item = window.localStorage.getItem(key)
-  return JSON.parse(JSON.stringify(item))
+  return item ? JSON.parse(item) : null
 }
 
 export const removeItem = (key: string) => {

@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import { AxiosError, AxiosResponse, HttpStatusCode, isAxiosError } from 'axios'
 import { toast } from 'react-toastify'
 
-import { authService } from '@/config/http'
+import { authAxios } from '@/config/http'
 import { AUTH, ISSERVER } from '@/constants'
 import { useAuthContext } from '@/contexts'
 import { authServices } from '@/services'
@@ -11,16 +11,16 @@ import { BaseResponse } from '@/types'
 import { RefreshTokenSuccessResponse } from '@/types/token.response'
 import { authUtils } from '@/utils'
 
-import useRefreshToken from './useRefreshToken'
+// import useRefreshToken from './useRefreshToken'
 
 function useAxiosPrivate() {
   const isRefreshTokenExpired = useRef(true) // Chỉ toast 1 lần duy nhất khi RefreshToken hết hạn
   const refreshingToken = useRef<Promise<AxiosResponse<RefreshTokenSuccessResponse>> | null>(null)
-  const refresh = useRefreshToken()
-  const { accessToken, handleSetAccessToken, handleSetUser } = useAuthContext()
+  // const refresh = useRefreshToken()
+  const { accessToken, handleSetAccessToken } = useAuthContext()
 
   useEffect(() => {
-    const requestInterceptor = authService.interceptors.request.use(
+    const requestInterceptor = authAxios.interceptors.request.use(
       (config) => {
         if (!ISSERVER && !config.headers.Authorization) {
           config.headers = config.headers || {}
@@ -34,7 +34,7 @@ function useAxiosPrivate() {
       }
     )
 
-    const responseInterceptor = authService.interceptors.response.use(
+    const responseInterceptor = authAxios.interceptors.response.use(
       (response) => {
         return response
       },
@@ -57,19 +57,23 @@ function useAxiosPrivate() {
               ? refreshingToken.current
               : authServices.getRefreshToken()
             const { data } = await refreshingToken.current
-
+            // Set lại AccessToken
+            handleSetAccessToken(data.data.accessToken)
             // Set lại Header
             originalRequest.headers.Authorization = `Bearer ${data.data.accessToken}`
 
             // Set lại refreshingToken = null cho những lần expired tiếp theo
             refreshingToken.current = null
-            return authService(originalRequest)
+            return authAxios(originalRequest)
           } catch (err) {
+            console.log('🚀 ~ err:', err)
+
             if (isAxiosError<BaseResponse>(err) && isRefreshTokenExpired.current) {
               // Reset context
               authUtils.removeItem(AUTH.IS_LOGGING)
+              authUtils.removeItem(AUTH.USER_INFO)
               handleSetAccessToken(null!)
-              handleSetUser(null!)
+
               isRefreshTokenExpired.current = false
               // Xử lí refresh token hết hạn, cho log out, auto redirect về trang login được set trong protected route
               toast.info(err.response?.data.message)
@@ -82,13 +86,13 @@ function useAxiosPrivate() {
     )
 
     return () => {
-      authService.interceptors.request.eject(requestInterceptor)
-      authService.interceptors.response.eject(responseInterceptor)
+      authAxios.interceptors.request.eject(requestInterceptor)
+      authAxios.interceptors.response.eject(responseInterceptor)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refresh, accessToken])
+  }, [accessToken])
 
-  return authService
+  return authAxios
 }
 
 export default useAxiosPrivate

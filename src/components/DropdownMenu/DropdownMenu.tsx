@@ -34,7 +34,7 @@ const DropdownMenu = ({ data, title, footer }: Props) => {
   return (
     <div
       id="dropdown"
-      className="bg-white divide-y divide-gray-100 rounded-sm shadow-md overflow-hidden min-w-[11rem] max-w-sm h-fit pt-2">
+      className="relative bg-white divide-y divide-gray-100 rounded-sm shadow-xl overflow-hidden min-w-[11rem] max-w-sm h-fit pt-2 border-gray-300 border z-50">
       {title && <p className="text-black/50 p-2">Sản Phẩm Mới Thêm</p>}
       {renderData}
       {data.length > 0 && footer && (

@@ -12,7 +12,7 @@ const MainLayout = () => {
     <>
       <div className="flex flex-col h-full">
         <MainHeader />
-        <div className="flex-1">
+        <div className="flex-1 bg-neutral-100">
           <MyErrorBoundary>
             <React.Suspense fallback={<Spinner />}>
               <Outlet />

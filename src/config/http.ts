@@ -1,4 +1,5 @@
-import axios, { AxiosInstance } from 'axios'
+import {} from '@tanstack/react-query'
+import axios, { AxiosInstance, isCancel } from 'axios'
 import { toast } from 'react-toastify'
 
 declare module 'axios' {
@@ -17,6 +18,20 @@ class Http {
     this.instance = axios.create({
       baseURL: import.meta.env.VITE_BASE_URL,
       timeout: 10000,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      isRetryAttempt: false
+    })
+  }
+}
+
+class AuthHttp {
+  instance: AxiosInstance
+  constructor() {
+    this.instance = axios.create({
+      baseURL: import.meta.env.VITE_BASE_URL,
+      timeout: 10000,
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json'
@@ -26,24 +41,21 @@ class Http {
   }
 }
 
-const httpService = new Http().instance
+const httpAxios = new Http().instance
 
-export const authService = new Http().instance
+export const authAxios = new AuthHttp().instance
 
-httpService.interceptors.response.use(
+httpAxios.interceptors.response.use(
   (response) => response,
   (error) => {
     // Check CORS error
-    if (typeof error.response === 'undefined') {
-      toast.error(
-        'Đã có lỗi xảy ra tại httpService. Điều này có thể là vấn đề CORS hoặc mất kết nối internet.',
-        {
-          theme: 'colored'
-        }
-      )
+    if (typeof error.response === 'undefined' && !isCancel(error)) {
+      toast.error('Đã có lỗi về CORS hoặc mất kết nối internet.', {
+        theme: 'colored'
+      })
     }
     return Promise.reject(error)
   }
 )
 
-export default httpService
+export default httpAxios

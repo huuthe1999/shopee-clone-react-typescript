@@ -63,8 +63,6 @@ const backdropVariants: Variants = {
 
 export const withModal = <T extends WithModalProps>(WrappedComponent: React.ComponentType<T>) => {
   const WithModal = (props: T) => {
-    console.log('🚀 ~ WithModal ~ props:')
-
     const { handleResetAuth } = useAuthContext()
     const [showModal, setShowModal] = useState(false)
     const handleShowModal = useCallback((value: boolean) => setShowModal(value), [])
@@ -80,6 +78,7 @@ export const withModal = <T extends WithModalProps>(WrappedComponent: React.Comp
             if (data.isSuccess) {
               //Reset auth
               authUtils.removeItem(AUTH.IS_LOGGING)
+              authUtils.removeItem(AUTH.USER_INFO)
               handleResetAuth()
 
               // navigate(PATHS.LOGIN_PATH, { replace: true })

@@ -2,7 +2,7 @@ import { Bell, ChevronDown, Facebook, Globe, HelpCircle, Instagram } from 'react
 import { Link } from 'react-router-dom'
 
 import { INavItem } from '@/components/NavItem'
-import { EVENT_MODALS, PATHS } from '@/constants'
+import { AUTH, EVENT_MODALS, PATHS } from '@/constants'
 
 export const LEFT_NAV: INavItem[] = [
   {
@@ -83,7 +83,7 @@ export const RIGHT_NAV: INavItem[] = [
       }
     ],
     isVisible: true, //Show khi authenticated(khi có access token)
-    text: 'gamecaro',
+    text: AUTH.USER_INFO, //Condition to show username
     leftIcon: (
       <div className="w-5 h-5 rounded-full overflow-hidden bg-[url('https://down-vn.img.susercontent.com/file/mx-11134226-23020-6nbhtbltvynvfb_tn')] bg-no-repeat bg-center bg-contain" />
     )

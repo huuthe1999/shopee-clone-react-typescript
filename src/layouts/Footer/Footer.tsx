@@ -31,7 +31,7 @@ const Footer = () => {
     </span>
   ))
   return (
-    <footer className="shrink-0 bg-neutral-100 p-1">
+    <footer className="shrink-0 bg-neutral-100 p-1 border-t-4 border-primary">
       <div className="mx-auto max-w-6xl flex flex-row flex-wrap">
         {renderItems}
         <div className="border-t-2 border-zinc-300 w-full flex flex-wrap py-8 text-neutral-500 text-sm">

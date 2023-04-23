@@ -4,39 +4,29 @@ import { Home, Search, ShoppingCart } from 'react-feather'
 import { Link } from 'react-router-dom'
 
 import { Button, DropdownMenu, INavItem, LogoIcon, NavItem } from '@/components'
-import { PATHS } from '@/constants'
+import { AUTH, PATHS } from '@/constants'
 import { TooltipContent, TooltipProvider, TooltipTrigger, useAuthContext } from '@/contexts'
 import { LEFT_NAV, RIGHT_NAV } from '@/data/header'
 
 const MainHeader = () => {
-  const { accessToken } = useAuthContext()
+  const { accessToken, currentUser } = useAuthContext()
 
   const renderNav = useCallback(
     (data: INavItem[]) =>
-      data.map(({ children, id, isVisible, ...rest }) => {
+      data.map(({ children, id, isVisible, text, ...rest }) => {
         return (
           // isVisible === 'undefined' ==> Mặc định luôn show, item không cần check authentication
           (typeof isVisible === 'undefined' || isVisible === !!accessToken) && (
-            <NavItem {...rest} key={id}>
+            <NavItem
+              key={id}
+              {...rest}
+              text={currentUser && text === AUTH.USER_INFO ? currentUser.name : text}>
               {children}
             </NavItem>
           )
-
-          // isVisible === 'undefined' ==> Mặc định luôn show
-          // typeof isVisible === 'undefined' || isVisible === !!accessToken ? (
-          //   !menuItems ? (
-          //     <NavItem {...rest} key={id}>
-          //       {children}
-          //     </NavItem>
-          //   ) : menuItems ? (
-          //     <ModalProvider initialState={false} key={id}>
-          //       <NavItemWithPopup {...rest}>{children}</NavItemWithPopup>
-          //     </ModalProvider>
-          //   ) : null
-          // ) : null
         )
       }),
-    [accessToken]
+    [accessToken, currentUser]
   )
 
   return (
@@ -73,7 +63,7 @@ const MainHeader = () => {
       </nav>
 
       {/* Header with search */}
-      <div className="mx-auto max-w-6xl bg-transparent py-2 flex flex-nowrap gap-4 justify-between items-center">
+      <div className="mx-auto max-w-6xl bg-transparent pt-2 flex flex-nowrap gap-4 justify-between items-center">
         {/* Logo */}
         <div className="px-2 self-start max-sm:self-center">
           <NavItem
@@ -94,16 +84,16 @@ const MainHeader = () => {
             <input
               type="text"
               placeholder="Tìm kiếm sản phẩm tại đây"
-              className="pl-4 pr-2 rounded-sm text-black max-sm:outline-none focus:outline focus:outline-2 focus:outline-offset-4 "
+              className="pl-4 pr-2 rounded-sm text-black max-sm:outline-none focus:outline focus:outline-2 focus:outline-offset-4"
             />
-            <span className="bg-primary p-1 sm:p-3 m-1 rounded-sm cursor-pointer flex items-center text-white hover:opacity-90">
-              <Search className="text-xs sm:text-2xl" />
+            <span className="bg-primary py-1 px-2 md:py-2 md:px-6 m-1 rounded-sm cursor-pointer flex items-center text-white hover:opacity-90">
+              <Search className="text-xs sm:text-2xl" size={16} />
             </span>
           </div>
 
           {/* Category */}
           <div className="max-sm:hidden overflow-hidden h-6 mt-1">
-            <ul className="flex flex-wrap justify-between text-sm text-gray-50">
+            <ul className="flex flex-wrap justify-between text-xs text-gray-50">
               {/* Call api later */}
               <NavItem text="Dép Nam" className="py-1" />
               <li className="px-2 py-1">

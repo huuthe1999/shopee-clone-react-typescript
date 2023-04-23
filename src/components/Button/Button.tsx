@@ -1,10 +1,7 @@
-import { ButtonHTMLAttributes } from 'react'
-
 import { LoadingIcon } from '@/components/Icon'
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  isLoading?: boolean
-}
+import { ButtonProps } from './type'
+
 const Button = ({ className, children, disabled, isLoading, ...rest }: ButtonProps) => {
   const customClassName = disabled ? className + ' cursor-not-allowed' : className
   return (
