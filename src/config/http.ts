@@ -45,15 +45,33 @@ const httpAxios = new Http().instance
 
 export const authAxios = new AuthHttp().instance
 
+let isFirstFailedRequest = true
+
 httpAxios.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Reset for next request
+    if (!isFirstFailedRequest) {
+      isFirstFailedRequest = true
+    }
+    return response
+  },
   (error) => {
     // Check CORS error
-    if (typeof error.response === 'undefined' && !isCancel(error)) {
-      toast.error('Đã có lỗi về CORS hoặc mất kết nối internet.', {
+    if (isFirstFailedRequest && typeof error.response === 'undefined' && !isCancel(error)) {
+      isFirstFailedRequest = false
+      toast.error('Mất kết nối server. Vui lòng thử lại!', {
         theme: 'colored'
       })
     }
+    // else {
+    //   // Check Network Error
+    //   if (!error.status && !isCancel(error)) {
+    //     toast.error('Mất kết nối internet. Vui lòng thử lại!', {
+    //       theme: 'colored'
+    //     })
+    //   }
+    // }
+
     return Promise.reject(error)
   }
 )

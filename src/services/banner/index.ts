@@ -1,5 +1,5 @@
 import httpAxios from '@/config/http'
-import { ENDPOINTS } from '@/constants'
+import { ENDPOINTS, SIZE } from '@/constants'
 import { CateCardBannerSuccessResponse } from '@/types/banner.response'
 
 export const getCateCardBanner = (signal?: AbortSignal, page?: number, size?: number) =>
@@ -7,6 +7,6 @@ export const getCateCardBanner = (signal?: AbortSignal, page?: number, size?: nu
     signal,
     params: {
       page,
-      size
+      size: size ?? SIZE
     }
   })

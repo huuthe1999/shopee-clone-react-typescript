@@ -1,6 +1,9 @@
 export const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat('vi-VN', {
+  const formatter = new Intl.NumberFormat('vi-VN', {
     style: 'currency',
     currency: 'VND'
-  }).format(value)
+  }).format(value) // ==> "12.345 ₫"
+
+  // Convert to ₫12.345
+  return formatter.slice(-1).concat(formatter.slice(0, -2))
 }

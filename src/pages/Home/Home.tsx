@@ -1,10 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { Banner } from '@/components'
+import { Banner, ProductList } from '@/components'
 import { ENDPOINTS } from '@/constants'
 import { useAuthContext } from '@/contexts'
 import { useAxiosPrivate, useProfileQuery } from '@/hooks'
 import { ProfileSuccessResponse } from '@/types/user.response'
+
+import CateSection from './CateSection'
 
 const Home = () => {
   const { accessToken } = useAuthContext()
@@ -22,11 +24,14 @@ const Home = () => {
 
   return (
     <>
-      <Banner />
-      <div className="max-w-6xl mx-auto">
-        <div className="min-h-[500px]">Home Page</div>
-        <button onClick={handleRefetch}>Refetch1</button>
-        <button onClick={handleRefetch2}>Refetch2</button>
+      <div className="bg-white py-8">
+        <div className="max-w-6xl flex flex-col mx-auto gap-y-4">
+          {/* Banner */}
+          <Banner />
+          <CateSection />
+          {/* Product section */}
+          <ProductList />
+        </div>
       </div>
     </>
   )

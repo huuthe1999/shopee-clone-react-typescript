@@ -15,6 +15,7 @@ function App() {
         <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       </QueryClientProvider>
       <ToastContainer
+        limit={1}
         position="top-right"
         autoClose={1000}
         pauseOnHover

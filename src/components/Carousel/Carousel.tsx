@@ -43,7 +43,7 @@ const Carousel = ({
         slidesToShow={slidesToShow}
         autoplayInterval={2000}
         pauseOnHover={false}
-        speed={300}
+        speed={500}
         renderCenterLeftControls={({ previousSlide, previousDisabled }) => (
           <AnimatePresence>
             {!wrapAround ? ( // Trường hợp disabled infinitely navigate forwards and backwards
