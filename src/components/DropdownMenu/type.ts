@@ -12,3 +12,10 @@ export interface DropItemMenu {
   text: string
   to?: To
 }
+
+export type MenuItemProps = Omit<DropItemMenu, 'hasPopup'> & {
+  onClick?: () => void
+  leftButtonIcon?: React.ReactNode
+  rightButtonIcon?: React.ReactNode
+  buttonClassName?: string
+}

@@ -10,7 +10,7 @@ const MainLayout = () => {
   useRefreshTokenQuery()
   return (
     <>
-      <div className="flex flex-col h-full">
+      <div className="relative flex flex-col h-full overflow-auto">
         <MainHeader />
         <div className="flex-1 bg-neutral-100">
           <MyErrorBoundary>

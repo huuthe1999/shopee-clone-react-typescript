@@ -1,48 +1,22 @@
-import React from 'react'
+import { HTMLAttributes } from 'react'
 
-import { EmptyCartIcon, MenuItem, MenuItemWithModal } from '@/components'
+import classNames from 'classnames'
 
-import { DropItemMenu } from './type'
-
-interface Props {
+interface Props extends HTMLAttributes<HTMLDivElement> {
   title?: string
-  data: DropItemMenu[]
-  footer?: React.ReactNode
 }
 
-const DropdownMenu = ({ data, title, footer }: Props) => {
-  const renderMenuItem = data.map((props, index) => {
-    return !props.hasPopup ? (
-      <MenuItem key={index} {...props} />
-    ) : (
-      <MenuItemWithModal key={index} {...props} />
-    )
-  })
-
-  const renderData =
-    data.length === 0 ? (
-      <div className="px-2 py-14 overflow-hidden text-center w-full">
-        <EmptyCartIcon width="25rem" />
-        <p className="mt-4 text-gray-700 text-sm p-2">Chưa Có Sản Phẩm</p>
-      </div>
-    ) : (
-      <ul className="text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
-        {renderMenuItem}
-      </ul>
-    )
-
+const DropdownMenu = ({ title, className, children }: Props) => {
   return (
     <div
-      id="dropdown"
-      className="relative bg-white divide-y divide-gray-100 rounded-sm shadow-xl overflow-hidden min-w-[11rem] max-w-sm h-fit pt-2 border-gray-300 border z-50">
-      {title && <p className="text-black/50 p-2">Sản Phẩm Mới Thêm</p>}
-      {renderData}
-      {data.length > 0 && footer && (
-        <div className="p-2 flex justify-between items-center">
-          <p className="text-xs text-black/70 capitalize">2 sản phầm nữa trong giỏ hàng</p>
-          {footer}
-        </div>
-      )}
+      className={classNames(
+        'bg-white divide-y divide-gray-100 rounded-sm shadow-xl border-gray-300 border overflow-hidden',
+        [className]
+      )}>
+      {title && <p className="text-black/50 p-2">{title}</p>}
+      <ul className="text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
+        {children}
+      </ul>
     </div>
   )
 }

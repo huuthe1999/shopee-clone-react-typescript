@@ -66,8 +66,6 @@ function useAxiosPrivate() {
             refreshingToken.current = null
             return authAxios(originalRequest)
           } catch (err) {
-            console.log('🚀 ~ err:', err)
-
             if (isAxiosError<BaseResponse>(err) && isRefreshTokenExpired.current) {
               // Reset context
               authUtils.removeItem(AUTH.IS_LOGGING)

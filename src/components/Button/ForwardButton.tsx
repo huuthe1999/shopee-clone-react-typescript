@@ -1,6 +1,6 @@
 import { forwardRef } from 'react'
 
-import { LoadingIcon } from '@/components/Icon'
+import { LoadingIcon } from '@/components'
 
 import { ButtonProps } from './type'
 

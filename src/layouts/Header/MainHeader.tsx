@@ -3,28 +3,104 @@ import { useCallback } from 'react'
 import { Home, Search, ShoppingCart } from 'react-feather'
 import { Link } from 'react-router-dom'
 
-import { Button, DropdownMenu, INavItem, LogoIcon, NavItem } from '@/components'
+import {
+  Button,
+  DropdownMenu,
+  EmptyCartIcon,
+  INavItem,
+  LogoIcon,
+  MenuItem,
+  NavItem,
+  NavItemWithModal
+} from '@/components'
 import { AUTH, PATHS } from '@/constants'
 import { TooltipContent, TooltipProvider, TooltipTrigger, useAuthContext } from '@/contexts'
 import { LEFT_NAV, RIGHT_NAV } from '@/data/header'
+
+const fakeData = [
+  {
+    text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+    image: 'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+    price: 1213213,
+    to: PATHS.HOME_PATH
+  },
+  {
+    text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+    image: 'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+    price: 1213213,
+    to: PATHS.HOME_PATH
+  },
+  {
+    text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+    image: 'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+    price: 1213213,
+    to: PATHS.HOME_PATH
+  },
+  {
+    text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+    image: 'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+    price: 1213213,
+    to: PATHS.HOME_PATH
+  },
+  {
+    text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+    image: 'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+    price: 1213213,
+    to: PATHS.HOME_PATH
+  },
+  {
+    text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+    image: 'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+    price: 1213213,
+    to: PATHS.HOME_PATH
+  },
+  {
+    text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+    image: 'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+    price: 1213213,
+    to: PATHS.HOME_PATH
+  },
+  {
+    text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+    image: 'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+    price: 1213213,
+    to: PATHS.HOME_PATH
+  },
+  {
+    text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+    image: 'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+    price: 1213213,
+    to: PATHS.HOME_PATH
+  },
+  {
+    text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
+    image: 'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
+    price: 1213213,
+    to: PATHS.HOME_PATH
+  }
+]
 
 const MainHeader = () => {
   const { accessToken, currentUser } = useAuthContext()
 
   const renderNav = useCallback(
     (data: INavItem[]) =>
-      data.map(({ children, id, isVisible, text, ...rest }) => {
-        return (
-          // isVisible === 'undefined' ==> Mặc định luôn show, item không cần check authentication
-          (typeof isVisible === 'undefined' || isVisible === !!accessToken) && (
-            <NavItem
-              key={id}
-              {...rest}
-              text={currentUser && text === AUTH.USER_INFO ? currentUser.name : text}>
+      data.map(({ children, id, isVisible, text, menuItems, ...rest }) => {
+        // isVisible === 'undefined' ==> Mặc định luôn show, item không cần check authentication
+        if (typeof isVisible === 'undefined' || isVisible === !!accessToken) {
+          return !menuItems ? (
+            <NavItem key={id} {...rest} text={text}>
               {children}
             </NavItem>
+          ) : (
+            <NavItemWithModal
+              key={id}
+              {...rest}
+              menuItems={menuItems}
+              text={currentUser && text === AUTH.USER_INFO ? currentUser.name : text}
+            />
           )
-        )
+        }
       }),
     [accessToken, currentUser]
   )
@@ -147,86 +223,28 @@ const MainHeader = () => {
             </div>
           </TooltipTrigger>
           <TooltipContent>
-            <DropdownMenu
-              data={[
-                {
-                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
-                  image:
-                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
-                  price: 1213213,
-                  to: PATHS.HOME_PATH
-                },
-                {
-                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
-                  image:
-                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
-                  price: 1213213,
-                  to: PATHS.HOME_PATH
-                },
-                {
-                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
-                  image:
-                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
-                  price: 1213213,
-                  to: PATHS.HOME_PATH
-                },
-                {
-                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
-                  image:
-                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
-                  price: 1213213,
-                  to: PATHS.HOME_PATH
-                },
-                {
-                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
-                  image:
-                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
-                  price: 1213213,
-                  to: PATHS.HOME_PATH
-                },
-                {
-                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
-                  image:
-                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
-                  price: 1213213,
-                  to: PATHS.HOME_PATH
-                },
-                {
-                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
-                  image:
-                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
-                  price: 1213213,
-                  to: PATHS.HOME_PATH
-                },
-                {
-                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
-                  image:
-                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
-                  price: 1213213,
-                  to: PATHS.HOME_PATH
-                },
-                {
-                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
-                  image:
-                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
-                  price: 1213213,
-                  to: PATHS.HOME_PATH
-                },
-                {
-                  text: 'dqwjdqwd dkmqlmdqd qdklqkd,dq dqkdq',
-                  image:
-                    'https://down-vn.img.susercontent.com/file/sg-11134201-23010-zdi4iyf1ramva8_tn',
-                  price: 1213213,
-                  to: PATHS.HOME_PATH
-                }
-              ]}
-              title="Sản Phẩm Mới Thêm"
-              footer={
-                <Button className="px-4 py-2 text-white bg-primary rounded-sm hover:opacity-90">
-                  Xem giỏ hàng
-                </Button>
-              }
-            />
+            <DropdownMenu title="Sản Phẩm Mới Thêm" className="min-w-[11rem] max-w-sm pt-2">
+              {fakeData.length === 0 ? (
+                <div className="px-2 py-14 overflow-hidden text-center w-full">
+                  <EmptyCartIcon width="25rem" />
+                  <p className="mt-4 text-gray-700 text-sm p-2">Chưa Có Sản Phẩm</p>
+                </div>
+              ) : (
+                <>
+                  {fakeData.map((props, index) => (
+                    <MenuItem key={index} {...props} />
+                  ))}
+                  <div className="p-2 flex justify-between items-center">
+                    <p className="text-xs text-black/70 capitalize">
+                      2 sản phầm nữa trong giỏ hàng
+                    </p>
+                    <Button className="px-4 py-2 text-white bg-primary rounded-sm hover:opacity-90">
+                      Xem giỏ hàng
+                    </Button>
+                  </div>
+                </>
+              )}
+            </DropdownMenu>
           </TooltipContent>
         </TooltipProvider>
       </div>

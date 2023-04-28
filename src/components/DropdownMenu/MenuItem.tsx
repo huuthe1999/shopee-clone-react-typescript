@@ -1,11 +1,9 @@
 import classNames from 'classnames'
 import { Link } from 'react-router-dom'
 
-import { useTooltipContext } from '@/contexts'
-import { withModal, WithModalProps } from '@/hoc'
 import { formatCurrency } from '@/utils'
 
-import { DropItemMenu } from './type'
+import { MenuItemProps } from './type'
 
 const MenuItem = ({
   to,
@@ -13,16 +11,15 @@ const MenuItem = ({
   image,
   price,
   className,
-  setShowModal
-}: Omit<DropItemMenu, 'hasPopup'> & WithModalProps) => {
-  const { setOpen } = useTooltipContext()
-
+  leftButtonIcon,
+  rightButtonIcon,
+  buttonClassName,
+  onClick
+}: MenuItemProps) => {
   return (
     <>
       <li
-        className={classNames('hover:bg-gray-200 hover:text-primary cursor-pointer', {
-          [className ?? '']: className
-        })}>
+        className={classNames('hover:bg-gray-200 hover:text-primary cursor-pointer', [className])}>
         {to ? (
           <Link to={to} className="p-2 flex flex-nowrap justify-between gap-2">
             {image && (
@@ -41,14 +38,13 @@ const MenuItem = ({
           </Link>
         ) : (
           <button
-            className="w-full p-2 text-left"
-            onClick={async () => {
-              if (setShowModal) {
-                setOpen(true)
-                setShowModal(true)
-              }
-            }}>
-            {text}
+            className={classNames('w-full p-2 text-left flex items-center gap-2', [
+              buttonClassName
+            ])}
+            onClick={onClick}>
+            {leftButtonIcon}
+            <span className="flex-1">{text}</span>
+            {rightButtonIcon}
           </button>
         )}
       </li>
@@ -56,5 +52,5 @@ const MenuItem = ({
   )
 }
 
-export const MenuItemWithModal = withModal(MenuItem)
+// export const MenuItemWithModal = withModal(MenuItem)
 export default MenuItem

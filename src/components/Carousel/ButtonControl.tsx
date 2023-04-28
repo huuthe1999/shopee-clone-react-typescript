@@ -44,9 +44,7 @@ const ButtonControl = ({
         ease: 'linear',
         duration: 0.2
       }}
-      className={classNames({
-        [className ?? '']: className
-      })}
+      className={classNames([className])}
       onClick={onControl || nextSlide || previousSlide}
       disabled={nextDisabled || previousDisabled}>
       {children}

@@ -1,4 +1,5 @@
 export * as AUTH from './auth'
+export * as CATEGORY from './category'
 export * as ENDPOINTS from './end-point'
 export * as EVENT_MODALS from './event-modal'
 export * as PATHS from './paths'

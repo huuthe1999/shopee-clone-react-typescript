@@ -20,7 +20,7 @@ const customItemStyles: ItemStyles = {
 const Product = ({ index }: Props) => {
   return (
     <Link to={'/'}>
-      <section className="relative flex flex-col hover:-translate-y-1 transition ease-linear shadow-xl rounded-sm border border-transparent hover:border-primary h-auto">
+      <section className="relative flex flex-col hover:-translate-y-1 transition ease-linear shadow-xl rounded-sm border border-transparent hover:border-primary h-full">
         {/* Favorite Ribbon */}
         <div className="absolute z-20 max-w-[75%] bg-primary -translate-x-1 text-white text-xs px-1 top-2 rounded-r-sm">
           <div className="absolute z-20 left-0 bg-primary/90 w-1 h-1 triangle-top-right top-full"></div>
@@ -51,11 +51,11 @@ const Product = ({ index }: Props) => {
             className="aspect-square w-full"
           />
         </div>
-        <div className="flex flex-col p-2 gap-y-4">
+        <div className="flex flex-col p-2 justify-between flex-1">
           <p className="line-clamp-2 text-sm">
             Bộ 2 dây tay cách điệu, chất vải mềm mịn, phù hợp đi chơi đi biển, thời trang hot hè AO5
           </p>
-          <div className="grid grid-cols-2 text-xs gap-y-2 place-content-stretch">
+          <div className="mt-3 grid grid-cols-2 text-xs gap-y-2 place-content-stretch">
             {index % 2 === 0 && (
               <p
                 className={classNames(

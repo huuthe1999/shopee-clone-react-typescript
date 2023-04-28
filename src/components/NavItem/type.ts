@@ -1,4 +1,4 @@
-import { DropItemMenu } from '@/components/DropdownMenu'
+import { DropItemMenu } from '@/components'
 
 export interface INavItem {
   id: number

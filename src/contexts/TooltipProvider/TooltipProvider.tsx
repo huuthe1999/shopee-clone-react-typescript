@@ -10,6 +10,8 @@ import {
   offset,
   safePolygon,
   shift,
+  size,
+  useClick,
   useDismiss,
   useFloating,
   useFocus,
@@ -25,6 +27,9 @@ interface TooltipOptions {
   initialOpen?: boolean
   placement?: Placement
   open?: boolean
+  click?: boolean
+  noArrowRef?: boolean
+  matchRefWidth?: boolean
   onOpenChange?: (open: boolean) => void
 }
 
@@ -32,13 +37,17 @@ export function useTooltip({
   mainAxis,
   initialOpen = false,
   placement = 'top',
+  click: controlledClick,
   open: controlledOpen,
+  noArrowRef = false,
+  matchRefWidth = false,
   onOpenChange: setControlledOpen
 }: TooltipOptions = {}) {
   const arrowRef = React.useRef(null)
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(initialOpen)
 
   const open = controlledOpen ?? uncontrolledOpen
+
   const setOpen = setControlledOpen ?? setUncontrolledOpen
 
   const data = useFloating({
@@ -48,6 +57,14 @@ export function useTooltip({
     whileElementsMounted: autoUpdate,
     middleware: [
       offset(mainAxis ?? 10),
+      matchRefWidth &&
+        size({
+          apply({ rects, elements }) {
+            Object.assign(elements.floating.style, {
+              width: `${rects.reference.width}px`
+            })
+          }
+        }),
       flip({
         fallbackAxisSideDirection: 'end'
       }),
@@ -61,7 +78,7 @@ export function useTooltip({
   const context = data.context
 
   const hover = useHover(context, {
-    enabled: controlledOpen == null,
+    enabled: !controlledClick,
     handleClose: safePolygon({
       blockPointerEvents: true
     })
@@ -71,10 +88,14 @@ export function useTooltip({
     enabled: controlledOpen == null
   })
 
+  const click = useClick(context, {
+    enabled: controlledClick
+  })
+
   const dismiss = useDismiss(context)
   const role = useRole(context, { role: 'tooltip' })
 
-  const interactions = useInteractions([hover, focus, dismiss, role])
+  const interactions = useInteractions([hover, click, focus, dismiss, role])
 
   return React.useMemo(
     () => ({
@@ -82,9 +103,10 @@ export function useTooltip({
       setOpen,
       ...interactions,
       ...data,
-      arrowRef
+      arrowRef,
+      noArrowRef
     }),
-    [open, setOpen, interactions, data]
+    [open, setOpen, interactions, data, noArrowRef]
   )
 }
 
@@ -146,7 +168,7 @@ export const TooltipTrigger = React.forwardRef<
 
 export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElement>>(
   function TooltipContent({ children, ...props }, propRef) {
-    const { arrowRef, context: floatingContext, ...context } = useTooltipContext()
+    const { arrowRef, noArrowRef, context: floatingContext, ...context } = useTooltipContext()
     const ref = useMergeRefs([context.refs.setFloating, propRef])
 
     return (
@@ -156,11 +178,13 @@ export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
             <motion.div
               ref={ref}
               style={{
+                backgroundColor: 'inherit',
                 position: context.strategy,
                 top: context.y ?? 0,
                 left: context.x ?? 0,
                 width: 'max-content',
-                visibility: context.x == null ? 'hidden' : 'visible'
+                visibility: context.x == null ? 'hidden' : 'visible',
+                zIndex: 1000
               }}
               initial={{
                 opacity: 0,
@@ -190,13 +214,15 @@ export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
               }}
               {...context.getFloatingProps(props)}>
               {children}
-              <FloatingArrow
-                ref={arrowRef}
-                context={floatingContext}
-                width={28}
-                height={10}
-                className="fill-white [&>path:last-of-type]:stroke-white"
-              />
+              {!noArrowRef && (
+                <FloatingArrow
+                  ref={arrowRef}
+                  context={floatingContext}
+                  width={28}
+                  height={10}
+                  className="fill-white [&>path:last-of-type]:stroke-white"
+                />
+              )}
             </motion.div>
           )}
         </AnimatePresence>

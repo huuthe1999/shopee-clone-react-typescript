@@ -6,7 +6,7 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 
 const CardBanner = ({ image }: Props) => {
   return (
-    <div className="bg-emerald-400 h-full">
+    <div className="h-full">
       <img className="w-full h-full" src={image} alt="" />
     </div>
   )

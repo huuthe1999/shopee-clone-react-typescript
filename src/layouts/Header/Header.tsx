@@ -7,7 +7,7 @@ const Header = () => {
   const match = useMatch(PATHS.LOGIN_PATH)
 
   return (
-    <header className="py-6 px-4">
+    <header className="bg-white py-6 px-4">
       <nav className="mx-auto max-w-6xl flex flex-row items-end justify-between">
         <div className="flex items-center gap-4">
           <Link to={PATHS.HOME_PATH}>

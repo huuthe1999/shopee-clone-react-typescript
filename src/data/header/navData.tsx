@@ -1,7 +1,7 @@
 import { Bell, ChevronDown, Facebook, Globe, HelpCircle, Instagram } from 'react-feather'
 import { Link } from 'react-router-dom'
 
-import { INavItem } from '@/components/NavItem'
+import { INavItem } from '@/components'
 import { AUTH, EVENT_MODALS, PATHS } from '@/constants'
 
 export const LEFT_NAV: INavItem[] = [

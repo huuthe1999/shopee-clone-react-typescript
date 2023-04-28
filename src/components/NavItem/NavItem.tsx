@@ -1,9 +1,6 @@
 import classNames from 'classnames'
 import { Link } from 'react-router-dom'
 
-import { DropdownMenu } from '@/components'
-import { TooltipContent, TooltipProvider, TooltipTrigger } from '@/contexts'
-
 import { INavItem } from './type'
 
 const NavItem = ({
@@ -12,9 +9,8 @@ const NavItem = ({
   rightIcon,
   text,
   className,
-  children,
-  menuItems
-}: Omit<INavItem, 'id'>) => {
+  children
+}: Omit<INavItem, 'id' | 'menuItems'>) => {
   const content = (
     <>
       {leftIcon}
@@ -24,10 +20,7 @@ const NavItem = ({
   )
 
   const renderElement = (
-    <li
-      className={classNames('px-2', {
-        [className ?? '']: className
-      })}>
+    <li className={classNames('px-2', [className])}>
       {to ? (
         <Link className="flex gap-1 hover:text-neutral-200" to={to}>
           {content}
@@ -42,16 +35,7 @@ const NavItem = ({
     </li>
   )
 
-  return !menuItems ? (
-    renderElement
-  ) : (
-    <TooltipProvider placement="bottom-end">
-      <TooltipTrigger asChild>{renderElement}</TooltipTrigger>
-      <TooltipContent>
-        <DropdownMenu data={menuItems} />
-      </TooltipContent>
-    </TooltipProvider>
-  )
+  return renderElement
 }
 
 export default NavItem

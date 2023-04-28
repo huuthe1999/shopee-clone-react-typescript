@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useCallback, useState } from 'react'
 
-interface UseBooleanOutput {
+interface useBooleanOutput {
   value: boolean
   setValue: Dispatch<SetStateAction<boolean>>
   setTrue: () => void
@@ -8,7 +8,7 @@ interface UseBooleanOutput {
   toggle: () => void
 }
 
-function useBoolean(defaultValue?: boolean): UseBooleanOutput {
+function useBoolean(defaultValue?: boolean): useBooleanOutput {
   const [value, setValue] = useState(!!defaultValue)
 
   const setTrue = useCallback(() => setValue(true), [])
