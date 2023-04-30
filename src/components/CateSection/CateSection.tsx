@@ -1,36 +1,42 @@
-import { MenuItem } from '@/components'
+import { memo } from 'react'
+
+import { useSearchParams } from 'react-router-dom'
+
+import { SetParamsProps } from '@/pages/Category'
 
 import CateItemSection from './CateItemSection'
 
-interface Props {}
+interface Props {
+  type: string
+  name: string
+  data: {
+    id: string
+    text: string
+  }[]
+  onChangeParam: (params?: SetParamsProps) => void
+}
 
-const fakeData = [
-  {
-    id: '1',
-    text: 'Áo hoodie 1'
-  },
-  {
-    id: '2',
-    text: 'Áo hoodie 2'
-  },
-  {
-    id: '3',
-    text: 'Áo hoodie 3'
-  },
-  {
-    id: '4',
-    text: 'Áo hoodie 4'
+const CateSection = ({ type, name, data, onChangeParam }: Props) => {
+  const [searchParams] = useSearchParams()
+
+  const params = searchParams.get(type)?.split(',')
+  const handleSetCateItemParams = (key: string, value: boolean) => {
+    onChangeParam({ type, key, value })
   }
-]
-const CateSection = (props: Props) => {
+
   return (
     <>
-      <section className="text-sm text-black/[0.87] mt-2">
-        <p>Theo Danh Mục</p>
-        <MenuItem text="wdh" />
+      <section className="text-sm text-black/[0.87] mt-2 border-b border-black/10">
+        <p>{name}</p>
         <ul className="text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
-          {fakeData.map(({ text, id }) => (
-            <CateItemSection key={id} label={text} id={id} />
+          {data.map(({ text, id }) => (
+            <CateItemSection
+              key={id}
+              label={text}
+              id={id}
+              onSelect={handleSetCateItemParams}
+              isSelect={params?.includes(id) ?? false}
+            />
           ))}
         </ul>
       </section>
@@ -38,4 +44,4 @@ const CateSection = (props: Props) => {
   )
 }
 
-export default CateSection
+export default memo(CateSection)

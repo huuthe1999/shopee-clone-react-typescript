@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 import { INavItem } from './type'
 
@@ -11,6 +11,8 @@ const NavItem = ({
   className,
   children
 }: Omit<INavItem, 'id' | 'menuItems'>) => {
+  const location = useLocation()
+
   const content = (
     <>
       {leftIcon}
@@ -22,7 +24,7 @@ const NavItem = ({
   const renderElement = (
     <li className={classNames('px-2', [className])}>
       {to ? (
-        <Link className="flex gap-1 hover:text-neutral-200" to={to}>
+        <Link className="flex gap-1 hover:text-neutral-200" to={to} state={{ from: location }}>
           {content}
         </Link>
       ) : children ? (

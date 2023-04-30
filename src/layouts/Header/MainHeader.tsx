@@ -112,30 +112,7 @@ const MainHeader = () => {
         {/* Left Nav */}
         <ul className="flex divide-x divide-slate-400 ">{renderNav(LEFT_NAV)}</ul>
         {/* Right Nav */}
-        <ul className="flex divide-x divide-slate-400 items-center">
-          {renderNav(RIGHT_NAV)}
-          {/* <NavItem
-            to={PATHS.HOME_PATH}
-            text="Tiếng việt"
-            leftIcon={<Globe size={16} />}
-            rightIcon={<ChevronDown size={16} />}
-          /> */}
-          {/* {!!accessToken && (
-            <TooltipProvider placement="bottom-end">
-              <TooltipTrigger asChild>
-                <li className="px-2 cursor-pointer">
-                  <span className="flex gap-1 hover:text-neutral-200 items-center">
-                    {RIGHT_NAV[RIGHT_NAV.length - 1].leftIcon}
-                    {RIGHT_NAV[RIGHT_NAV.length - 1].text}
-                  </span>
-                </li>
-              </TooltipTrigger>
-              <TooltipContent>
-                <DropdownMenu data={RIGHT_NAV[RIGHT_NAV.length - 1].menuItems!} />
-              </TooltipContent>
-            </TooltipProvider>
-          )} */}
-        </ul>
+        <ul className="flex divide-x divide-slate-400 items-center">{renderNav(RIGHT_NAV)}</ul>
       </nav>
 
       {/* Header with search */}

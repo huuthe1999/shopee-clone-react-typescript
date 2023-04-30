@@ -22,17 +22,17 @@ const Product = ({ index }: Props) => {
     <Link to={'/'}>
       <section className="relative flex flex-col hover:-translate-y-1 transition ease-linear shadow-xl rounded-sm border border-transparent hover:border-primary h-full">
         {/* Favorite Ribbon */}
-        <div className="absolute z-20 max-w-[75%] bg-primary -translate-x-1 text-white text-xs px-1 top-2 rounded-r-sm">
-          <div className="absolute z-20 left-0 bg-primary/90 w-1 h-1 triangle-top-right top-full"></div>
+        <div className="absolute z-10 max-w-[75%] bg-primary -translate-x-1 text-white text-xs px-1 top-2 rounded-r-sm">
+          <div className="absolute z-10 left-0 bg-primary/90 w-1 h-1 triangle-top-right top-full"></div>
           <span className="h-full inline-block">Yêu thích</span>
         </div>
         {/* Ribbon voucher */}
-        <div className="ribbon bg-yellow-300 absolute z-20 right-0 p-1">
+        <div className="ribbon bg-yellow-300 absolute z-10 right-0 p-1">
           <span className="text-xs text-primary block text-center">48%</span>
           <span className="text-xs text-white block text-center mb-1 uppercase">Giảm</span>
         </div>
         {/* Overlay image */}
-        <div className="absolute z-20 left-0 right-0 h-fit bg-transparent">
+        <div className="absolute z-10 left-0 right-0 h-fit bg-transparent">
           <img
             src="https://res.cloudinary.com/dknvhah81/image/upload/v1682351189/category-banner/vn-50009109-191aec5513df34fbd150de9bb7aa884c_erbv4r.png"
             alt=""
@@ -81,6 +81,7 @@ const Product = ({ index }: Props) => {
             <p className="text-black/[0.54] line-clamp-1 whitespace-pre-wrap col-auto">
               Đã bán {formatNumber(99879194)}
             </p>
+            {index % 3 === 0 && <div className="mt-2 col-span-full">TP. Hồ Chí Minh</div>}
           </div>
         </div>
       </section>

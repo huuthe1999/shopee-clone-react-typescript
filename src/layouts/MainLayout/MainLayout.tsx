@@ -12,7 +12,7 @@ const MainLayout = () => {
     <>
       <div className="relative flex flex-col h-full overflow-auto">
         <MainHeader />
-        <div className="flex-1 bg-neutral-100">
+        <div className="flex-1 bg-neutral-100 p-2">
           <MyErrorBoundary>
             <React.Suspense fallback={<Spinner />}>
               <Outlet />
