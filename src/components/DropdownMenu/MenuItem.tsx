@@ -18,8 +18,7 @@ const MenuItem = ({
 }: MenuItemProps) => {
   return (
     <>
-      <li
-        className={classNames('hover:bg-gray-200 hover:text-primary cursor-pointer', [className])}>
+      <li className={classNames('hover:bg-gray-200 hover:text-primary', [className])}>
         {to ? (
           <Link to={to} className="p-2 flex flex-nowrap justify-between gap-2">
             {image && (

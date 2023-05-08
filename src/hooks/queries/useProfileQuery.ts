@@ -4,7 +4,10 @@ import { ENDPOINTS } from '@/constants'
 import { useAuthContext } from '@/contexts'
 import { userServices } from '@/services'
 
+import useAxiosPrivate from '../useAxiosPrivate'
+
 const useProfileQuery = () => {
+  useAxiosPrivate()
   const { accessToken } = useAuthContext()
 
   return useQuery({
@@ -12,8 +15,8 @@ const useProfileQuery = () => {
     queryFn: ({ signal }) => {
       return userServices.getProfile(signal)
     },
-    enabled: !!accessToken,
-    staleTime: Infinity
+    enabled: !!accessToken
+    // staleTime: Infinity
   })
 }
 

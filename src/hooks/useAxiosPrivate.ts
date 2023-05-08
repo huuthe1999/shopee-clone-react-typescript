@@ -11,8 +11,6 @@ import { BaseResponse } from '@/types'
 import { RefreshTokenSuccessResponse } from '@/types/token.response'
 import { authUtils } from '@/utils'
 
-// import useRefreshToken from './useRefreshToken'
-
 function useAxiosPrivate() {
   const isRefreshTokenExpired = useRef(true) // Chỉ toast 1 lần duy nhất khi RefreshToken hết hạn
   const refreshingToken = useRef<Promise<AxiosResponse<RefreshTokenSuccessResponse>> | null>(null)

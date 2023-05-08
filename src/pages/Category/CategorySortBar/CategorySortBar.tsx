@@ -1,21 +1,60 @@
-import { HTMLAttributes, memo } from 'react'
+import { HTMLAttributes, memo, useCallback } from 'react'
 
 import classNames from 'classnames'
 import { motion } from 'framer-motion'
 import { Check, ChevronDown, ChevronLeft, ChevronRight } from 'react-feather'
+import { useSearchParams } from 'react-router-dom'
 
-import { Button, DropdownMenu, MenuItem } from '@/components'
+import { Button, DropdownMenu, ForwardButton, MenuItem } from '@/components'
 import { CATEGORY } from '@/constants'
 import { TooltipContent, TooltipProvider, TooltipTrigger } from '@/contexts'
 import { OrderType, SortByType } from '@/types'
+import { formatSearchParamUrl } from '@/utils'
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
-  order: OrderType
-  sortBy: SortByType
-  onSortBy: (sortByName: string, orderName?: OrderType) => void
+  pageCount: number
 }
 
-const CategorySortBar = ({ sortBy, order, onSortBy, className }: Props) => {
+const CategorySortBar = ({ pageCount, className }: Props) => {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const page = Number(searchParams.get('page'))
+  const order: OrderType = (searchParams.get('order') as OrderType) || ''
+  const sortBy: SortByType = (searchParams.get('sortBy') as SortByType) || 'popular'
+
+  const handleSetSortBy = useCallback(
+    (sortByName: SortByType, orderName?: OrderType) => {
+      const newParamsObject = formatSearchParamUrl({
+        searchParams,
+        params: [
+          { name: 'sortBy', value: sortByName },
+          { name: 'order', value: orderName ?? '' },
+          { name: 'page', value: 0 }
+        ]
+      })
+
+      setSearchParams(newParamsObject)
+    },
+    [setSearchParams, searchParams]
+  )
+
+  const handleSetNextPage = () => {
+    const newParamsObject = formatSearchParamUrl({
+      searchParams,
+      params: [{ name: 'page', value: page + 1 }]
+    })
+
+    setSearchParams(newParamsObject)
+  }
+
+  const handleSetPrevPage = () => {
+    const newParamsObject = formatSearchParamUrl({
+      searchParams,
+      params: [{ name: 'page', value: page - 1 }]
+    })
+
+    setSearchParams(newParamsObject)
+  }
+
   const renderSortBar = CATEGORY.SORT_BY_LIST.map(({ text, type, isDropdown }) => {
     return (
       <li
@@ -25,15 +64,15 @@ const CategorySortBar = ({ sortBy, order, onSortBy, className }: Props) => {
         })}
         key={type}>
         {isDropdown ? (
-          <TooltipProvider placement="bottom-end" noArrowRef mainAxis={2} matchRefWidth>
+          <TooltipProvider
+            placement="bottom-end"
+            noArrowRef
+            mainAxis={2}
+            matchRefWidth
+            click={false}>
             <TooltipTrigger asChild>
-              <div className="relative flex flex-nowrap items-stretch min-w-[12.5rem] max-w-xs h-full px-2">
-                <span className="relative z-10 text-left my-auto line-clamp-1 flex-1">
-                  {text.vi}
-                </span>
-                <span className="relative z-10 my-auto shrink-0">
-                  <ChevronDown size={16} />
-                </span>
+              <ForwardButton
+                className={classNames('relative px-4 py-2 flex flex-nowrap items-stretch')}>
                 {sortBy === type && (
                   <motion.div
                     className="absolute bg-primary inset-0 rounded-md"
@@ -45,7 +84,11 @@ const CategorySortBar = ({ sortBy, order, onSortBy, className }: Props) => {
                     }}
                   />
                 )}
-              </div>
+                <span className="relative z-10 pr-16">{text.vi}</span>
+                <span className="relative z-10 my-auto shrink-0">
+                  <ChevronDown size={16} />
+                </span>
+              </ForwardButton>
             </TooltipTrigger>
             <TooltipContent>
               <DropdownMenu className="py-2">
@@ -54,20 +97,27 @@ const CategorySortBar = ({ sortBy, order, onSortBy, className }: Props) => {
                     key={itemText.vi}
                     text={itemText.vi}
                     onClick={() => {
-                      onSortBy(type, itemType)
+                      order === itemType && sortBy === type
+                        ? undefined
+                        : handleSetSortBy(type as SortByType, itemType)
                     }}
                     rightButtonIcon={
                       order === itemType &&
                       sortBy === type && <Check className="text-primary" size={16} />
                     }
-                    buttonClassName={order === itemType && sortBy === type ? 'text-primary' : ''}
+                    buttonClassName={
+                      order === itemType && sortBy === type ? 'text-primary cursor-not-allowed' : ''
+                    }
                   />
                 ))}
               </DropdownMenu>
             </TooltipContent>
           </TooltipProvider>
         ) : (
-          <Button className={classNames('relative px-4 py-2')} onClick={() => onSortBy(type)}>
+          <Button
+            disabled={sortBy === type}
+            className={classNames('relative px-4 py-2', { '!opacity-100': sortBy === type })}
+            onClick={() => handleSetSortBy(type as SortByType)}>
             {sortBy === type && (
               <motion.div
                 className="absolute bg-primary inset-0 rounded-md"
@@ -93,21 +143,27 @@ const CategorySortBar = ({ sortBy, order, onSortBy, className }: Props) => {
         [className]
       )}>
       {/* Sort bar */}
-      <span>Sắp xếp theo</span>
-      <div className="flex-1 shrink-0">
-        <ul className="flex flex-nowrap text-center gap-x-2">{renderSortBar}</ul>
+      <div className="flex items-center gap-x-2">
+        <span>Sắp xếp theo</span>
+        <ul className="flex flex-nowrap text-center gap-2 shrink">{renderSortBar}</ul>
       </div>
       {/* Pagination */}
       <div className="flex items-center justify-end gap-2 self-stretch">
         <p className="flex flex-nowrap my-auto px-2">
-          <span className="text-primary line-clamp-1">1</span>
-          <span className="line-clamp-1">/9</span>
+          <span className="text-primary line-clamp-1">{page + 1}</span>
+          <span className="line-clamp-1">/{pageCount}</span>
         </p>
 
-        <Button className="px-3 text-center h-full" disabled>
+        <Button
+          className="px-3 text-center h-full"
+          disabled={page === 0}
+          onClick={handleSetPrevPage}>
           <ChevronLeft size={16} />
         </Button>
-        <Button className="px-3 text-center h-full">
+        <Button
+          className="px-3 text-center h-full"
+          disabled={page === pageCount - 1}
+          onClick={handleSetNextPage}>
           <ChevronRight size={16} />
         </Button>
       </div>

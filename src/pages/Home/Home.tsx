@@ -1,23 +1,13 @@
-import { useQuery } from '@tanstack/react-query'
-
-import { Banner, ProductList } from '@/components'
-import { ENDPOINTS } from '@/constants'
-import { useAuthContext } from '@/contexts'
-import { useAxiosPrivate, useProfileQuery } from '@/hooks'
-import { ProfileSuccessResponse } from '@/types/user.response'
+import { Banner, Button, ProductList, Skeleton } from '@/components'
+import { useProductsInfiniteQuery } from '@/hooks'
 
 import CateSection from './CateSection'
 
 const Home = () => {
-  const { accessToken } = useAuthContext()
-  const axiosPrivate = useAxiosPrivate()
-  const profileQuery = useProfileQuery()
-  const profileQuery2 = useQuery({
-    queryKey: [ENDPOINTS.PROFILE_END_POINT, 2],
-    queryFn: ({ signal }) =>
-      axiosPrivate.get<ProfileSuccessResponse>(ENDPOINTS.PROFILE_END_POINT, { signal }),
-    enabled: !!accessToken
-  })
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useProductsInfiniteQuery({
+      size: 12
+    })
 
   return (
     <>
@@ -47,7 +37,30 @@ const Home = () => {
                 </li>
               </ul>
             </nav>
-            <ProductList className="grid-cols-6" />
+            {data?.pages.map((page) => (
+              <ProductList
+                className="grid-cols-6"
+                data={page.data.data.items}
+                key={page.data.data.nextPage}
+              />
+            ))}
+            {(isLoading || isFetchingNextPage) && (
+              <div className="grid gap-2 mt-2 grid-cols-6">
+                {Array(12)
+                  .fill(null)
+                  .map((item, index) => (
+                    <Skeleton key={index} />
+                  ))}
+              </div>
+            )}
+            {hasNextPage && (
+              <Button
+                disabled={isFetchingNextPage}
+                className="border bg-gray-300 mx-auto block mt-4 px-4 py-2 rounded-sm hover:opacity-70 hover:border-stone-400 transition-all"
+                onClick={() => fetchNextPage()}>
+                Xem thêm
+              </Button>
+            )}
           </div>
         </div>
       </div>

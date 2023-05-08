@@ -1,9 +1,12 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 
+import queryString from 'query-string'
 import { useSearchParams } from 'react-router-dom'
 
-import { ProductList } from '@/components'
+import { Pagination, ProductList } from '@/components'
+import { useProductsQuery } from '@/hooks'
 import { OrderType, SortByType } from '@/types'
+import { SearchParamsProps, formatCommaSearchParamUrl, formatSearchParamUrl } from '@/utils'
 
 import CategoryFilter from './CategoryFilter'
 import CategorySortBar from './CategorySortBar'
@@ -54,94 +57,116 @@ const fakeData = [
     ]
   }
 ]
-interface Props {}
 
-export type SetParamsProps = { type: string; key: string; value: boolean }
-
-const CategoryPage = (props: Props) => {
+const defaultParams = ['maxPrice', 'minPrice', 'filters', 'status', 'ratingFilter']
+const CategoryPage = () => {
   // Calculate height of filter side
   const ref = useRef<HTMLDivElement>(null)
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const [page, setPage] = useState(searchParams.get('page') || 1)
-  const [order, setOrder] = useState<OrderType>((searchParams.get('order') as OrderType) || 'asc')
-  const [sortBy, setSortBy] = useState<SortByType>(
-    (searchParams.get('sortBy') as SortByType) || 'popular'
-  )
+  const { page, order, sortBy } = queryString.parse(searchParams.toString(), {
+    parseNumbers: true,
+    arrayFormat: 'comma'
+  })
 
-  const handleSetSortBy = useCallback((sortByName: string, orderName?: OrderType) => {
-    setSortBy(sortByName as SortByType)
-    if (orderName) {
-      setOrder(orderName)
-    }
-  }, [])
+  const { data } = useProductsQuery({
+    size: 10,
+    page: page ? +page + 1 : 1,
+    order: order,
+    sortBy: sortBy ? sortBy : 'popular'
+  })
+
+  const products = data?.data.data.items
+
+  // Check is filtering
+  const hasFilter = useMemo(() => {
+    const hasType = fakeData.some((data) => {
+      return searchParams.has(data.type)
+    })
+
+    const hasDefaultParam = Array.from(searchParams.keys()).some((param) =>
+      defaultParams.includes(param)
+    )
+    return hasType || hasDefaultParam
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [Array.from(searchParams.keys()).length])
 
   const handleSetParams = useCallback(
-    (params?: SetParamsProps) => {
+    (params?: SearchParamsProps) => {
       if (params) {
-        const { type, key, value } = params
-        setSearchParams(
-          (prevParam) => {
-            const prevTypeParam = prevParam.get(type)
-
-            // Nếu param chưa có => Thêm mới
-            if (!prevTypeParam) {
-              prevParam.append(type, key)
-            } else {
-              // Dựa vào value để edit param
-              const filterParams = value
-                ? [...prevParam.getAll(type), key]
-                : prevTypeParam.split(',').filter((param) => param !== key)
-
-              if (filterParams.length > 0) {
-                prevParam.set(type, filterParams.join(','))
-              } else {
-                prevParam.delete(type)
-              }
-            }
-
-            prevParam.sort()
-            return prevParam
-          },
-          { preventScrollReset: true }
-        )
+        const newParamsObject =
+          params.name !== 'ratingFilter'
+            ? formatCommaSearchParamUrl({ searchParams, params })
+            : formatSearchParamUrl({ searchParams, params: [{ ...params }] })
+        setSearchParams(newParamsObject)
       } else {
-        setSearchParams({
-          page: page.toString(),
-          order,
-          sortBy
-        })
+        // Reset params
+        setSearchParams(
+          queryString.stringify(
+            {
+              page: 1,
+              minPrice: '',
+              maxPrice: '',
+              order: (searchParams.get('order') as OrderType) || '',
+              sortBy: (searchParams.get('sortBy') as SortByType) || 'popular'
+            },
+            {
+              arrayFormat: 'comma',
+              skipNull: true,
+              skipEmptyString: true
+            }
+          )
+        )
       }
     },
-    [setSearchParams, page, order, sortBy]
+    [setSearchParams, searchParams]
   )
+
+  const handlePageClick = (event: { selected: number }) => {
+    const newParamsObject = formatSearchParamUrl({
+      searchParams,
+      params: [{ name: 'page', value: event.selected }]
+    })
+
+    setSearchParams(newParamsObject, { preventScrollReset: true })
+  }
 
   return (
     <div className="max-w-6xl mx-auto h-full">
-      <div className="flex my-16 gap-x-4" ref={ref}>
+      <div className="flex my-2 md:my-16 gap-x-4" ref={ref}>
         {/* Filter side */}
         <div
-          className="basis-1/6 px-2 bg-white"
+          className="basis-1/6 px-2 pb-2 bg-white hidden md:block min-h-fit"
           style={{ height: ref.current?.clientHeight + 'px' }}>
           <CategoryFilter
             headerText="BỘ LỌC TÌM KIẾM"
-            hasFilter={Boolean(searchParams.toString())}
+            hasFilter={hasFilter}
             data={fakeData}
             onChangeParam={handleSetParams}
             className="sticky top-0 z-10"
           />
         </div>
         {/* Product list aside*/}
-        <div className="basis-5/6">
+        <div className="md:basis-5/6 basis-full">
           {/* Sort bar */}
           <CategorySortBar
-            order={order}
-            sortBy={sortBy}
-            onSortBy={handleSetSortBy}
             className="sticky top-0 z-20 bg-white"
+            pageCount={data?.data.data.totalPages ?? 1}
           />
           {/* Product list*/}
-          <ProductList className="grid-cols-5" />
+          <ProductList
+            className="grid-cols-3 sm:grid-cols-4 lg:grid-cols-5"
+            data={products}
+            onResetParam={handleSetParams}
+            hasFilter={hasFilter}
+          />
+          {products && (
+            <Pagination
+              // key={searchParams.get('page')}
+              pageCount={data?.data.data.totalPages ?? 1}
+              onPageChange={handlePageClick}
+            />
+          )}
         </div>
       </div>
     </div>

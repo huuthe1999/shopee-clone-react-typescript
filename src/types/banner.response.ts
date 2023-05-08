@@ -1,19 +1,7 @@
-import { BaseResponse } from './base.response'
+import { BaseResponse, IBaseDataPagination } from './base.response'
 
 export interface CateCardBannerSuccessResponse extends BaseResponse {
-  data: {
-    items: CateCardBanner[]
-    totalItems: number
-    offset: number
-    perPage: number
-    totalPages: number
-    currentPage: number
-    prevPage: number | null
-    nextPage: number | null
-    hasPrevPage: boolean
-    hasNextPage: boolean
-    pagingCounter: number
-  }
+  data: IBaseDataPagination<CateCardBanner>
 }
 
 export interface CateCardBanner {

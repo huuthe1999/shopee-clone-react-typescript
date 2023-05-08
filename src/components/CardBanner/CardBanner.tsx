@@ -1,4 +1,4 @@
-import { HTMLAttributes, memo } from 'react'
+import { HTMLAttributes } from 'react'
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   image: string
@@ -7,9 +7,9 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 const CardBanner = ({ image }: Props) => {
   return (
     <div className="h-full">
-      <img className="w-full h-full" src={image} alt="" />
+      <img className="w-full h-full" src={image} alt="" loading="lazy" />
     </div>
   )
 }
 
-export default memo(CardBanner)
+export default CardBanner

@@ -31,12 +31,14 @@ const Banner = (props: Props) => {
             className="w-full h-full"
             src="https://res.cloudinary.com/dknvhah81/image/upload/v1682264292/category-banner/vn-50009109-5ac166c8551a403fb209c8e7b7f593f1_xhdpi_fngeqh.jpg"
             alt=""
+            loading="lazy"
           />
 
           <img
             className="w-full h-full"
             src="https://res.cloudinary.com/dknvhah81/image/upload/v1682264327/category-banner/vn-50009109-6377f701bb7902c943f995f1acfb969a_xhdpi_pdzlcr.png"
             alt=""
+            loading="lazy"
           />
         </div>
       </div>
