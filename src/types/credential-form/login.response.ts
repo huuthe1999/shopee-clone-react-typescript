@@ -1,6 +1,4 @@
-import { UserResponse } from '@/types/credential-form/user.type'
-
-import { BaseResponse } from '../base.response'
+import { BaseResponse, UserResponse } from '@/types'
 
 export interface LoginSuccessResponse extends BaseResponse {
   data: LoginDataResponse

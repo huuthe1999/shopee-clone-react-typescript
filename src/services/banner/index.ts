@@ -1,12 +1,10 @@
 import httpAxios from '@/config/http'
-import { ENDPOINTS, SIZE } from '@/constants'
-import { CateCardBannerSuccessResponse } from '@/types/banner.response'
+import { ENDPOINTS } from '@/constants'
+import { Params } from '@/services'
+import { CateCardBannerSuccessResponse } from '@/types'
 
-export const getCateCardBanner = (signal?: AbortSignal, page?: number, size?: number) =>
+export const getCateCardBanner = (signal?: AbortSignal, params?: Params) =>
   httpAxios.get<CateCardBannerSuccessResponse>(ENDPOINTS.CATE_BANNER_END_POINT, {
     signal,
-    params: {
-      page,
-      size: size ?? SIZE
-    }
+    params
   })

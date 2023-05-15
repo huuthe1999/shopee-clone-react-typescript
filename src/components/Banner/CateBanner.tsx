@@ -6,7 +6,7 @@ import classNames from 'classnames'
 
 import { Carousel, CateCard, Skeleton } from '@/components'
 import { SIZE } from '@/constants'
-import { CateCardBannerSuccessResponse } from '@/types/banner.response'
+import { CateCardBannerSuccessResponse, ICategoryResponse, isCategoryResponse } from '@/types'
 
 type Props<T> = UseInfiniteQueryResult<AxiosResponse<T>> & {
   header?: string
@@ -23,19 +23,8 @@ const CateBanner = ({
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage
-}: Props<CateCardBannerSuccessResponse>) => {
+}: Props<CateCardBannerSuccessResponse | ICategoryResponse>) => {
   const refMaxSlideIndex = useRef(0)
-
-  // const {
-  //   data,
-  //   isLoading,
-  //   isInitialLoading,
-  //   fetchNextPage,
-  //   hasNextPage,
-  //   isFetchingNextPage,
-  //   isStale,
-  //   remove
-  // } = useCateCardBanner()
 
   // Check if the desired pageParam value is already in the cache
   const pageParamExists = (pageParam: any) => {
@@ -57,6 +46,7 @@ const CateBanner = ({
       remove()
     }
   }, [])
+
   const handleFetchNextPage = (index: number) => {
     // Kiểm tra xem nếu next page index > current index ==> Tiếp tục cho fetch data
     // Kiểm tra xem trong cache có chứa pageParam đã fetch rồi hay chưa, tránh fetch lại data khi chuyển trang
@@ -92,9 +82,18 @@ const CateBanner = ({
                     className={classNames('grid grid-cols-8', {
                       'grid-rows-2': grid
                     })}>
-                    {page.data.data.items.map((item) => (
-                      <CateCard key={item._id} {...item} />
-                    ))}
+                    {page.data.data.items.map((item) =>
+                      isCategoryResponse(item) ? (
+                        <CateCard
+                          key={item._id}
+                          name={item.name}
+                          link={item.slug}
+                          image={item.images[0].url}
+                        />
+                      ) : (
+                        <CateCard key={item._id} image={item.image} name={item.text} />
+                      )
+                    )}
                   </div>
                 ))}
             {(hasNextPage || isFetchingNextPage) && renderSkeleton}

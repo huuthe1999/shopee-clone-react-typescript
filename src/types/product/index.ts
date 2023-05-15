@@ -1,22 +1,22 @@
-import { BaseResponse, IBaseDataPagination } from '../base.response'
+import { BaseResponse, IBaseDataPagination, IBaseItem, IFile, IProvince } from '@/types'
 
 export interface IProductResponse extends BaseResponse {
   data: IBaseDataPagination<IProduct>
 }
 
-export interface IProduct {
-  _id: string
-  name: string
+export interface IProduct extends IBaseItem {
   isActive: boolean
-  images: string[]
-  category: string
+  images: IFile[]
+  categorySlug: string
   price: number
   quantity: number
   rating: number
   discount: number
+  province: IProvince
   sold: number
   viewed: number
   slug: string
+  description?: string
   createdAt: string
   updatedAt: string
 }

@@ -1,6 +1,4 @@
-import { BaseResponse } from '../base.response'
-
-import { UserResponse } from './'
+import { BaseResponse, UserResponse } from '@/types'
 
 export interface RegisterSuccessResponse extends BaseResponse {
   data: {

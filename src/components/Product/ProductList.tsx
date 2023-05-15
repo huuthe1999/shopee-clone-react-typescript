@@ -1,4 +1,4 @@
-import { HTMLAttributes, memo, useRef } from 'react'
+import { HTMLAttributes, useRef } from 'react'
 
 import classNames from 'classnames'
 
@@ -48,4 +48,4 @@ const ProductList = ({ data, className, hasFilter, onResetParam }: ProductListPr
   )
 }
 
-export default memo(ProductList)
+export default ProductList

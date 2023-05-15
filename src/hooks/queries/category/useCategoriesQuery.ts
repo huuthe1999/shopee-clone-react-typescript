@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ENDPOINTS, PAGE, SIZE } from '@/constants'
 import { categoryServices } from '@/services'
 
-const useCategoriesQuery = ({
+export const useCategoriesQuery = ({
   size = SIZE,
   page = PAGE
 }: { size?: number; page?: number } = {}) => {
@@ -14,5 +14,3 @@ const useCategoriesQuery = ({
     staleTime: 60 * 1000
   })
 }
-
-export default useCategoriesQuery

@@ -7,8 +7,7 @@ import { authAxios } from '@/config/http'
 import { AUTH, ISSERVER } from '@/constants'
 import { useAuthContext } from '@/contexts'
 import { authServices } from '@/services'
-import { BaseResponse } from '@/types'
-import { RefreshTokenSuccessResponse } from '@/types/token.response'
+import { BaseResponse, RefreshTokenSuccessResponse } from '@/types'
 import { authUtils } from '@/utils'
 
 function useAxiosPrivate() {

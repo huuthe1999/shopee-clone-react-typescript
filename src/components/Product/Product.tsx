@@ -14,7 +14,7 @@ export const customItemStyles: ItemStyles = {
   inactiveStrokeColor: '#e17b21'
 }
 
-const Product = ({ slug, discount, images, name, price, rating, viewed }: IProduct) => {
+const Product = ({ slug, discount, images, name, price, rating, sold }: IProduct) => {
   return (
     <Link to={slug}>
       <section className="my-1 relative flex flex-col hover:-translate-y-[2px] transition ease-linear shadow-xl rounded-sm border border-transparent hover:border-primary hover:shadow-md h-full">
@@ -33,7 +33,15 @@ const Product = ({ slug, discount, images, name, price, rating, viewed }: IProdu
 
         {/* Image */}
         <div className="relative overflow-hidden bg-transparent w-fit">
-          <img src={images[0]} alt="" className="aspect-square w-full" loading="lazy" />
+          <img
+            src={
+              images[0].url ||
+              'https://res.cloudinary.com/dknvhah81/image/upload/v1683429549/shoppe-default/20210604_RGFkOmxRF6Emt7SXpoGBDyZO_o1vv86.png'
+            }
+            alt={slug}
+            className="aspect-square w-full"
+            loading="lazy"
+          />
           {/* Overlay image */}
           <div className="absolute z-10 inset-0 bg-transparent">
             <img
@@ -44,9 +52,7 @@ const Product = ({ slug, discount, images, name, price, rating, viewed }: IProdu
           </div>
         </div>
         <div className="flex flex-col p-2 justify-between flex-1">
-          <p className="line-clamp-2 text-sm">
-            {viewed} - {name}
-          </p>
+          <p className="line-clamp-2 text-sm">{name}</p>
           <div className="mt-3 flex flex-col gap-y-2">
             <div className="inline-flex gap-x-2">
               {/* Discount */}
@@ -71,7 +77,7 @@ const Product = ({ slug, discount, images, name, price, rating, viewed }: IProdu
                 className="h-full max-w-[40%] pr-2"
               />
               <p className="text-xs text-black/[0.54] line-clamp-1 whitespace-pre-wrap col-auto">
-                Đã bán {formatNumber(99879194)}
+                Đã bán {formatNumber(sold)}
               </p>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { BaseResponse, IBaseDataPagination } from './base.response'
+import { BaseResponse, IBaseDataPagination } from '@/types'
 
 export interface CateCardBannerSuccessResponse extends BaseResponse {
   data: IBaseDataPagination<CateCardBanner>

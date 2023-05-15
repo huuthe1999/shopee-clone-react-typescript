@@ -1,9 +1,12 @@
 import { TCredentialForm } from '@/components/FormCredential/validate'
 import httpAxios from '@/config/http'
 import { ENDPOINTS } from '@/constants'
-import { BaseResponse } from '@/types'
-import { LoginSuccessResponse, RegisterSuccessResponse } from '@/types/credential-form'
-import { RefreshTokenSuccessResponse } from '@/types/token.response'
+import {
+  BaseResponse,
+  LoginSuccessResponse,
+  RefreshTokenSuccessResponse,
+  RegisterSuccessResponse
+} from '@/types'
 
 export const loginUser = (data: TCredentialForm) => {
   return httpAxios.post<LoginSuccessResponse>(ENDPOINTS.LOGIN_END_POINT, data, {

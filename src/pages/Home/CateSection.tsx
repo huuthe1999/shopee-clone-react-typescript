@@ -1,10 +1,9 @@
 import { CateBanner } from '@/components'
-import { useCateCardBanner } from '@/hooks'
+import { useCategoryBannerInfinityQuery } from '@/hooks'
 
-interface Props {}
+const CateSection = () => {
+  const result = useCategoryBannerInfinityQuery(16)
 
-const CateSection = (props: Props) => {
-  const result = useCateCardBanner(10)
   return <CateBanner header="DANH MỤC" grid {...result} />
 }
 

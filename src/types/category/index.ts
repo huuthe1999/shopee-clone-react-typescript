@@ -1,4 +1,4 @@
-import { BaseResponse, IBaseDataPagination } from '../base.response'
+import { BaseResponse, CateCardBanner, IBaseDataPagination, IBaseItem, IFile } from '@/types'
 
 export type OrderType = 'asc' | 'desc' | ''
 export type SortByType = 'popular' | 'newest' | 'sales' | 'price'
@@ -7,13 +7,15 @@ export interface ICategoryResponse extends BaseResponse {
   data: IBaseDataPagination<ICategory>
 }
 
-export interface ICategory {
-  _id: string
-  name: string
-  active: boolean
-  image: string
-  user: string
+export interface ICategory extends IBaseItem {
+  isActive: boolean
+  images: IFile[]
   slug: string
+  subCategories: IBaseItem[]
   createdAt: string
   updatedAt: string
+}
+
+export function isCategoryResponse(data: ICategory | CateCardBanner): data is ICategory {
+  return (data as ICategory).subCategories !== undefined
 }

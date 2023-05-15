@@ -1,11 +1,11 @@
-import { useCateCardBanner } from '@/hooks'
+import { useCardBannerInfinityQuery } from '@/hooks'
 
 import CateBanner from './CateBanner'
 
 interface Props {}
 
 const BottomBanner = (props: Props) => {
-  const result = useCateCardBanner()
+  const result = useCardBannerInfinityQuery()
   return <CateBanner {...result} />
 }
 

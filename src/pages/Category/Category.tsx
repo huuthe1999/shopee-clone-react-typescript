@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef } from 'react'
 
 import queryString from 'query-string'
-import { useSearchParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 
 import { Pagination, ProductList } from '@/components'
 import { useProductsQuery } from '@/hooks'
@@ -59,7 +59,10 @@ const fakeData = [
 ]
 
 const defaultParams = ['maxPrice', 'minPrice', 'filters', 'status', 'ratingFilter']
+
 const CategoryPage = () => {
+  const { categorySlug } = useParams()
+
   // Calculate height of filter side
   const ref = useRef<HTMLDivElement>(null)
   const [searchParams, setSearchParams] = useSearchParams()
@@ -72,6 +75,7 @@ const CategoryPage = () => {
   const { data } = useProductsQuery({
     size: 10,
     page: page ? +page + 1 : 1,
+    categorySlug,
     order: order,
     sortBy: sortBy ? sortBy : 'popular'
   })
