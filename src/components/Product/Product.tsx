@@ -14,15 +14,26 @@ export const customItemStyles: ItemStyles = {
   inactiveStrokeColor: '#e17b21'
 }
 
-const Product = ({ slug, discount, images, name, price, rating, sold }: IProduct) => {
+const Product = ({ slug, discount, images, name, price, rating, sold, shopType }: IProduct) => {
   return (
     <Link to={slug}>
       <section className="my-1 relative flex flex-col hover:-translate-y-[2px] transition ease-linear shadow-xl rounded-sm border border-transparent hover:border-primary hover:shadow-md h-full">
         {/* Favorite Ribbon */}
-        <div className="absolute z-10 max-w-[75%] bg-primary -translate-x-1 text-white text-xs px-1 top-2 rounded-r-sm">
-          <div className="absolute z-10 left-0 bg-primary/90 w-1 h-1 triangle-top-right top-full"></div>
-          <span className="h-full inline-block">Yêu thích</span>
-        </div>
+        {shopType === 2 && (
+          <div className="absolute z-10 max-w-[75%] bg-primary -translate-x-1 text-white text-xs px-1 top-2 rounded-r-sm">
+            <div className="absolute z-10 left-0 bg-primary/90 w-1 h-1 triangle-top-right top-full"></div>
+            <span className="h-full inline-block">Yêu thích</span>
+          </div>
+        )}
+
+        {/* Mall Ribbon */}
+        {shopType === 1 && (
+          <div className="absolute z-10 max-w-[75%] bg-red-700 -translate-x-1 text-white text-xs px-1 top-2 rounded-r-sm">
+            <div className="absolute z-10 left-0 bg-red-700 w-1 h-1 triangle-top-right top-full"></div>
+            <span className="h-full inline-block">Mall</span>
+          </div>
+        )}
+
         {/* Ribbon voucher */}
         {discount > 0 && (
           <div className="ribbon bg-yellow-300 absolute z-10 right-0 p-1">

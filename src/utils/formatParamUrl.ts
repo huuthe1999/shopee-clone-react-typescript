@@ -14,12 +14,11 @@ export const formatSearchParamUrl = ({
   params: Omit<SearchParamsProps, 'check'>[]
 }) => {
   const paramsObject = queryString.parse(searchParams.toString(), {
-    parseNumbers: true,
     arrayFormat: 'comma'
   })
 
   params.forEach(({ name, value }) => {
-    paramsObject[name] = value
+    paramsObject[name] = value.toString()
   })
 
   const newParamsObject = queryString.stringify(paramsObject, {
@@ -44,27 +43,28 @@ export const formatCommaSearchParamUrl = ({
   let paramsObject
   if (check) {
     // Nếu checkbox:true ==> Thêm param vào URLSearchParams
-    searchParams.append(name, value.toString())
+    if (name === 'ratingFilter') {
+      searchParams.set(name, value.toString())
+    } else {
+      searchParams.append(name, value.toString())
+    }
 
-    paramsObject = queryString.parse(searchParams.toString(), {
-      parseNumbers: true
-    })
+    paramsObject = queryString.parse(searchParams.toString())
   } else {
     paramsObject = queryString.parse(searchParams.toString(), {
-      parseNumbers: true,
       arrayFormat: 'comma'
-    }) //=> {foo: [1, 2, 3]}
+    }) // => {foo: [1, 2, 3]}
 
-    const typeParams = paramsObject[name]
-    if (typeParams && typeof typeParams == 'object') {
-      paramsObject[name] = typeParams.filter((val) => val !== +value)
-    } else {
-      paramsObject[name] = ''
-    }
+    // Loại bỏ param uncheck
+    const typeParams = paramsObject[name] || []
+    paramsObject[name] =
+      Array.isArray(typeParams) && name !== 'ratingFilter'
+        ? typeParams.filter((val) => val !== value)
+        : ''
   }
 
   // Reset page
-  paramsObject.page = 0
+  paramsObject.page = '0'
 
   const newParamsObject = queryString.stringify(paramsObject, {
     arrayFormat: 'comma',

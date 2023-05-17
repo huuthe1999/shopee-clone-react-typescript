@@ -6,8 +6,8 @@ import { Check, ChevronDown, ChevronLeft, ChevronRight } from 'react-feather'
 import { useSearchParams } from 'react-router-dom'
 
 import { Button, DropdownMenu, ForwardButton, MenuItem } from '@/components'
-import { CATEGORY } from '@/constants'
 import { TooltipContent, TooltipProvider, TooltipTrigger } from '@/contexts'
+import { ORDER_LIST, SORT_BY_LIST } from '@/data/category'
 import { OrderType, SortByType } from '@/types'
 import { formatSearchParamUrl } from '@/utils'
 
@@ -55,7 +55,7 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
     setSearchParams(newParamsObject)
   }
 
-  const renderSortBar = CATEGORY.SORT_BY_LIST.map(({ text, type, isDropdown }) => {
+  const renderSortBar = SORT_BY_LIST.map(({ text, type, isDropdown }) => {
     return (
       <li
         className={classNames('rounded-md cursor-pointer text-neutral-600 transition', {
@@ -92,7 +92,7 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
             </TooltipTrigger>
             <TooltipContent>
               <DropdownMenu className="py-2">
-                {CATEGORY.ORDER_LIST.map(({ text: itemText, type: itemType }) => (
+                {ORDER_LIST.map(({ text: itemText, type: itemType }) => (
                   <MenuItem
                     key={itemText.vi}
                     text={itemText.vi}
@@ -148,25 +148,27 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
         <ul className="flex flex-nowrap text-center gap-2 shrink">{renderSortBar}</ul>
       </div>
       {/* Pagination */}
-      <div className="flex items-center justify-end gap-2 self-stretch">
-        <p className="flex flex-nowrap my-auto px-2">
-          <span className="text-primary line-clamp-1">{page + 1}</span>
-          <span className="line-clamp-1">/{pageCount}</span>
-        </p>
+      {pageCount > 1 && (
+        <div className="flex items-center justify-end gap-2 self-stretch">
+          <p className="flex flex-nowrap my-auto px-2">
+            <span className="text-primary line-clamp-1">{page + 1}</span>
+            <span className="line-clamp-1">/{pageCount}</span>
+          </p>
 
-        <Button
-          className="px-3 text-center h-full"
-          disabled={page === 0}
-          onClick={handleSetPrevPage}>
-          <ChevronLeft size={16} />
-        </Button>
-        <Button
-          className="px-3 text-center h-full"
-          disabled={page === pageCount - 1}
-          onClick={handleSetNextPage}>
-          <ChevronRight size={16} />
-        </Button>
-      </div>
+          <Button
+            className="px-3 text-center h-full"
+            disabled={page === 0}
+            onClick={handleSetPrevPage}>
+            <ChevronLeft size={16} />
+          </Button>
+          <Button
+            className="px-3 text-center h-full"
+            disabled={page === pageCount - 1}
+            onClick={handleSetNextPage}>
+            <ChevronRight size={16} />
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

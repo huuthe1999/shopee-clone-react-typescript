@@ -1,6 +1,6 @@
 interface Props {
   label: React.ReactNode
-  id: string
+  id: string | number
   onSelect: (name: string, check: boolean) => void
   isSelect: boolean
   children?: React.ReactNode
@@ -13,18 +13,17 @@ function CateItemSection({ label, id, onSelect, isSelect }: Props) {
         type="checkbox"
         checked={isSelect}
         onChange={(e) => {
-          onSelect(id, e.target.checked)
+          onSelect(id.toString(), e.target.checked)
         }}
-        id={`bordered-checkbox-${id}`}
-        name={`bordered-checkbox-${id}`}
+        id={`${label}-${id}`}
+        name={`${label}-${id}`}
         className={'w-4 h-4 text-primary accent-primary border-gray-300 rounded cursor-pointer'}
       />
 
       <label
-        htmlFor={`bordered-checkbox-${id}`}
+        htmlFor={`${label}-${id}`}
         className="w-full p-4 pl-2 text-sm font-medium cursor-pointer">
         {label}
-        {/* ({formatNumber(998791121294)}+) */}
       </label>
     </li>
   )

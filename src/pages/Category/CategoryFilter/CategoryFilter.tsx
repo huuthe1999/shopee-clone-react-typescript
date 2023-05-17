@@ -1,126 +1,68 @@
-import { HTMLAttributes, memo } from 'react'
+import { HTMLAttributes, memo, useMemo } from 'react'
 
-import { Rating } from '@smastrom/react-rating'
 import classNames from 'classnames'
 import { Filter } from 'react-feather'
+import { useParams, useSearchParams } from 'react-router-dom'
 
-import { Button, CateSection, PingIcon, customItemStyles } from '@/components'
+import { Button, CateSection, PingIcon } from '@/components'
+import { FILTER_LIST } from '@/data/category'
+import { useProvincesQuery, useSubCategoryBySlugQuery } from '@/hooks'
+import { IBaseItem } from '@/types'
 import { SearchParamsProps } from '@/utils'
 
 import CategoryFilterPrice from './CategoryFilterPrice'
-
-const fakeData = [
-  {
-    type: 'filters',
-    name: 'Loại Shop',
-    data: [
-      {
-        id: '11',
-        text: 'Shopee Mall'
-      },
-      {
-        id: '21',
-        text: 'Shop Yêu thích'
-      }
-    ]
-  },
-  {
-    type: 'status',
-    name: 'Tình Trạng',
-    data: [
-      {
-        id: '31',
-        text: 'Đã sử dụng'
-      },
-      {
-        id: '41',
-        text: 'Mới'
-      }
-    ]
-  },
-  {
-    type: 'ratingFilter',
-    name: 'Đánh Giá',
-    data: [
-      {
-        id: '51',
-        text: (
-          <Rating
-            readOnly
-            value={5}
-            itemStyles={customItemStyles}
-            className="pr-6"
-            style={{ maxWidth: 100 }}
-          />
-        )
-      },
-      {
-        id: '61',
-        text: (
-          <Rating
-            readOnly
-            value={4}
-            itemStyles={customItemStyles}
-            className="pr-6"
-            style={{ maxWidth: 100 }}
-          />
-        )
-      },
-      {
-        id: '71',
-        text: (
-          <Rating
-            readOnly
-            value={3}
-            itemStyles={customItemStyles}
-            className="pr-6"
-            style={{ maxWidth: 100 }}
-          />
-        )
-      },
-      {
-        id: '81',
-        text: (
-          <Rating
-            readOnly
-            value={2}
-            itemStyles={customItemStyles}
-            className="pr-6"
-            style={{ maxWidth: 100 }}
-          />
-        )
-      },
-      {
-        id: '91',
-        text: (
-          <Rating
-            readOnly
-            value={1}
-            itemStyles={customItemStyles}
-            className="pr-6"
-            style={{ maxWidth: 100 }}
-          />
-        )
-      }
-    ]
-  }
-]
-
 interface Props extends HTMLAttributes<HTMLDivElement> {
   headerText: string
   hasFilter: boolean
-  data: {
-    type: string
-    name: string
-    data: {
-      id: string
-      text: React.ReactNode
-    }[]
-  }[]
   onChangeParam: (params?: SearchParamsProps) => void
 }
 
-function CategoryFilter({ headerText, hasFilter, data, className, onChangeParam }: Props) {
+function CategoryFilter({ headerText, hasFilter, className, onChangeParam }: Props) {
+  const { categorySlug } = useParams()
+  const [searchParams] = useSearchParams()
+
+  const { data: categoryData } = useSubCategoryBySlugQuery({
+    categorySlug,
+    select: ['subCategories']
+  })
+
+  const { data: provincesData } = useProvincesQuery()
+
+  const subCategories = categoryData?.data.data?.subCategories.filter(
+    (subCate) => subCate.name !== 'Mặc định'
+  )
+
+  const locationData = provincesData?.data.data
+
+  // Filter data
+  const subCategoriesObject = {
+    type: 'facet',
+    name: 'Theo Danh Mục',
+    data: subCategories || []
+  }
+
+  // Location data
+  const provincesObject = useMemo(() => {
+    const locationParams = searchParams.get('locations')?.split(',')
+
+    const sortLocationSelected: IBaseItem[] = []
+
+    locationData?.forEach(({ idProvince, name }) => {
+      if (locationParams?.includes(idProvince)) {
+        sortLocationSelected.unshift({ _id: idProvince, name })
+      } else {
+        sortLocationSelected.push({ _id: idProvince, name })
+      }
+    }) || []
+
+    return {
+      type: 'locations',
+      name: 'Nơi bán',
+      data: sortLocationSelected
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams.get('locations'), locationData])
+
   return (
     <div className={classNames('flex flex-col gap-y-2', [className])}>
       {/* Header name */}
@@ -133,21 +75,27 @@ function CategoryFilter({ headerText, hasFilter, data, className, onChangeParam 
         <h2 className="font-bold uppercase">{headerText}</h2>
       </div>
 
-      {data.map((cateSection, index) => (
-        <CateSection key={index} {...cateSection} onChangeParam={onChangeParam} />
-      ))}
+      {/* Subcategory filter */}
+      <CateSection {...subCategoriesObject} onChangeParam={onChangeParam} />
+
+      {/* Location filter */}
+      <CateSection
+        {...provincesObject}
+        onChangeParam={onChangeParam}
+        className="max-h-44 overflow-y-auto mb-1"
+      />
 
       {/* Default filter */}
 
       {/* Range price */}
       <CategoryFilterPrice />
 
-      {fakeData.map((cateSection, index) => (
-        <CateSection key={index} {...cateSection} onChangeParam={onChangeParam} />
+      {FILTER_LIST.map((cateSection) => (
+        <CateSection key={cateSection.type} {...cateSection} onChangeParam={onChangeParam} />
       ))}
 
       <Button
-        className="uppercase mt-2 mx-auto bg-primary text-white w-full py-1 rounded-sm text-sm"
+        className="uppercase mt-2 mx-auto bg-primary w-full py-1 rounded-sm text-sm text-white"
         disabled={!hasFilter}
         onClick={() => onChangeParam()}>
         Xoá tất cả

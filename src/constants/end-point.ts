@@ -1,5 +1,6 @@
 export const AUTH_ROUTE = '/auth'
 export const BANNER_ROUTE = '/banner'
+export const PROVINCE_ROUTE = '/provinces'
 export const CATEGORY_ROUTE = '/categories'
 export const PRODUCT_ROUTE = '/products'
 export const LOGIN_END_POINT = `${AUTH_ROUTE}/login`
@@ -13,6 +14,9 @@ export const CATE_BANNER_END_POINT = `${BANNER_ROUTE}`
 
 // Category
 export const CATEGORY_END_POINT = `${CATEGORY_ROUTE}`
+
+// Province
+export const PROVINCE_END_POINT = `${PROVINCE_ROUTE}`
 
 // Product
 export const PRODUCT_END_POINT = `${PRODUCT_ROUTE}`

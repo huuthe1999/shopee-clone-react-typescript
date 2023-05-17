@@ -1,64 +1,17 @@
 import { useCallback, useMemo, useRef } from 'react'
 
+import classNames from 'classnames'
 import queryString from 'query-string'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import { Pagination, ProductList } from '@/components'
+import { DEFAULT_FILTER_DATA } from '@/data/category'
 import { useProductsQuery } from '@/hooks'
 import { OrderType, SortByType } from '@/types'
 import { SearchParamsProps, formatCommaSearchParamUrl, formatSearchParamUrl } from '@/utils'
 
 import CategoryFilter from './CategoryFilter'
 import CategorySortBar from './CategorySortBar'
-
-const fakeData = [
-  {
-    type: 'facet',
-    name: 'Theo Danh Mục',
-    data: [
-      {
-        id: '1',
-        text: 'Áo hoodie 1'
-      },
-      {
-        id: '2',
-        text: 'Áo hoodie 2'
-      },
-      {
-        id: '3',
-        text: 'Áo hoodie 3'
-      },
-      {
-        id: '4',
-        text: 'Áo hoodie 4'
-      }
-    ]
-  },
-  {
-    type: 'locations',
-    name: 'Nơi bán',
-    data: [
-      {
-        id: '5',
-        text: 'TP. Hồ Chí Minh 1'
-      },
-      {
-        id: '6',
-        text: 'TP. Hồ Chí Minh 2'
-      },
-      {
-        id: '7',
-        text: 'TP. Hồ Chí Minh 3'
-      },
-      {
-        id: '8',
-        text: 'TP. Hồ Chí Minh 4'
-      }
-    ]
-  }
-]
-
-const defaultParams = ['maxPrice', 'minPrice', 'filters', 'status', 'ratingFilter']
 
 const CategoryPage = () => {
   const { categorySlug } = useParams()
@@ -67,48 +20,39 @@ const CategoryPage = () => {
   const ref = useRef<HTMLDivElement>(null)
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const { page, order, sortBy } = queryString.parse(searchParams.toString(), {
-    parseNumbers: true,
+  const { page, order, sortBy, ...rest } = queryString.parse(searchParams.toString(), {
     arrayFormat: 'comma'
   })
 
-  const { data } = useProductsQuery({
+  const { data, isFetching: isProductsFetching } = useProductsQuery({
     size: 10,
     page: page ? +page + 1 : 1,
     categorySlug,
     order: order,
-    sortBy: sortBy ? sortBy : 'popular'
+    sortBy: sortBy ? sortBy : 'popular',
+    ...(rest && { ...rest })
   })
 
   const products = data?.data.data.items
 
   // Check is filtering
-  const hasFilter = useMemo(() => {
-    const hasType = fakeData.some((data) => {
-      return searchParams.has(data.type)
-    })
-
-    const hasDefaultParam = Array.from(searchParams.keys()).some((param) =>
-      defaultParams.includes(param)
-    )
-    return hasType || hasDefaultParam
+  const hasFilter = useMemo(
+    () => DEFAULT_FILTER_DATA.some((data) => searchParams.has(data)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Array.from(searchParams.keys()).length])
+    [Array.from(searchParams.keys()).length]
+  )
 
   const handleSetParams = useCallback(
     (params?: SearchParamsProps) => {
       if (params) {
-        const newParamsObject =
-          params.name !== 'ratingFilter'
-            ? formatCommaSearchParamUrl({ searchParams, params })
-            : formatSearchParamUrl({ searchParams, params: [{ ...params }] })
+        const newParamsObject = formatCommaSearchParamUrl({ searchParams, params })
         setSearchParams(newParamsObject)
       } else {
         // Reset params
         setSearchParams(
           queryString.stringify(
             {
-              page: 1,
+              page: 0,
               minPrice: '',
               maxPrice: '',
               order: (searchParams.get('order') as OrderType) || '',
@@ -137,15 +81,18 @@ const CategoryPage = () => {
 
   return (
     <div className="max-w-6xl mx-auto h-full">
-      <div className="flex my-2 md:my-16 gap-x-4" ref={ref}>
+      <div
+        className={classNames('flex my-2 md:my-16 gap-x-4', {
+          'pointer-events-none opacity-50': isProductsFetching
+        })}
+        ref={ref}>
         {/* Filter side */}
         <div
           className="basis-1/6 px-2 pb-2 bg-white hidden md:block min-h-fit"
-          style={{ height: ref.current?.clientHeight + 'px' }}>
+          style={{ minHeight: ref.current?.clientHeight + 'px' }}>
           <CategoryFilter
             headerText="BỘ LỌC TÌM KIẾM"
             hasFilter={hasFilter}
-            data={fakeData}
             onChangeParam={handleSetParams}
             className="sticky top-0 z-10"
           />
@@ -164,7 +111,7 @@ const CategoryPage = () => {
             onResetParam={handleSetParams}
             hasFilter={hasFilter}
           />
-          {products && (
+          {products && products.length > 0 && (
             <Pagination
               // key={searchParams.get('page')}
               pageCount={data?.data.data.totalPages ?? 1}

@@ -7,6 +7,10 @@ export interface ICategoryResponse extends BaseResponse {
   data: IBaseDataPagination<ICategory>
 }
 
+export interface ISubCategoryResponse extends BaseResponse {
+  data: Pick<ICategory, 'subCategories'>
+}
+
 export interface ICategory extends IBaseItem {
   isActive: boolean
   images: IFile[]
