@@ -8,7 +8,7 @@ interface Props {
 
 function CateItemSection({ label, id, onSelect, isSelect }: Props) {
   return (
-    <li className="cursor-pointer flex items-center hover:bg-gray-200 hover:text-primary rounded">
+    <li className="flex cursor-pointer items-center rounded hover:bg-gray-200 hover:text-primary">
       <input
         type="checkbox"
         checked={isSelect}
@@ -17,12 +17,12 @@ function CateItemSection({ label, id, onSelect, isSelect }: Props) {
         }}
         id={`${label}-${id}`}
         name={`${label}-${id}`}
-        className={'w-4 h-4 text-primary accent-primary border-gray-300 rounded cursor-pointer'}
+        className={'h-4 w-4 cursor-pointer rounded border-gray-300 text-primary accent-primary'}
       />
 
       <label
         htmlFor={`${label}-${id}`}
-        className="w-full p-4 pl-2 text-sm font-medium cursor-pointer">
+        className="w-full cursor-pointer p-4 pl-2 text-sm font-medium">
         {label}
       </label>
     </li>

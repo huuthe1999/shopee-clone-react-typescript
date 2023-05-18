@@ -25,7 +25,7 @@ const CategoryPage = () => {
   })
 
   const { data, isFetching: isProductsFetching } = useProductsQuery({
-    size: 10,
+    size: 15,
     page: page ? +page + 1 : 1,
     categorySlug,
     order: order,
@@ -80,15 +80,15 @@ const CategoryPage = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto h-full">
+    <div className="mx-auto h-full max-w-6xl">
       <div
-        className={classNames('flex my-2 md:my-16 gap-x-4', {
+        className={classNames('my-2 flex gap-x-4 md:my-16', {
           'pointer-events-none opacity-50': isProductsFetching
         })}
         ref={ref}>
         {/* Filter side */}
         <div
-          className="basis-1/6 px-2 pb-2 bg-white hidden md:block min-h-fit"
+          className="hidden min-h-fit basis-1/6 bg-white px-2 pb-2 md:block"
           style={{ minHeight: ref.current?.clientHeight + 'px' }}>
           <CategoryFilter
             headerText="BỘ LỌC TÌM KIẾM"
@@ -98,7 +98,7 @@ const CategoryPage = () => {
           />
         </div>
         {/* Product list aside*/}
-        <div className="md:basis-5/6 basis-full">
+        <div className="basis-full md:basis-5/6">
           {/* Sort bar */}
           <CategorySortBar
             className="sticky top-0 z-20 bg-white"

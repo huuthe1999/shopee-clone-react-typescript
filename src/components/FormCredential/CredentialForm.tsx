@@ -108,19 +108,19 @@ const CredentialForm = () => {
 
   const renderError = (name: keyof TCredentialFormSchema) => {
     return (
-      <span className="text-red-500 text-sm block min-h-[1.25rem]">{errors[name]?.message}</span>
+      <span className="block min-h-[1.25rem] text-sm text-red-500">{errors[name]?.message}</span>
     )
   }
 
   const renderShowPassword = (flag: boolean, cb: () => void) =>
     !flag ? (
       <EyeOff
-        className="absolute w-5 h-5 right-2 top-1/2 -translate-x-2 -translate-y-1/2 cursor-pointer  bg-inherit"
+        className="absolute right-2 top-1/2 h-5 w-5 -translate-x-2 -translate-y-1/2 cursor-pointer  bg-inherit"
         onClick={cb}
       />
     ) : (
       <Eye
-        className="absolute w-5 h-5 right-2 top-1/2 -translate-x-2 -translate-y-1/2 cursor-pointer"
+        className="absolute right-2 top-1/2 h-5 w-5 -translate-x-2 -translate-y-1/2 cursor-pointer"
         onClick={cb}
       />
     )
@@ -135,10 +135,10 @@ const CredentialForm = () => {
 
   return (
     <form
-      className="p-8 bg-white rounded-sm shadow-md flex flex-col gap-3"
+      className="flex flex-col gap-3 rounded-sm bg-white p-8 shadow-md"
       onSubmit={handleSubmit(handleSubmitForm)}
       noValidate>
-      <h2 className="font-medium text-xl py-3">{matchLogin ? 'Đăng nhập' : 'Đăng ký'}</h2>
+      <h2 className="py-3 text-xl font-medium">{matchLogin ? 'Đăng nhập' : 'Đăng ký'}</h2>
       <div>
         <input
           type="text"
@@ -182,7 +182,7 @@ const CredentialForm = () => {
         isLoading={isSubmitting}
         disabled={!isValid || isSubmitting}
         className={classNames(
-          'bg-primary uppercase py-3 text-white rounded-sm flex justify-center items-center',
+          'flex items-center justify-center rounded-sm bg-primary py-3 uppercase text-white',
           {
             'cursor-not-allowed opacity-80': !isValid || isSubmitting,
             'cursor-pointer hover:opacity-90': isValid && !isSubmitting
@@ -192,8 +192,8 @@ const CredentialForm = () => {
       </Button>
 
       {/* Divide */}
-      <div className="bg-neutral-300 h-[1px] mt-1 relative text-neutral-400">
-        <span className="absolute top-1/2 left-1/2 bg-white p-1 -translate-x-1/2 -translate-y-1/2">
+      <div className="relative mt-1 h-[1px] bg-neutral-300 text-neutral-400">
+        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-1">
           Hoặc
         </span>
       </div>
@@ -201,7 +201,7 @@ const CredentialForm = () => {
       {/* Link */}
       <Link
         to={matchLogin ? PATHS.REGISTER_PATH : PATHS.LOGIN_PATH}
-        className="mx-auto text-primary hover:text-orange-400 text-sm mt-1">
+        className="mx-auto mt-1 text-sm text-primary hover:text-orange-400">
         {!matchLogin ? 'Đăng nhập' : 'Đăng ký'}
       </Link>
     </form>

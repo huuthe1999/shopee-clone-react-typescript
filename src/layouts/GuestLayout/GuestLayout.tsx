@@ -10,7 +10,7 @@ const GuestLayout = () => {
   useRefreshTokenQuery()
   return (
     <>
-      <div className="flex flex-col h-full">
+      <div className="flex h-full flex-col">
         <Header />
         <div className="flex-1">
           <MyErrorBoundary>

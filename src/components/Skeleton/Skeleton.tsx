@@ -1,20 +1,16 @@
-interface Props {}
-
-const Skeleton = (props: Props) => {
+export const Skeleton = () => {
   return (
-    <div className="border border-gray-300 shadow rounded-md p-4 max-w-xs w-full mx-auto">
-      <div className="animate-pulse flex flex-col justify-center items-center gap-y-4">
-        <div className="rounded-full bg-slate-400 h-11 w-11 mt-4">
-          <span className="overflow-hidden rounded-2xl pt-0 bg-slate-400" />
+    <div className="mx-auto w-full max-w-xs rounded-md border border-gray-300 p-4 shadow">
+      <div className="flex animate-pulse flex-col items-center justify-center gap-y-4">
+        <div className="mt-4 h-11 w-11 rounded-full bg-slate-400">
+          <span className="overflow-hidden rounded-2xl bg-slate-400 pt-0" />
         </div>
 
-        <div className="overflow-hidden mb-2 h-4 w-full">
-          <div className="bg-slate-400 rounded" />
-          <p className="line-clamp-2 text-center text-xs bg-slate-400 h-4" />
+        <div className="mb-2 h-4 w-full overflow-hidden">
+          <div className="rounded bg-slate-400" />
+          <p className="line-clamp-2 h-4 bg-slate-400 text-center text-xs" />
         </div>
       </div>
     </div>
   )
 }
-
-export default Skeleton

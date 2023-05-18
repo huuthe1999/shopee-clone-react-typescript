@@ -6,9 +6,9 @@ interface Props {
 
 const PingIcon = () => {
   return (
-    <span className={classNames('absolute flex w-2 h-2 bottom-0 right-0')}>
-      <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-secondary" />
-      <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+    <span className={classNames('absolute bottom-0 right-0 flex h-2 w-2')}>
+      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-secondary opacity-75" />
+      <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
     </span>
   )
 }

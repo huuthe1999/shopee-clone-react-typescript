@@ -82,7 +82,7 @@ function CategoryFilter({ headerText, hasFilter, className, onChangeParam }: Pro
       <CateSection
         {...provincesObject}
         onChangeParam={onChangeParam}
-        className="max-h-44 overflow-y-auto mb-1"
+        className="mb-1 max-h-44 overflow-y-auto"
       />
 
       {/* Default filter */}
@@ -95,7 +95,7 @@ function CategoryFilter({ headerText, hasFilter, className, onChangeParam }: Pro
       ))}
 
       <Button
-        className="uppercase mt-2 mx-auto bg-primary w-full py-1 rounded-sm text-sm text-white"
+        className="mx-auto mt-2 w-full rounded-sm bg-primary py-1 text-sm uppercase text-white"
         disabled={!hasFilter}
         onClick={() => onChangeParam()}>
         Xoá tất cả

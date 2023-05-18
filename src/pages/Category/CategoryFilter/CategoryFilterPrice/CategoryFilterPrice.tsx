@@ -80,7 +80,7 @@ const CategoryFilterPrice = () => {
   }, [searchParams])
 
   return (
-    <section className="text-sm text-black/[0.87] mt-2 border-b border-black/30">
+    <section className="mt-2 border-b border-black/30 text-sm text-black/[0.87]">
       <p>Khoảng Giá</p>
       <div className="flex flex-nowrap items-center gap-x-1 py-4">
         <input
@@ -91,7 +91,7 @@ const CategoryFilterPrice = () => {
           name="from"
           id="from"
           placeholder="₫ Từ"
-          className="basis-2/5 border border-black/[0.26] rounded-sm py-1 px-1"
+          className="basis-2/5 rounded-sm border border-black/[0.26] px-1 py-1"
         />
         <span className="h-[2px] basis-auto bg-slate-500 px-2" />
         <input
@@ -102,15 +102,15 @@ const CategoryFilterPrice = () => {
           name="to"
           id="to"
           placeholder="₫ Đến"
-          className="basis-2/5 border border-black/[0.26] rounded-sm py-1 px-1"
+          className="basis-2/5 rounded-sm border border-black/[0.26] px-1 py-1"
         />
       </div>
       {/* Error text */}
       {isError && (
-        <div className="text-red-600 text-xs line-clamp-2">Vui lòng điền khoảng giá phù hợp</div>
+        <div className="line-clamp-2 text-xs text-red-600">Vui lòng điền khoảng giá phù hợp</div>
       )}
       <Button
-        className="uppercase mt-2 mx-auto bg-primary text-white w-full py-1 rounded-sm text-sm mb-3"
+        className="mx-auto mb-3 mt-2 w-full rounded-sm bg-primary py-1 text-sm uppercase text-white"
         disabled={!(value.from || value.to)}
         onClick={handleSubmit}>
         Áp dụng

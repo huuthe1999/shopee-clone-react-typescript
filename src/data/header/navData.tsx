@@ -85,7 +85,7 @@ export const RIGHT_NAV: INavItem[] = [
     isVisible: true, //Show khi authenticated(khi có access token)
     text: AUTH.USER_INFO, //Condition to show username
     leftIcon: (
-      <div className="w-5 h-5 rounded-full overflow-hidden bg-[url('https://down-vn.img.susercontent.com/file/mx-11134226-23020-6nbhtbltvynvfb_tn')] bg-no-repeat bg-center bg-contain" />
+      <div className="h-5 w-5 overflow-hidden rounded-full bg-[url('https://down-vn.img.susercontent.com/file/mx-11134226-23020-6nbhtbltvynvfb_tn')] bg-contain bg-center bg-no-repeat" />
     )
   }
 ]

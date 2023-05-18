@@ -108,7 +108,7 @@ function Modal({ eventModal, setShowModal, heading, description, buttonText }: P
           }}
           className="fixed inset-0 z-10 overflow-y-auto"
           lockScroll>
-          <div className="flex min-h-full justify-center p-4 text-center items-center sm:p-0">
+          <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
             <motion.div
               onClick={(e) => e.stopPropagation()}
               variants={panelVariants}
@@ -149,7 +149,7 @@ function Modal({ eventModal, setShowModal, heading, description, buttonText }: P
                   disabled={logoutMutation.isLoading}
                   onClick={handleSubmit}
                   className={classNames(
-                    'inline-flex w-full justify-center items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto'
+                    'inline-flex w-full items-center justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto'
                   )}>
                   {buttonText}
                 </Button>

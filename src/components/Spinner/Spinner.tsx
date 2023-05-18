@@ -2,7 +2,7 @@ import loadingGif from '@/assets/images/loading.gif'
 
 const Spinner = () => {
   return (
-    <div className="flex justify-center items-center h-full min-h-[600px]">
+    <div className="flex h-full min-h-[600px] items-center justify-center">
       <img className="h-16 w-16" src={loadingGif} alt="loading" />
     </div>
   )

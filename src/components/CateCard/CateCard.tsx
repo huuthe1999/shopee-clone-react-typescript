@@ -10,12 +10,12 @@ interface CateCardProps {
 const CateCard = ({ image, name, link = PATHS.HOME_PATH }: CateCardProps) => {
   return (
     <Link to={link}>
-      <div className="flex flex-col justify-center items-center hover:-translate-y-1 transition-transform">
-        <div className="overflow-hidden aspect-square mb-0 mt-4 mx-6">
+      <div className="flex flex-col items-center justify-center transition-transform hover:-translate-y-1">
+        <div className="mx-6 mb-0 mt-4 aspect-square overflow-hidden">
           <img src={image} alt="" className="block overflow-hidden rounded-2xl p-4" />
         </div>
 
-        <div className="overflow-hidden mb-2">
+        <div className="mb-2 overflow-hidden">
           <p className="line-clamp-2 h-fit text-center text-xs">{name}</p>
         </div>
       </div>

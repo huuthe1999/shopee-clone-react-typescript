@@ -34,7 +34,7 @@ const NavItemWithModal = ({
       ) : children ? (
         <>{children}</>
       ) : (
-        <span className="flex gap-1 hover:text-neutral-200 items-center cursor-pointer">
+        <span className="flex cursor-pointer items-center gap-1 hover:text-neutral-200">
           {content}
         </span>
       )}

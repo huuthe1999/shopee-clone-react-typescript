@@ -12,7 +12,7 @@ const Home = () => {
   return (
     <>
       <div className="bg-white py-8">
-        <div className="max-w-6xl flex flex-col mx-auto gap-y-4">
+        <div className="mx-auto flex max-w-6xl flex-col gap-y-4">
           {/* Banner */}
           <Banner />
           {/* Category section */}
@@ -20,11 +20,11 @@ const Home = () => {
           {/* Product section */}
           <div className="mt-14" id="product-list">
             {/* Sticky header */}
-            <nav className="sticky z-50 top-0 bg-white">
+            <nav className="sticky top-0 z-50 bg-white">
               <ul className="border-b-4 border-primary">
-                <li className="text-primary text-center text-base uppercase cursor-pointer font-semibold tracking-wide">
+                <li className="cursor-pointer text-center text-base font-semibold uppercase tracking-wide text-primary">
                   <button
-                    className="w-full py-4 px-5"
+                    className="w-full px-5 py-4"
                     onClick={(e) => {
                       e.preventDefault()
                       const target = document.getElementById('product-list')
@@ -45,7 +45,7 @@ const Home = () => {
               />
             ))}
             {(isLoading || isFetchingNextPage) && (
-              <div className="grid gap-2 mt-2 grid-cols-6">
+              <div className="mt-2 grid grid-cols-6 gap-2">
                 {Array(12)
                   .fill(null)
                   .map((item, index) => (
@@ -56,7 +56,7 @@ const Home = () => {
             {hasNextPage && (
               <Button
                 disabled={isFetchingNextPage}
-                className="border bg-gray-300 mx-auto block mt-4 px-4 py-2 rounded-sm hover:opacity-70 hover:border-stone-400 transition-all"
+                className="mx-auto mt-4 block rounded-sm border bg-gray-300 px-4 py-2 transition-all hover:border-stone-400 hover:opacity-70"
                 onClick={() => fetchNextPage()}>
                 Xem thêm
               </Button>

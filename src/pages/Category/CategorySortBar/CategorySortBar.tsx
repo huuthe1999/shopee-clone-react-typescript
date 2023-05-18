@@ -58,7 +58,7 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
   const renderSortBar = SORT_BY_LIST.map(({ text, type, isDropdown }) => {
     return (
       <li
-        className={classNames('rounded-md cursor-pointer text-neutral-600 transition', {
+        className={classNames('cursor-pointer rounded-md text-neutral-600 transition', {
           'text-white': sortBy === type,
           'hover:opacity-80': sortBy !== type
         })}
@@ -72,10 +72,10 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
             click={false}>
             <TooltipTrigger asChild>
               <ForwardButton
-                className={classNames('relative px-4 py-2 flex flex-nowrap items-stretch')}>
+                className={classNames('relative flex flex-nowrap items-stretch px-4 py-2')}>
                 {sortBy === type && (
                   <motion.div
-                    className="absolute bg-primary inset-0 rounded-md"
+                    className="absolute inset-0 rounded-md bg-primary"
                     layoutId="underline"
                     // style={{ borderRadius: 9999 }}
                     transition={{
@@ -120,7 +120,7 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
             onClick={() => handleSetSortBy(type as SortByType)}>
             {sortBy === type && (
               <motion.div
-                className="absolute bg-primary inset-0 rounded-md"
+                className="absolute inset-0 rounded-md bg-primary"
                 layoutId="underline"
                 // style={{ borderRadius: 9999 }}
                 transition={{
@@ -139,30 +139,30 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
   return (
     <div
       className={classNames(
-        'flex flex-nowrap justify-between items-center py-3 px-5 text-sm gap-x-2 bg-black/[0.03]',
+        'flex flex-nowrap items-center justify-between gap-x-2 bg-black/[0.03] px-5 py-3 text-sm',
         [className]
       )}>
       {/* Sort bar */}
       <div className="flex items-center gap-x-2">
         <span>Sắp xếp theo</span>
-        <ul className="flex flex-nowrap text-center gap-2 shrink">{renderSortBar}</ul>
+        <ul className="flex shrink flex-nowrap gap-2 text-center">{renderSortBar}</ul>
       </div>
       {/* Pagination */}
       {pageCount > 1 && (
         <div className="flex items-center justify-end gap-2 self-stretch">
-          <p className="flex flex-nowrap my-auto px-2">
-            <span className="text-primary line-clamp-1">{page + 1}</span>
+          <p className="my-auto flex flex-nowrap px-2">
+            <span className="line-clamp-1 text-primary">{page + 1}</span>
             <span className="line-clamp-1">/{pageCount}</span>
           </p>
 
           <Button
-            className="px-3 text-center h-full"
+            className="h-full px-3 text-center"
             disabled={page === 0}
             onClick={handleSetPrevPage}>
             <ChevronLeft size={16} />
           </Button>
           <Button
-            className="px-3 text-center h-full"
+            className="h-full px-3 text-center"
             disabled={page === pageCount - 1}
             onClick={handleSetNextPage}>
             <ChevronRight size={16} />

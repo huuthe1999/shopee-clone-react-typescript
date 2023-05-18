@@ -7,11 +7,11 @@ const Header = () => {
   const match = useMatch(PATHS.LOGIN_PATH)
 
   return (
-    <header className="bg-white py-6 px-4">
-      <nav className="mx-auto max-w-6xl flex flex-row items-end justify-between">
+    <header className="bg-white px-4 py-6">
+      <nav className="mx-auto flex max-w-6xl flex-row items-end justify-between">
         <div className="flex items-center gap-4">
           <Link to={PATHS.HOME_PATH}>
-            <LogoIcon className="h-6 lg:h-8 fill-primary -mt-1" />
+            <LogoIcon className="-mt-1 h-6 fill-primary lg:h-8" />
           </Link>
           <p className="text-xl lg:text-2xl">{match ? 'Đăng nhập' : 'Đăng ký'}</p>
         </div>

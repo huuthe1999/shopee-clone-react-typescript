@@ -26,11 +26,11 @@ const CateSection = ({ type, name, data, onChangeParam, className }: CateSection
 
   return (
     <>
-      <section className="text-sm text-black/[0.87] mt-2 border-b border-black/30">
+      <section className="mt-2 border-b border-black/30 text-sm text-black/[0.87]">
         <p className="flex">
           {name}
           {params && params?.length > 0 && (
-            <span className="inline-flex items-center justify-center w-4 h-4 ml-2 text-xs font-semibold text-white bg-primary rounded-full">
+            <span className="ml-2 inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white">
               {params?.length}
             </span>
           )}

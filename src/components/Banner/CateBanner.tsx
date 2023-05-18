@@ -33,7 +33,7 @@ const CateBanner = ({
 
   const renderSkeleton = useMemo(
     () => (
-      <div className="grid grid-cols-8 py-2 gap-2">
+      <div className="grid grid-cols-8 gap-2 py-2">
         {[...Array(SIZE)].map((_, index) => (
           <Skeleton key={index} />
         ))}
@@ -58,10 +58,10 @@ const CateBanner = ({
   return (
     <>
       {data?.pages.length && (
-        <div className="pb-4 px-6">
+        <div className="px-6 pb-4">
           {/* Header */}
           {header && (
-            <h1 className="bg-transparent text-lg py-4 uppercase text-black/50">{header}</h1>
+            <h1 className="bg-transparent py-4 text-lg uppercase text-black/50">{header}</h1>
           )}
           <Carousel
             cellSpacing={4}

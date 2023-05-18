@@ -14,55 +14,61 @@ export const customItemStyles: ItemStyles = {
   inactiveStrokeColor: '#e17b21'
 }
 
-const Product = ({ slug, discount, images, name, price, rating, sold, shopType }: IProduct) => {
+const Product = ({
+  slug,
+  discount,
+  images,
+  name,
+  price,
+  rating,
+  sold,
+  shopType,
+  province: { name: provinceName }
+}: IProduct) => {
   return (
     <Link to={slug}>
-      <section className="my-1 relative flex flex-col hover:-translate-y-[2px] transition ease-linear shadow-xl rounded-sm border border-transparent hover:border-primary hover:shadow-md h-full">
+      <section className="relative my-1 flex h-full flex-col rounded-sm border border-transparent shadow-xl transition ease-linear hover:-translate-y-[2px] hover:border-primary hover:shadow-md">
         {/* Favorite Ribbon */}
         {shopType === 2 && (
-          <div className="absolute z-10 max-w-[75%] bg-primary -translate-x-1 text-white text-xs px-1 top-2 rounded-r-sm">
-            <div className="absolute z-10 left-0 bg-primary/90 w-1 h-1 triangle-top-right top-full"></div>
-            <span className="h-full inline-block">Yêu thích</span>
+          <div className="absolute top-2 z-10 max-w-[75%] -translate-x-1 rounded-r-sm bg-primary px-1 text-xs text-white">
+            <div className="triangle-top-right absolute left-0 top-full z-10 h-1 w-1 bg-primary/90"></div>
+            <span className="inline-block h-full">Yêu thích</span>
           </div>
         )}
 
         {/* Mall Ribbon */}
         {shopType === 1 && (
-          <div className="absolute z-10 max-w-[75%] bg-red-700 -translate-x-1 text-white text-xs px-1 top-2 rounded-r-sm">
-            <div className="absolute z-10 left-0 bg-red-700 w-1 h-1 triangle-top-right top-full"></div>
-            <span className="h-full inline-block">Mall</span>
+          <div className="absolute top-2 z-10 max-w-[75%] -translate-x-1 rounded-r-sm bg-red-700 px-1 text-xs text-white">
+            <div className="triangle-top-right absolute left-0 top-full z-10 h-1 w-1 bg-red-700"></div>
+            <span className="inline-block h-full">Mall</span>
           </div>
         )}
 
         {/* Ribbon voucher */}
         {discount > 0 && (
-          <div className="ribbon bg-yellow-300 absolute z-10 right-0 p-1">
-            <span className="text-xs text-primary block text-center">{discount}%</span>
-            <span className="text-xs text-white block text-center mb-1 uppercase">Giảm</span>
+          <div className="ribbon absolute right-0 z-10 bg-yellow-300 p-1">
+            <span className="block text-center text-xs text-primary">{discount}%</span>
+            <span className="mb-1 block text-center text-xs uppercase text-white">Giảm</span>
           </div>
         )}
 
         {/* Image */}
-        <div className="relative overflow-hidden bg-transparent w-fit">
+        <div className="relative w-fit overflow-hidden bg-transparent">
           <img
-            src={
-              images[0].url ||
-              'https://res.cloudinary.com/dknvhah81/image/upload/v1683429549/shoppe-default/20210604_RGFkOmxRF6Emt7SXpoGBDyZO_o1vv86.png'
-            }
+            src={images[0].url}
             alt={slug}
             className="aspect-square w-full"
-            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.onerror = null
+              e.currentTarget.src = '/images/default-image-product.png'
+            }}
           />
           {/* Overlay image */}
-          <div className="absolute z-10 inset-0 bg-transparent">
-            <img
-              src="https://res.cloudinary.com/dknvhah81/image/upload/v1682351189/category-banner/vn-50009109-191aec5513df34fbd150de9bb7aa884c_erbv4r.png"
-              alt=""
-              className="w-full"
-            />
+          <div className="absolute inset-0 z-10 bg-transparent">
+            <img src="/images/overlay-image-product.png" alt="" className="w-full object-cover" />
           </div>
         </div>
-        <div className="flex flex-col p-2 justify-between flex-1">
+        <div className="flex flex-1 flex-col justify-between p-2">
           <p className="line-clamp-2 text-sm">{name}</p>
           <div className="mt-3 flex flex-col gap-y-2">
             <div className="inline-flex gap-x-2">
@@ -70,13 +76,13 @@ const Product = ({ slug, discount, images, name, price, rating, sold, shopType }
               {discount > 0 && (
                 <span
                   className={classNames(
-                    'text-sm line-clamp-1 text-black/[0.54] line-through break-words w-full'
+                    'line-clamp-1 w-full break-words text-sm text-black/[0.54] line-through'
                   )}>
                   {formatCurrency((price * (100 - discount)) / 100)}
                 </span>
               )}
               {/* Price */}
-              <span className={classNames('text-sm line-clamp-1 break-words text-primary w-full')}>
+              <span className={classNames('line-clamp-1 w-full break-words text-sm text-primary')}>
                 {formatCurrency(price)}
               </span>
             </div>
@@ -87,10 +93,14 @@ const Product = ({ slug, discount, images, name, price, rating, sold, shopType }
                 itemStyles={customItemStyles}
                 className="h-full max-w-[40%] pr-2"
               />
-              <p className="text-xs text-black/[0.54] line-clamp-1 whitespace-pre-wrap col-auto">
+              <p className="col-auto line-clamp-1 whitespace-pre-wrap text-xs text-black/[0.54]">
                 Đã bán {formatNumber(sold)}
               </p>
             </div>
+            {/* Location */}
+            <p className="col-span-full mt-2 line-clamp-1 text-xs text-black/[0.65]">
+              {provinceName}
+            </p>
           </div>
         </div>
       </section>

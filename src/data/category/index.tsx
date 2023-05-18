@@ -92,7 +92,7 @@ export const FILTER_LIST = [
         name: (
           <div className="flex gap-x-2">
             <Rating readOnly value={5} itemStyles={customItemStyles} style={{ maxWidth: 100 }} />
-            <span className="shrink-0 invisible">trở lên</span>
+            <span className="invisible shrink-0">trở lên</span>
           </div>
         )
       },

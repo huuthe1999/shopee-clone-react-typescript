@@ -20,16 +20,16 @@ const MenuItem = ({
     <>
       <li className={classNames('hover:bg-gray-200 hover:text-primary', [className])}>
         {to ? (
-          <Link to={to} className="p-2 flex flex-nowrap justify-between gap-2">
+          <Link to={to} className="flex flex-nowrap justify-between gap-2 p-2">
             {image && (
-              <div className="flex-shrink-0 w-10 h-10 overflow-hidden">
+              <div className="h-10 w-10 flex-shrink-0 overflow-hidden">
                 <img src={image} alt="Ảnh sản phẩm" />
               </div>
             )}
-            <div className="flex-1 flex flex-nowrap overflow-hidden">
-              <p className="basis-4/6 line-clamp-1 h-fit">{text}</p>
+            <div className="flex flex-1 flex-nowrap overflow-hidden">
+              <p className="line-clamp-1 h-fit basis-4/6">{text}</p>
               {price && (
-                <div className="basis-1/6 text-right ml-10 text-primary">
+                <div className="ml-10 basis-1/6 text-right text-primary">
                   {formatCurrency(price)}
                 </div>
               )}
@@ -37,7 +37,7 @@ const MenuItem = ({
           </Link>
         ) : (
           <button
-            className={classNames('w-full p-2 text-left flex items-center gap-2', [
+            className={classNames('flex w-full items-center gap-2 p-2 text-left', [
               buttonClassName
             ])}
             onClick={onClick}>

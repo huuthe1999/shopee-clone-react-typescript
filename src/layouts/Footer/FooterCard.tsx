@@ -11,13 +11,13 @@ const FooterCard = ({ cardItem, isLastItem }: Props) => {
   const renderChildren = cardItem.children.map((item, index) => (
     <li
       key={index}
-      className={classNames('text-xs mb-3', {
+      className={classNames('mb-3 text-xs', {
         'mx-auto': isLastItem,
-        'flex p-1 bg-white gap-2': item.image,
+        'flex gap-2 bg-white p-1': item.image,
         'flex basis-full': !item.image,
         'basis-full bg-transparent': item.image && item.title
       })}>
-      {item.image && <img src={item.image} alt="social" className="max-w-full max-h-full" />}
+      {item.image && <img src={item.image} alt="social" className="max-h-full max-w-full" />}
       {item.title && (
         <Link to="#" className="hover:text-orange">
           {item.title}
@@ -28,7 +28,7 @@ const FooterCard = ({ cardItem, isLastItem }: Props) => {
   return (
     <>
       <section>
-        <h6 className="font-bold text-xs my-6 text-neutral-700">{cardItem.title}</h6>
+        <h6 className="my-6 text-xs font-bold text-neutral-700">{cardItem.title}</h6>
         <ul className="flex flex-wrap gap-x-2">{renderChildren}</ul>
       </section>
     </>

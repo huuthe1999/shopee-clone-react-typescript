@@ -9,9 +9,9 @@ const Banner = (props: Props) => {
   return (
     <>
       {/* Top banner */}
-      <div className="flex flex-row flex-1 items-end gap-x-2">
+      <div className="flex flex-1 flex-row items-end gap-x-2">
         {/* Top left banner */}
-        <div className="basis-2/3 bg-transparent max-sm:basis-full h-full flex-shrink-0">
+        <div className="h-full flex-shrink-0 basis-2/3 bg-transparent max-sm:basis-full">
           <Carousel
             autoplay
             wrapAround
@@ -26,16 +26,16 @@ const Banner = (props: Props) => {
           </Carousel>
         </div>
         {/* Top right banner */}
-        <div className="basis-1/3 flex flex-col max-sm:basis-0 gap-y-[5px]">
+        <div className="flex basis-1/3 flex-col gap-y-[5px] max-sm:basis-0">
           <img
-            className="w-full h-full"
+            className="h-full w-full"
             src="https://res.cloudinary.com/dknvhah81/image/upload/v1682264292/category-banner/vn-50009109-5ac166c8551a403fb209c8e7b7f593f1_xhdpi_fngeqh.jpg"
             alt=""
             loading="lazy"
           />
 
           <img
-            className="w-full h-full"
+            className="h-full w-full"
             src="https://res.cloudinary.com/dknvhah81/image/upload/v1682264327/category-banner/vn-50009109-6377f701bb7902c943f995f1acfb969a_xhdpi_pdzlcr.png"
             alt=""
             loading="lazy"

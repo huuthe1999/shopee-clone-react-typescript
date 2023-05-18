@@ -21,12 +21,12 @@ const Pagination = ({ pageCount, onPageChange }: Props) => {
     <ReactPaginate
       breakLabel="..."
       previousLabel={
-        <div className="h-10 w-10 mr-1 flex justify-center items-center rounded-full bg-gray-200">
+        <div className="mr-1 flex h-10 w-10 items-center justify-center rounded-full bg-gray-200">
           <ChevronLeft size={24} />
         </div>
       }
       nextLabel={
-        <div className="h-10 w-10 ml-1 flex justify-center items-center rounded-full bg-gray-200">
+        <div className="ml-1 flex h-10 w-10 items-center justify-center rounded-full bg-gray-200">
           <ChevronRight size={24} />
         </div>
       }
@@ -34,7 +34,7 @@ const Pagination = ({ pageCount, onPageChange }: Props) => {
       forcePage={page}
       pageRangeDisplayed={3}
       marginPagesDisplayed={2}
-      className="flex items-center my-12 justify-center text-black/40 gap-x-2"
+      className="my-12 flex items-center justify-center gap-x-2 text-black/40"
       breakClassName="hidden sm:list-item self-stretch w-10 rounded-full transition duration-150 ease-in"
       pageClassName="hidden sm:list-item self-stretch w-10 rounded-full transition duration-150 ease-in"
       breakLinkClassName="h-full flex items-center justify-center"
