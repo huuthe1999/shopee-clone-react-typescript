@@ -15,6 +15,8 @@ export const customItemStyles: ItemStyles = {
 }
 
 const Product = ({
+  _id,
+  categorySlug,
   slug,
   discount,
   images,
@@ -26,7 +28,7 @@ const Product = ({
   province: { name: provinceName }
 }: IProduct) => {
   return (
-    <Link to={slug}>
+    <Link to={`/${categorySlug}/${slug}-${_id}`}>
       <section className="relative my-1 flex h-full flex-col rounded-sm border border-transparent shadow-xl transition ease-linear hover:-translate-y-[2px] hover:border-primary hover:shadow-md">
         {/* Favorite Ribbon */}
         {shopType === 2 && (

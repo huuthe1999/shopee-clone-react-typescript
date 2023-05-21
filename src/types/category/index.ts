@@ -4,7 +4,7 @@ export type OrderType = 'asc' | 'desc' | ''
 export type SortByType = 'popular' | 'newest' | 'sales' | 'price'
 
 export interface ICategoryResponse extends BaseResponse {
-  data: IBaseDataPagination<ICategory>
+  data: IBaseDataPagination<ICategory[]>
 }
 
 export interface ISubCategoryResponse extends BaseResponse {

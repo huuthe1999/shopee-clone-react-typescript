@@ -7,9 +7,16 @@ import { ChevronLeft, ChevronRight } from 'react-feather'
 
 import ButtonControl from './ButtonControl'
 
-interface CarouselProps extends Partial<InternalCarouselProps> {}
+interface CarouselProps extends Partial<InternalCarouselProps> {
+  hoverHiddenControls?: boolean
+}
 
 const Carousel = ({
+  hoverHiddenControls,
+  autoplayReverse,
+  cellAlign,
+  slideIndex,
+  className,
   cellSpacing,
   wrapAround,
   children,
@@ -18,6 +25,7 @@ const Carousel = ({
   slidesToScroll,
   autoplay,
   defaultControlsConfig,
+  renderBottomCenterControls,
   beforeSlide,
   afterSlide
 }: CarouselProps) => {
@@ -34,6 +42,10 @@ const Carousel = ({
       role="button"
       tabIndex={0}>
       <NukaCarousel
+        autoplayReverse={autoplayReverse}
+        cellAlign={cellAlign}
+        slideIndex={slideIndex}
+        className={className}
         cellSpacing={cellSpacing}
         beforeSlide={beforeSlide}
         afterSlide={afterSlide}
@@ -52,7 +64,7 @@ const Carousel = ({
                 previousDisabled={previousDisabled}
                 className={classNames(
                   {
-                    hidden: previousDisabled
+                    hidden: hoverHiddenControls ?? previousDisabled
                   },
                   defaultControlsConfig?.prevButtonClassName
                 )}>
@@ -77,7 +89,7 @@ const Carousel = ({
                   nextDisabled={nextDisabled}
                   className={classNames(
                     {
-                      hidden: nextDisabled
+                      hidden: hoverHiddenControls ?? nextDisabled
                     },
                     defaultControlsConfig?.nextButtonClassName
                   )}>
@@ -98,6 +110,7 @@ const Carousel = ({
           pagingDotsContainerClassName: `gap-3 ${defaultControlsConfig?.pagingDotsContainerClassName}`,
           pagingDotsClassName: `w-2 h-2 border border-neutral-300 ${defaultControlsConfig?.pagingDotsClassName}`
         }}
+        renderBottomCenterControls={renderBottomCenterControls}
         withoutControls={hiddenControls}>
         {children}
       </NukaCarousel>

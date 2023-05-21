@@ -1,7 +1,7 @@
 import { BaseResponse, IBaseDataPagination } from '@/types'
 
 export interface CateCardBannerSuccessResponse extends BaseResponse {
-  data: IBaseDataPagination<CateCardBanner>
+  data: IBaseDataPagination<CateCardBanner[]>
 }
 
 export interface CateCardBanner {

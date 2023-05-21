@@ -12,6 +12,7 @@ const GuestLayout = React.lazy(() => import('@/layouts/GuestLayout'))
 const MainLayout = React.lazy(() => import('@/layouts/MainLayout'))
 const CartPage = React.lazy(() => import('@/pages/Cart'))
 const CategoryPage = React.lazy(() => import('@/pages/Category'))
+const ProductDetailPage = React.lazy(() => import('@/pages/ProductDetail'))
 
 const RouterElementProvider = () => {
   const router = createBrowserRouter([
@@ -39,6 +40,10 @@ const RouterElementProvider = () => {
         {
           element: <CategoryPage />,
           path: PATHS.CATEGORY_PATH
+        },
+        {
+          element: <ProductDetailPage />,
+          path: PATHS.PRODUCT_DETAIL_PATH
         }
       ]
     },
@@ -65,6 +70,10 @@ const RouterElementProvider = () => {
         {
           element: <CategoryPage />,
           path: PATHS.CATEGORY_PATH
+        },
+        {
+          element: <ProductDetailPage />,
+          path: PATHS.PRODUCT_DETAIL_PATH
         }
       ]
     },

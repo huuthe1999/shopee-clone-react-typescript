@@ -1,4 +1,5 @@
 export * from './Banner'
+export * from './BreadCrumb'
 export * from './Button'
 export { default as CardBanner } from './CardBanner'
 export * from './Carousel'

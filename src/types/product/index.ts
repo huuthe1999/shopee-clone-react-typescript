@@ -1,7 +1,11 @@
 import { BaseResponse, IBaseDataPagination, IBaseItem, IFile, IProvince } from '@/types'
 
 export interface IProductResponse extends BaseResponse {
-  data: IBaseDataPagination<IProduct>
+  data: IBaseDataPagination<IProduct[]>
+}
+
+export interface ISingleProductResponse extends BaseResponse {
+  data: ISingleProduct
 }
 
 export interface IProduct extends IBaseItem {
@@ -23,4 +27,11 @@ export interface IProduct extends IBaseItem {
   description?: string
   createdAt: string
   updatedAt: string
+}
+
+export interface ISingleProduct extends Omit<IProduct, 'categorySlug' | 'subCategory'> {
+  category: IBaseItem & {
+    slug: string
+  }
+  subCategory: IBaseItem
 }

@@ -15,7 +15,7 @@ export interface BaseErrorResponse<TFields extends FieldValues> extends BaseResp
 }
 
 export interface IBaseDataPagination<T> {
-  items: Array<T>
+  items: T
   totalItems: number
   offset: number
   perPage: number

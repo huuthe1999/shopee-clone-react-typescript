@@ -110,7 +110,7 @@ const MainHeader = () => {
       {/* Navbar */}
       <nav className="mx-auto mb-2 flex max-w-6xl flex-row items-center justify-between overflow-hidden text-xs font-semibold max-sm:hidden">
         {/* Left Nav */}
-        <ul className="flex divide-x divide-slate-400 ">{renderNav(LEFT_NAV)}</ul>
+        <ul className="flex divide-x divide-slate-400">{renderNav(LEFT_NAV)}</ul>
         {/* Right Nav */}
         <ul className="flex items-center divide-x divide-slate-400">{renderNav(RIGHT_NAV)}</ul>
       </nav>
