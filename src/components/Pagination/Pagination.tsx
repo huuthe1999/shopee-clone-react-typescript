@@ -35,8 +35,8 @@ const Pagination = ({ pageCount, onPageChange }: Props) => {
       pageRangeDisplayed={3}
       marginPagesDisplayed={2}
       className="my-12 flex items-center justify-center gap-x-2 text-black/40"
-      breakClassName="hidden sm:list-item self-stretch w-10 rounded-full transition duration-150 ease-in"
-      pageClassName="hidden sm:list-item self-stretch w-10 rounded-full transition duration-150 ease-in"
+      breakClassName="hidden sm:list-item self-stretch w-10 rounded-full"
+      pageClassName="hidden sm:list-item self-stretch w-10 rounded-full"
       breakLinkClassName="h-full flex items-center justify-center"
       pageLinkClassName="h-full flex items-center justify-center"
       // sm:flex justify-center items-center hidden text-center

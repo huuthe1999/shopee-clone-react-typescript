@@ -1,7 +1,7 @@
-import { useCallback } from 'react'
+import { FormEvent, useCallback, useEffect, useRef } from 'react'
 
 import { Home, Search, ShoppingCart } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 import {
   Button,
@@ -82,6 +82,10 @@ const fakeData = [
 
 const MainHeader = () => {
   const { accessToken, currentUser } = useAuthContext()
+  const [searchParams] = useSearchParams()
+
+  const inputRef = useRef<HTMLInputElement>(null)
+  const navigate = useNavigate()
 
   const renderNav = useCallback(
     (data: INavItem[]) =>
@@ -104,6 +108,27 @@ const MainHeader = () => {
       }),
     [accessToken, currentUser]
   )
+
+  useEffect(() => {
+    const searchKeyWord = searchParams.get('keyword')
+    if (searchKeyWord) {
+      if (inputRef.current) {
+        inputRef.current.value = searchKeyWord
+      }
+    } else {
+      if (inputRef.current) {
+        inputRef.current.value = ''
+      }
+    }
+  }, [searchParams])
+
+  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const value = inputRef.current?.value
+    if (value?.trim()) {
+      navigate({ pathname: PATHS.SEARCH_PATH, search: `?keyword=${value.trim()}` })
+    }
+  }
 
   return (
     <header className="bg-gradient-to-b from-primary to-secondary px-4 py-2 text-white">
@@ -133,16 +158,21 @@ const MainHeader = () => {
         {/* Search Container*/}
         <div className="w-full">
           {/* Search */}
-          <div className="flex flex-nowrap gap-1 rounded-md bg-white max-sm:gap-0">
+          <form
+            className="flex flex-nowrap gap-1 rounded-md bg-white max-sm:gap-0"
+            onSubmit={handleSearch}>
             <input
+              ref={inputRef}
               type="text"
               placeholder="Tìm kiếm sản phẩm tại đây"
               className="rounded-sm pl-4 pr-2 text-black focus:outline focus:outline-2 focus:outline-offset-4 max-sm:outline-none"
             />
-            <span className="m-1 flex cursor-pointer items-center rounded-sm bg-primary px-2 py-1 text-white hover:opacity-90 md:px-6 md:py-2">
+            <Button
+              className="m-1 flex cursor-pointer items-center rounded-sm bg-primary px-2 py-1 text-white hover:opacity-90 md:px-6 md:py-2"
+              type="submit">
               <Search className="text-xs sm:text-2xl" size={16} />
-            </span>
-          </div>
+            </Button>
+          </form>
 
           {/* Category */}
           <div className="mt-1 h-6 overflow-hidden max-sm:hidden">

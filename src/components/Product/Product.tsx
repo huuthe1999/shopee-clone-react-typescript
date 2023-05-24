@@ -55,37 +55,39 @@ const Product = ({
         )}
 
         {/* Image */}
-        <div className="relative w-fit overflow-hidden bg-transparent">
+        <div className="relative min-h-[50%] w-full overflow-hidden bg-transparent">
           <img
             src={images[0].url}
             alt={slug}
-            className="aspect-square w-full"
+            className="aspect-square w-full object-cover"
             onError={(e) => {
               e.currentTarget.onerror = null
               e.currentTarget.src = '/images/default-image-product.png'
             }}
           />
           {/* Overlay image */}
-          <div className="absolute inset-0 z-10 bg-transparent">
-            <img src="/images/overlay-image-product.png" alt="" className="w-full object-cover" />
-          </div>
+          <img
+            src="/images/overlay-image-product.png"
+            alt=""
+            className="absolute inset-0 z-10 bg-transparent object-cover"
+          />
         </div>
         <div className="flex flex-1 flex-col justify-between p-2">
           <p className="line-clamp-2 text-sm">{name}</p>
           <div className="mt-3 flex flex-col gap-y-2">
             <div className="inline-flex gap-x-2">
-              {/* Discount */}
+              {/*Original Price */}
               {discount > 0 && (
                 <span
                   className={classNames(
                     'line-clamp-1 w-full break-words text-sm text-black/[0.54] line-through'
                   )}>
-                  {formatCurrency((price * (100 - discount)) / 100)}
+                  {formatCurrency(price)}
                 </span>
               )}
-              {/* Price */}
+              {/* Discount Price */}
               <span className={classNames('line-clamp-1 w-full break-words text-sm text-primary')}>
-                {formatCurrency(price)}
+                {formatCurrency((price * (100 - discount)) / 100)}
               </span>
             </div>
             <div className="flex gap-x-4">

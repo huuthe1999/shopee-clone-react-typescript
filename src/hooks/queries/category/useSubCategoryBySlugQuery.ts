@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { ENDPOINTS } from '@/constants'
+import { ENDPOINTS, PATHS } from '@/constants'
 import { categoryServices } from '@/services'
 import { ICategory } from '@/types'
 
@@ -16,7 +16,7 @@ export const useSubCategoryBySlugQuery = ({
     queryFn: ({ signal }) =>
       categoryServices.getSubCategoryBySlug(signal, categorySlug, { select }),
     keepPreviousData: true,
-    enabled: categorySlug !== undefined,
+    enabled: categorySlug !== undefined && !PATHS.SEARCH_PATH.includes(categorySlug),
     staleTime: Infinity
   })
 }

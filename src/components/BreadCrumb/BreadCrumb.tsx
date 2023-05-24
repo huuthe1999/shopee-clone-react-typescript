@@ -61,7 +61,7 @@ export const BreadCrumb = ({ data }: BreadCrumbProps) => {
 
   return (
     <nav className="flex text-sm" aria-label="Breadcrumb">
-      <ol className="inline-flex items-center">{renderBreadCrumb}</ol>
+      <ol className="inline-flex flex-wrap items-center">{renderBreadCrumb}</ol>
     </nav>
   )
 }

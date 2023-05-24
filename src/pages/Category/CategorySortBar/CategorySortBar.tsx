@@ -58,7 +58,7 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
   const renderSortBar = SORT_BY_LIST.map(({ text, type, isDropdown }) => {
     return (
       <li
-        className={classNames('cursor-pointer rounded-md text-neutral-600 transition', {
+        className={classNames('cursor-pointer rounded-md bg-white text-neutral-600 transition', {
           'text-white': sortBy === type,
           'hover:opacity-80': sortBy !== type
         })}
@@ -72,20 +72,26 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
             click={false}>
             <TooltipTrigger asChild>
               <ForwardButton
-                className={classNames('relative flex flex-nowrap items-stretch px-4 py-2')}>
+                className={classNames(
+                  'relative flex min-w-[12.5rem] flex-nowrap items-stretch justify-between rounded-md px-4 py-2'
+                )}>
                 {sortBy === type && (
-                  <motion.div
+                  <motion.span
                     className="absolute inset-0 rounded-md bg-primary"
                     layoutId="underline"
                     // style={{ borderRadius: 9999 }}
                     transition={{
-                      type: 'tween',
-                      duration: 0.4
+                      type: 'spring',
+                      bounce: 0.2,
+                      duration: 0.6
                     }}
                   />
                 )}
-                <span className="relative z-10 pr-16">{text.vi}</span>
-                <span className="relative z-10 my-auto shrink-0">
+                <span className="relative">
+                  {text.vi}
+                  {Boolean(order) && `: ${ORDER_LIST.find(({ type }) => type === order)?.text.vi}`}
+                </span>
+                <span className="relative my-auto shrink-0">
                   <ChevronDown size={16} />
                 </span>
               </ForwardButton>
@@ -116,20 +122,26 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
         ) : (
           <Button
             disabled={sortBy === type}
-            className={classNames('relative px-4 py-2', { '!opacity-100': sortBy === type })}
+            className={classNames('relative rounded-md px-4 py-2', {
+              '!opacity-100': sortBy === type
+            })}
+            style={{
+              WebkitTapHighlightColor: 'transparent'
+            }}
             onClick={() => handleSetSortBy(type as SortByType)}>
             {sortBy === type && (
-              <motion.div
+              <motion.span
                 className="absolute inset-0 rounded-md bg-primary"
                 layoutId="underline"
                 // style={{ borderRadius: 9999 }}
                 transition={{
-                  type: 'tween',
-                  duration: 0.4
+                  type: 'spring',
+                  bounce: 0.2,
+                  duration: 0.6
                 }}
               />
             )}
-            <span className="relative z-10">{text.vi}</span>
+            <span className="relative">{text.vi}</span>
           </Button>
         )}
       </li>
@@ -156,13 +168,13 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
           </p>
 
           <Button
-            className="h-full px-3 text-center"
+            className="h-full bg-white px-3 text-center"
             disabled={page === 0}
             onClick={handleSetPrevPage}>
             <ChevronLeft size={16} />
           </Button>
           <Button
-            className="h-full px-3 text-center"
+            className="h-full bg-white px-3 text-center"
             disabled={page === pageCount - 1}
             onClick={handleSetNextPage}>
             <ChevronRight size={16} />

@@ -9,15 +9,22 @@ import { SearchParamsProps } from '@/utils'
 import Product from './Product'
 
 interface ProductListProps extends HTMLAttributes<HTMLDivElement> {
+  isFetching?: boolean
   data?: IProduct[]
   onResetParam?: (params?: SearchParamsProps) => void
   hasFilter?: boolean
 }
 
-const ProductList = ({ data, className, hasFilter, onResetParam }: ProductListProps) => {
+const ProductList = ({
+  isFetching,
+  data,
+  className,
+  hasFilter,
+  onResetParam
+}: ProductListProps) => {
   const ref = useRef<HTMLDivElement>(null)
 
-  const renderData = !data ? (
+  const renderData = isFetching ? (
     Array(15)
       .fill(null)
       .map((_, index) => <SkeletonProduct key={index} />)
@@ -25,11 +32,7 @@ const ProductList = ({ data, className, hasFilter, onResetParam }: ProductListPr
     data.map((product) => <Product key={product._id} {...product} />)
   ) : (
     <div className="col-span-full my-10 flex flex-col items-center gap-y-4">
-      <img
-        src="https://res.cloudinary.com/dknvhah81/image/upload/v1683041957/shoppe-default/a60759ad1dabe909c46a817ecbf71878_pjqggx.png"
-        alt=""
-        className="aspect-square w-36"
-      />
+      <img src="/images/loading-image-product.png" alt="" className="aspect-square w-36" />
       <p>
         {hasFilter
           ? 'Hix. Không có sản phẩm nào. Bạn thử tắt điều kiện lọc và tìm lại nhé?'
@@ -46,7 +49,7 @@ const ProductList = ({ data, className, hasFilter, onResetParam }: ProductListPr
   )
 
   return (
-    <div ref={ref} className={classNames('mt-2 grid gap-2', [className])}>
+    <div ref={ref} className={classNames('mt-2 grid place-items-center gap-2', [className])}>
       {renderData}
     </div>
   )

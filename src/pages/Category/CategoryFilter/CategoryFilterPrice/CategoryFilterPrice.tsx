@@ -1,13 +1,14 @@
 import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react'
 
-import queryString from 'query-string'
 import { useSearchParams } from 'react-router-dom'
 
 import { Button } from '@/components'
 import { OrderType, SortByType } from '@/types'
+import { formatSearchParamUrl } from '@/utils'
 
 const CategoryFilterPrice = () => {
   const [searchParams, setSearchParams] = useSearchParams()
+
   const from = searchParams.get('minPrice') ?? ''
   const to = searchParams.get('maxPrice') ?? ''
   const [isError, setIsError] = useState(false)
@@ -54,22 +55,18 @@ const CategoryFilterPrice = () => {
     if (Boolean(from) && Boolean(to) && +from >= +to) {
       setIsError(true)
     } else {
-      setSearchParams(
-        queryString.stringify(
-          {
-            page: 1,
-            minPrice: from,
-            maxPrice: to,
-            order: (searchParams.get('order') as OrderType) || '',
-            sortBy: (searchParams.get('sortBy') as SortByType) || 'popular'
-          },
-          {
-            skipNull: true,
-            skipEmptyString: true
-          }
-        ),
-        { preventScrollReset: true }
-      )
+      const newParamsObject = formatSearchParamUrl({
+        searchParams,
+        params: [
+          { name: 'minPrice', value: from },
+          { name: 'maxPrice', value: to },
+          { name: 'sortBy', value: (searchParams.get('sortBy') as SortByType) || 'popular' },
+          { name: 'order', value: (searchParams.get('order') as OrderType) || '' },
+          { name: 'page', value: 0 }
+        ]
+      })
+
+      setSearchParams(newParamsObject)
     }
   }
 

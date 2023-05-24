@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import { MyErrorBoundary, Spinner } from '@/components'
 import { PATHS } from '@/constants'
@@ -15,70 +15,74 @@ const CategoryPage = React.lazy(() => import('@/pages/Category'))
 const ProductDetailPage = React.lazy(() => import('@/pages/ProductDetail'))
 
 const RouterElementProvider = () => {
-  const router = createBrowserRouter([
-    {
-      element: (
-        <MyErrorBoundary>
-          <MainLayout />
-        </MyErrorBoundary>
-      ),
-      children: [
+  const router = useMemo(
+    () =>
+      createBrowserRouter([
         {
-          path: PATHS.HOME_PATH,
-          element: <HomePage />,
-          index: true
-        },
-        {
-          element: <ProtectedRoute />,
+          element: (
+            <MyErrorBoundary>
+              <MainLayout />
+            </MyErrorBoundary>
+          ),
           children: [
             {
-              path: PATHS.CART_PATH,
-              element: <CartPage />
-            }
-          ]
-        },
-        {
-          element: <CategoryPage />,
-          path: PATHS.CATEGORY_PATH
-        },
-        {
-          element: <ProductDetailPage />,
-          path: PATHS.PRODUCT_DETAIL_PATH
-        }
-      ]
-    },
-    {
-      element: (
-        <MyErrorBoundary>
-          <GuestLayout />
-        </MyErrorBoundary>
-      ),
-      children: [
-        {
-          element: <RejectedRoute />,
-          children: [
-            {
-              path: PATHS.LOGIN_PATH,
-              element: <CredentialPage />
+              path: PATHS.HOME_PATH,
+              element: <HomePage />,
+              index: true
             },
             {
-              path: PATHS.REGISTER_PATH,
-              element: <CredentialPage />
+              element: <ProtectedRoute />,
+              children: [
+                {
+                  path: PATHS.CART_PATH,
+                  element: <CartPage />
+                }
+              ]
+            },
+            {
+              element: <CategoryPage />,
+              path: PATHS.CATEGORY_PATH || PATHS.SEARCH_PATH
+            },
+            {
+              element: <ProductDetailPage />,
+              path: PATHS.PRODUCT_DETAIL_PATH
             }
           ]
         },
         {
-          element: <CategoryPage />,
-          path: PATHS.CATEGORY_PATH
+          element: (
+            <MyErrorBoundary>
+              <GuestLayout />
+            </MyErrorBoundary>
+          ),
+          children: [
+            {
+              element: <RejectedRoute />,
+              children: [
+                {
+                  path: PATHS.LOGIN_PATH,
+                  element: <CredentialPage />
+                },
+                {
+                  path: PATHS.REGISTER_PATH,
+                  element: <CredentialPage />
+                }
+              ]
+            },
+            {
+              element: <CategoryPage />,
+              path: PATHS.CATEGORY_PATH || PATHS.SEARCH_PATH
+            },
+            {
+              element: <ProductDetailPage />,
+              path: PATHS.PRODUCT_DETAIL_PATH
+            }
+          ]
         },
-        {
-          element: <ProductDetailPage />,
-          path: PATHS.PRODUCT_DETAIL_PATH
-        }
-      ]
-    },
-    { path: PATHS.NOTFOUND_PATH, element: <h1>404 Not Found page</h1> }
-  ])
+        { path: PATHS.NOTFOUND_PATH, element: <h1>404 Not Found page</h1> }
+      ]),
+    []
+  )
 
   return (
     <AuthProvider>

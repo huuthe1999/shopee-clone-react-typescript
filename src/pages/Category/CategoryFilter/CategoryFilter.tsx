@@ -76,7 +76,7 @@ function CategoryFilter({ headerText, hasFilter, className, onChangeParam }: Pro
       </div>
 
       {/* Subcategory filter */}
-      <CateSection {...subCategoriesObject} onChangeParam={onChangeParam} />
+      {subCategories && <CateSection {...subCategoriesObject} onChangeParam={onChangeParam} />}
 
       {/* Location filter */}
       <CateSection
