@@ -1,18 +1,23 @@
+import { Suspense, lazy } from 'react'
+
 import { Rating, Star } from '@smastrom/react-rating'
 import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
 import DOMPurify from 'dompurify'
-import { Check, ShoppingCart, Truck } from 'react-feather'
+import { Truck } from 'react-feather'
 import { useParams } from 'react-router-dom'
 
-import { BreadCrumb, BreadCrumbItem, Button, ProductList } from '@/components'
+import { BreadCrumb, BreadCrumbItem, Spinner } from '@/components'
 import { PATHS } from '@/constants'
 import { useProductsQuery } from '@/hooks'
+import { ProductPurchase } from '@/pages/ProductDetail/components/ProductPurchase'
 import { productServices } from '@/services'
+import { SortByType } from '@/types'
 import { formatCurrency, formatNumber } from '@/utils'
 
-import { ProductCarousel, ProductInputNumber } from './components'
+import { ProductCarousel } from './components'
 
+const ProductList = lazy(() => import('@/components/Product/ProductList'))
 interface Props {}
 
 const ProductDetail = (props: Props) => {
@@ -21,18 +26,20 @@ const ProductDetail = (props: Props) => {
   productSlug = productSlug as string
   const productId = productSlug.substring(productSlug.lastIndexOf('-') + 1)
 
-  const { data: productQueryData } = useQuery({
+  const { data: productQueryData, isFetching: isFetchingProductQueryData } = useQuery({
     queryKey: [PATHS.PRODUCT_DETAIL_PATH, productId],
     queryFn: () => productServices.getProduct(productId),
-    staleTime: 10 * 60 * 1000,
+    staleTime: 2 * 60 * 1000,
     keepPreviousData: true
   })
 
   const productData = productQueryData?.data.data
 
-  const { data: productFavQueryData } = useProductsQuery({
+  const { data: productFavQueryData, isInitialLoading } = useProductsQuery({
     size: 18,
     page: 0,
+    sortBy: 'popular' as SortByType,
+    facet: productData?.subCategory._id,
     categorySlug: productData?.category.slug,
     enabled: Boolean(productData)
   })
@@ -64,7 +71,10 @@ const ProductDetail = (props: Props) => {
 
   return (
     <>
-      <div className="mx-auto flex max-w-6xl flex-col">
+      <div
+        className={classNames('mx-auto flex max-w-6xl flex-col', {
+          'pointer-events-none opacity-50': isFetchingProductQueryData
+        })}>
         {/* Breadcrumb */}
         <div className="mt-4">
           <BreadCrumb data={breadCrumb} />
@@ -126,7 +136,7 @@ const ProductDetail = (props: Props) => {
               <div className="flex flex-nowrap items-center gap-x-3 bg-neutral-100 p-4">
                 {productData.discount > 0 && (
                   <span className={classNames('text-md text-neutral-500 line-through')}>
-                    {formatCurrency((productData.price * (100 - productData.discount)) / 100)}
+                    {formatCurrency(productData.price)}
                   </span>
                 )}
                 <h2
@@ -134,7 +144,7 @@ const ProductDetail = (props: Props) => {
                     'text-primary': productData.shopType !== 1,
                     'text-red-700': productData.shopType === 1
                   })}>
-                  {formatCurrency(productData.price)}
+                  {formatCurrency((productData.price * (100 - productData.discount)) / 100)}
                 </h2>
                 {productData.discount > 0 && (
                   <span
@@ -142,10 +152,10 @@ const ProductDetail = (props: Props) => {
                       'mr-1 rounded px-2.5 py-0.5 text-xs font-medium text-white',
                       {
                         'bg-red-700': productData.shopType === 1,
-                        'bg-primary': productData.shopType === 2
+                        'bg-primary': productData.shopType !== 1
                       }
                     )}>
-                    25% GIẢM
+                    {productData.discount}% GIẢM
                   </span>
                 )}
               </div>
@@ -202,107 +212,15 @@ const ProductDetail = (props: Props) => {
                   </div>
                 </div>
               </div>
-              {/* Colors */}
-              <div className="flex gap-x-4 text-sm">
-                <span className="min-w-[6.875rem] text-neutral-500">Màu Sắc</span>
-                <div className="flex flex-wrap gap-2">
-                  {Array(7)
-                    .fill(0)
-                    .map((_, index) => {
-                      return (
-                        <Button
-                          key={index}
-                          className={classNames(
-                            'group relative border border-black/[0.09] px-8 py-2 transition-colors',
-                            {
-                              'hover:border-primary hover:text-primary': productData.shopType !== 1,
-                              'hover:border-red-700 hover:text-red-700': productData.shopType === 1
-                            }
-                          )}>
-                          {index + 1}
-                          <span
-                            className={classNames(
-                              'invisible absolute bottom-0 right-0 overflow-hidden border-[10px] border-l-transparent border-t-transparent group-hover:visible',
-                              {
-                                'border-primary': productData.shopType !== 1,
-                                'border-red-700': productData.shopType === 1
-                              }
-                            )}
-                          />
-                          <Check
-                            className="invisible absolute bottom-0 right-0 z-10 text-white group-hover:visible"
-                            size={12}
-                          />
-                        </Button>
-                      )
-                    })}
-                </div>
-              </div>
-              {/* Sizes */}
-              <div className="flex gap-x-4 text-sm">
-                <span className="min-w-[6.875rem] text-neutral-500">Kích Cỡ</span>
-                <div className="flex flex-wrap gap-2">
-                  {Array(3)
-                    .fill(0)
-                    .map((_, index) => {
-                      return (
-                        <Button
-                          key={index}
-                          className={classNames(
-                            'group relative border border-black/[0.09] px-8 py-2 transition',
-                            {
-                              'hover:border-primary hover:text-primary': productData.shopType !== 1,
-                              'hover:border-red-700 hover:text-red-700': productData.shopType === 1
-                            }
-                          )}>
-                          {index + 1}
-                          <span
-                            className={classNames(
-                              'invisible absolute bottom-0 right-0 overflow-hidden border-[10px] border-l-transparent border-t-transparent group-hover:visible',
-                              {
-                                'border-primary': productData.shopType !== 1,
-                                'border-red-700': productData.shopType === 1
-                              }
-                            )}
-                          />
-                          <Check
-                            className="invisible absolute bottom-0 right-0 z-10 text-white group-hover:visible"
-                            size={12}
-                          />
-                        </Button>
-                      )
-                    })}
-                </div>
-              </div>
-              {/* Quantity */}
-              <div className="flex items-center gap-x-4 text-sm">
-                <span className="min-w-[6.875rem] text-neutral-500">Số Lượng</span>
-                <div className="flex flex-wrap gap-4">
-                  <div className="relative mt-1 flex h-10 flex-row rounded-lg border border-black/[0.09] bg-transparent">
-                    <ProductInputNumber quantity={productData.quantity} />
-                  </div>
-                  <span className="m-auto text-neutral-500">
-                    {productData.quantity} sản phẩm có sẵn
-                  </span>
-                </div>
-              </div>
-              {/* Cart & Buy now */}
-              <div className="flex gap-x-4">
-                <Button
-                  className={classNames(
-                    'text-md flex flex-nowrap items-center gap-x-2 rounded-sm border bg-neutral-100 px-4 py-3 capitalize transition hover:bg-neutral-50',
-                    {
-                      'border-primary text-primary': productData.shopType !== 1,
-                      'border-red-700 text-red-700': productData.shopType === 1
-                    }
-                  )}>
-                  <ShoppingCart />
-                  <span className="font-medium">Thêm Vào Giỏ Hàng</span>
-                </Button>
-                <Button className="text-md rounded-sm bg-primary px-4 py-3 capitalize text-white transition hover:bg-primary/90">
-                  Mua Ngay
-                </Button>
-              </div>
+              {/* Add to cart & Buy now */}
+              <ProductPurchase
+                key={productData._id}
+                {...productData}
+                productId={productData._id}
+                image={productData.images[0].url}
+                categorySlug={productData.category.slug}
+                productSlug={productData.slug}
+              />
             </div>
           ) : (
             <div className="col-span-7 flex animate-pulse flex-col gap-y-6 p-2">
@@ -330,14 +248,17 @@ const ProductDetail = (props: Props) => {
         </div>
 
         {/* May like product */}
-
-        <div className="p-6">
-          <h1 className="py-4 text-xl uppercase">CÓ THỂ BẠN CŨNG THÍCH</h1>
-          <ProductList
-            data={productFavData?.items}
-            className="grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6"
-          />
-        </div>
+        <Suspense fallback={<Spinner />}>
+          <div className="p-6">
+            <h1 className="py-4 text-xl uppercase">CÓ THỂ BẠN CŨNG THÍCH</h1>
+            <ProductList
+              skeletonSize={10}
+              isFetching={isInitialLoading}
+              data={productFavData?.items}
+              className="grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6"
+            />
+          </div>
+        </Suspense>
       </div>
     </>
   )

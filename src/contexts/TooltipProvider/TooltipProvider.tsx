@@ -220,7 +220,7 @@ export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
                   context={floatingContext}
                   width={28}
                   height={10}
-                  className="fill-white [&>path:last-of-type]:stroke-white"
+                  className="fill-white [&>path:first-of-type]:stroke-white [&>path:last-of-type]:stroke-white"
                 />
               )}
             </motion.div>

@@ -59,3 +59,16 @@ input {
   -webkit-mask: var(--mask);
   mask: var(--mask);
 }
+
+.box {
+  --mask: radial-gradient(4.57px at 6.2px 50%, #000 99%, #0000 101%) 0 calc(50% - 8px) / 51% 16px
+      repeat-y,
+    radial-gradient(4.57px at -2.2px 50%, #0000 99%, #000 101%) 4px 50% / calc(51% - 4px) 16px
+      repeat-y,
+    radial-gradient(4.57px at calc(100% - 6.2px) 50%, #000 99%, #0000 101%) 100% calc(50% - 8px) /
+      51% 16px repeat-y,
+    radial-gradient(4.57px at calc(100% + 2.2px) 50%, #0000 99%, #000 101%) calc(100% - 4px) 50% /
+      calc(51% - 4px) 16px repeat-y;
+  -webkit-mask: var(--mask);
+  mask: var(--mask);
+}

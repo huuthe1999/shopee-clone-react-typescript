@@ -45,8 +45,7 @@ const CategoryPage = () => {
   // Check is filtering
   const hasFilter = useMemo(
     () => DEFAULT_FILTER_DATA.some((data) => searchParams.has(data)),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [Array.from(searchParams.keys()).length]
+    [searchParams]
   )
 
   const handleSetParams = useCallback(

@@ -10,8 +10,12 @@ export interface BaseResponse {
   message: string
 }
 
-export interface BaseErrorResponse<TFields extends FieldValues> extends BaseResponse {
+export interface BaseErrorFormResponse<TFields extends FieldValues> extends BaseResponse {
   errors?: Array<{ [key in keyof TFields]: string }>
+}
+
+export interface BaseErrorResponse<T> extends BaseResponse {
+  errors?: Array<{ [key in keyof T]: string }>
 }
 
 export interface IBaseDataPagination<T> {

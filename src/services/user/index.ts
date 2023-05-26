@@ -1,6 +1,6 @@
 import { authAxios } from '@/config/http'
 import { ENDPOINTS } from '@/constants'
-import { ProfileSuccessResponse } from '@/types'
+import { IProfileSuccessResponse } from '@/types'
 
 export const getProfile = (signal?: AbortSignal) =>
-  authAxios.get<ProfileSuccessResponse>(ENDPOINTS.PROFILE_END_POINT, { signal })
+  authAxios.get<IProfileSuccessResponse>(ENDPOINTS.PROFILE_END_POINT, { signal })

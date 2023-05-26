@@ -2,13 +2,13 @@ import { HttpStatusCode, isAxiosError } from 'axios'
 import { FieldValues, Path, UseFormSetError } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
-import { BaseErrorResponse } from '@/types'
+import { BaseErrorFormResponse } from '@/types'
 
 export const formatErrorData = <T extends FieldValues>(
   error: unknown,
   setError?: UseFormSetError<T>
 ) => {
-  if (isAxiosError<BaseErrorResponse<T>>(error)) {
+  if (isAxiosError<BaseErrorFormResponse<T>>(error)) {
     if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
       toast.error(error.response?.data.message)
     }

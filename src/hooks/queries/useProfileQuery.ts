@@ -34,7 +34,7 @@ const useProfileQuery = () => {
 //     queryFn: ({ signal }) => {
 //       const queryString = query ? qs.stringify(query) : ''
 //       const url = `${ENDPOINTS.PROFILE_END_POINT}${queryString ? `?${queryString}` : ''}`
-//       return axiosPrivate.get<ProfileSuccessResponse>(url, { signal })
+//       return axiosPrivate.get<IProfileSuccessResponse>(url, { signal })
 //     },
 //     enabled: !!accessToken,
 //     staleTime: Infinity

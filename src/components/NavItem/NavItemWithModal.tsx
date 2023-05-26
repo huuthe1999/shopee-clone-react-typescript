@@ -41,7 +41,7 @@ const NavItemWithModal = ({
     </li>
   )
 
-  const childHasPopup = useMemo(() => menuItems?.some((item) => item.hasPopup), [])
+  const childHasPopup = useMemo(() => menuItems?.some((item) => item.hasPopup), [menuItems])
 
   return (
     <TooltipProvider placement="bottom-end" click={childHasPopup}>

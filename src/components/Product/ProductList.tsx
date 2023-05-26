@@ -9,6 +9,7 @@ import { SearchParamsProps } from '@/utils'
 import Product from './Product'
 
 interface ProductListProps extends HTMLAttributes<HTMLDivElement> {
+  skeletonSize?: number
   isFetching?: boolean
   data?: IProduct[]
   onResetParam?: (params?: SearchParamsProps) => void
@@ -16,6 +17,7 @@ interface ProductListProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const ProductList = ({
+  skeletonSize = 15,
   isFetching,
   data,
   className,
@@ -25,7 +27,7 @@ const ProductList = ({
   const ref = useRef<HTMLDivElement>(null)
 
   const renderData = isFetching ? (
-    Array(15)
+    Array(skeletonSize)
       .fill(null)
       .map((_, index) => <SkeletonProduct key={index} />)
   ) : data && data?.length > 0 ? (

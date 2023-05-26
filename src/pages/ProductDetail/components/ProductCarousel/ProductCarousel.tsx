@@ -90,7 +90,7 @@ export const ProductCarousel = ({ images }: Props) => {
         />
         <img
           ref={zoomImageRef}
-          src={currentImage?.url}
+          src={currentImage?.url.split('_')?.[0]}
           alt={'zoom_image'}
           className="clip-circle pointer-events-none absolute left-0 top-0 z-10 h-full w-full scale-150 opacity-0"
         />

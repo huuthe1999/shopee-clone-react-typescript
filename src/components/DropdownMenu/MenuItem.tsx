@@ -37,13 +37,25 @@ const MenuItem = ({
           </Link>
         ) : (
           <button
-            className={classNames('flex w-full items-center gap-2 p-2 text-left', [
-              buttonClassName
-            ])}
+            className={classNames('flex w-full gap-2 p-2 text-left', [buttonClassName])}
             onClick={onClick}>
+            {image && (
+              <div className="h-10 w-10 flex-shrink-0 overflow-hidden">
+                <img
+                  src={image}
+                  alt="Ảnh sản phẩm"
+                  className="aspect-square w-full bg-transparent"
+                />
+              </div>
+            )}
             {leftButtonIcon}
-            <span className="flex-1">{text}</span>
+            <span className="line-clamp-2 flex-1">{text}</span>
             {rightButtonIcon}
+            {price && (
+              <div className="line-clamp-1 basis-2/6 break-words text-right text-primary">
+                {formatCurrency(price)}
+              </div>
+            )}
           </button>
         )}
       </li>
