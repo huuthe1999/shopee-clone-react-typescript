@@ -1,8 +1,11 @@
 import { ChangeEvent, KeyboardEvent } from 'react'
 
+import classNames from 'classnames'
+
 import { Button } from '@/components'
 
-interface Props {
+export interface InputNumberProps {
+  className?: string
   quantity: number
   value: string
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
@@ -11,14 +14,15 @@ interface Props {
   onBlur: () => void
 }
 
-export const ProductInputNumber = ({
+export const InputNumber = ({
+  className,
   quantity,
   onChange,
   onBlur,
   onDecrease,
   onIncrease,
   value
-}: Props) => {
+}: InputNumberProps) => {
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     // allow only numeric values and the delete key
     if (event.key !== 'Backspace' && (event.key < '0' || event.key > '9')) {
@@ -27,9 +31,13 @@ export const ProductInputNumber = ({
   }
 
   return (
-    <>
+    <div
+      className={classNames(
+        'relative flex flex-row rounded-lg border border-black/[0.09] bg-transparent',
+        [className]
+      )}>
       <Button
-        className="h-full rounded-l px-6 text-gray-600 outline-none"
+        className="h-full basis-1/3 rounded-l px-2 text-gray-600 outline-none"
         onClick={onDecrease}
         disabled={+value === 1}>
         <span className="m-auto text-2xl font-thin">−</span>
@@ -40,13 +48,13 @@ export const ProductInputNumber = ({
         onKeyDown={handleKeyDown}
         onChange={onChange}
         onBlur={onBlur}
-        className="text-md flex w-16 items-center border-x border-x-black/[0.09] text-center font-semibold text-gray-700 outline-none"></input>
+        className="text-md flex w-16 basis-1/3 items-center border-x border-x-black/[0.09] text-center font-semibold text-gray-700 outline-none"></input>
       <Button
-        className="h-full rounded-l px-6 text-gray-600 outline-none"
+        className="h-full basis-1/3 rounded-l px-2 text-gray-600 outline-none"
         onClick={onIncrease}
         disabled={+value === quantity}>
         <span className="m-auto text-2xl font-thin">+</span>
       </Button>
-    </>
+    </div>
   )
 }

@@ -10,6 +10,7 @@ export interface ISingleProductResponse extends BaseResponse {
 
 export interface IProduct extends IBaseItem {
   isActive: boolean
+  image: string
   images: IFile[]
   categorySlug: string
   subCategory: string
@@ -18,6 +19,15 @@ export interface IProduct extends IBaseItem {
   rating: number
   discount: number
   province: IProvince
+  vouchers: Array<
+    {
+      type: 0 | 1 // 0:Giảm giá % - 1:Giảm x
+      discount: {
+        percent: number
+        price: number
+      }
+    } & IBaseItem['_id']
+  >
   shipping: number[]
   shopType: number
   status: number

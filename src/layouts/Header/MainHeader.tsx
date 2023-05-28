@@ -179,19 +179,19 @@ const MainHeader = () => {
                     : undefined
                 }
                 className="min-w-[11rem] max-w-sm pt-2">
-                {productsCartData?.items.length === 0 ? (
+                {!productsCartData || productsCartData?.items.length === 0 ? (
                   <div className="w-full overflow-hidden px-2 py-14 text-center">
                     <EmptyCartIcon width="25rem" />
                     <p className="mt-4 p-2 text-sm text-gray-700">Chưa Có Sản Phẩm</p>
                   </div>
                 ) : (
                   <>
-                    {productsCartData?.items.map(({ brief_product, _id }) => (
+                    {productsCartData?.items.map(({ product, _id }) => (
                       <MenuItem
                         key={_id}
-                        text={brief_product.name}
-                        image={brief_product.image}
-                        price={brief_product.price}
+                        text={product.name}
+                        image={product.image}
+                        price={product.price}
                         buttonClassName="cursor-default"
                       />
                     ))}

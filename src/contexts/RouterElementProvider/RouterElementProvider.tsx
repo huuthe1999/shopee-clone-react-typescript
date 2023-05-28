@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
-import { MyErrorBoundary, Spinner } from '@/components'
+import { MyErrorBoundary } from '@/components'
 import { PATHS } from '@/constants'
 import { AuthProvider, ProtectedRoute, RejectedRoute } from '@/contexts'
 
@@ -86,9 +86,9 @@ const RouterElementProvider = () => {
 
   return (
     <AuthProvider>
-      <React.Suspense fallback={<Spinner />}>
-        <RouterProvider router={router} />
-      </React.Suspense>
+      {/* <React.Suspense fallback={<Spinner />}> */}
+      <RouterProvider router={router} />
+      {/* </React.Suspense> */}
     </AuthProvider>
   )
 }

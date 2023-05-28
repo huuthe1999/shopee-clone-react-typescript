@@ -1,33 +1,22 @@
-import { ChangeEvent, useCallback, useState } from 'react'
+import { ChangeEvent, startTransition, useCallback, useState } from 'react'
 
 import classNames from 'classnames'
 import { ShoppingCart } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { Button } from '@/components'
+import { Button, InputNumber } from '@/components'
 import { PATHS } from '@/constants'
 import { useAuthContext } from '@/contexts'
 import { useAddToCartMutation } from '@/hooks'
-import { ICart } from '@/types'
 
-import { ProductInputNumber } from '../ProductInputNumber'
-
-interface ProductPurchaseProps extends Omit<ICart['brief_product'], '_id'> {
+interface ProductPurchaseProps {
   quantity: number
   shopType: number
   productId: string
 }
 
-export const ProductPurchase = ({
-  quantity,
-  shopType,
-  productId,
-  name,
-  image,
-  price,
-  ...rest
-}: ProductPurchaseProps) => {
+export const ProductPurchase = ({ quantity, shopType, productId }: ProductPurchaseProps) => {
   const [amount, setAmount] = useState('1')
 
   const { accessToken } = useAuthContext()
@@ -64,13 +53,7 @@ export const ProductPurchase = ({
       addToCartMutate(
         {
           amount: Number(amount),
-          productId,
-          brief_product: {
-            name,
-            image,
-            price,
-            ...rest
-          }
+          productId
         },
         {
           onError(error) {
@@ -82,14 +65,11 @@ export const ProductPurchase = ({
         }
       )
     } else {
-      navigate(
-        { pathname: PATHS.LOGIN_PATH, search: `?callback=${pathname}` },
-        {
-          state: { from: location }
-        }
-      )
+      startTransition(() => {
+        navigate({ pathname: PATHS.LOGIN_PATH, search: `?callback=${pathname}` })
+      })
     }
-  }, [accessToken, amount, image, name, price, productId, pathname])
+  }, [accessToken, amount, productId, pathname])
 
   return (
     <>
@@ -97,16 +77,14 @@ export const ProductPurchase = ({
       <div className="flex items-center gap-x-4 text-sm">
         <span className="min-w-[6.875rem] text-neutral-500">Số Lượng</span>
         <div className="flex flex-wrap gap-4">
-          <div className="relative mt-1 flex h-10 flex-row rounded-lg border border-black/[0.09] bg-transparent">
-            <ProductInputNumber
-              value={amount}
-              quantity={quantity}
-              onChange={handleChange}
-              onBlur={handleBlurChange}
-              onIncrease={handleIncrease}
-              onDecrease={handleDecrease}
-            />
-          </div>
+          <InputNumber
+            value={amount}
+            quantity={quantity}
+            onChange={handleChange}
+            onBlur={handleBlurChange}
+            onIncrease={handleIncrease}
+            onDecrease={handleDecrease}
+          />
           <span className="m-auto text-neutral-500">{quantity} sản phẩm có sẵn</span>
         </div>
       </div>

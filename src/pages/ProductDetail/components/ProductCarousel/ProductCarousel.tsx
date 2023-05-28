@@ -7,9 +7,10 @@ import { ISingleProduct } from '@/types'
 
 interface Props {
   images?: ISingleProduct['images']
+  isLoading?: boolean
 }
 
-export const ProductCarousel = ({ images }: Props) => {
+export const ProductCarousel = ({ images, isLoading }: Props) => {
   const zoomImageRef = useRef<HTMLImageElement>(null)
   const [slideIndex, setSlideIndex] = useState(images ? 0 : undefined)
   const [currentImage, setCurrentImage] = useState(images ? images?.[0] : undefined)
@@ -76,41 +77,55 @@ export const ProductCarousel = ({ images }: Props) => {
 
   return (
     <>
-      {/* Image preview */}
-      <div
-        className={classNames('relative w-full overflow-hidden pt-[100%]', {
-          'animate-pulse': !currentImage
-        })}>
-        <img
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          src={currentImage ? currentImage?.url : '/images/loading-image-product.png'}
-          alt={currentImage ? currentImage?.name : 'default_image'}
-          className="absolute left-0 top-0 h-full w-full object-cover"
-        />
-        <img
-          ref={zoomImageRef}
-          src={currentImage?.url.split('_')?.[0]}
-          alt={'zoom_image'}
-          className="clip-circle pointer-events-none absolute left-0 top-0 z-10 h-full w-full scale-150 opacity-0"
-        />
-      </div>
-      {/* Carousel */}
-      <Carousel
-        hoverHiddenControls={false}
-        autoplayReverse
-        slideIndex={slideIndex}
-        className="mt-4"
-        cellSpacing={2}
-        slidesToShow={5}
-        renderBottomCenterControls={null}
-        defaultControlsConfig={{
-          nextButtonClassName: 'bg-black/10 px-2 py-4 rounded-r-sm hover:bg-black/25 text-white',
-          prevButtonClassName: 'bg-black/10 px-2 py-4 rounded-r-sm hover:bg-black/25 text-white',
-          pagingDotsContainerClassName: 'hidden'
-        }}>
-        {renderProductImages}
-      </Carousel>
+      {isLoading ? (
+        <div className={classNames('relative w-full animate-pulse overflow-hidden pt-[100%]')}>
+          <img
+            src={'/images/loading-image-product.png'}
+            alt={'default_image'}
+            className="absolute left-0 top-0 h-full w-full object-cover"
+          />
+        </div>
+      ) : currentImage ? (
+        <>
+          {/* Image preview */}
+          <div
+            className={classNames('relative w-full overflow-hidden pt-[100%]', {
+              'animate-pulse': !currentImage
+            })}>
+            <img
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              src={currentImage ? currentImage.url : '/images/loading-image-product.png'}
+              alt={currentImage ? currentImage.name : 'default_image'}
+              className="absolute left-0 top-0 h-full w-full object-cover"
+            />
+            <img
+              ref={zoomImageRef}
+              src={currentImage.url}
+              alt={'zoom_image'}
+              className="clip-circle pointer-events-none absolute left-0 top-0 z-10 h-full w-full scale-150 opacity-0"
+            />
+          </div>
+          {/* Carousel */}
+          <Carousel
+            hoverHiddenControls={false}
+            autoplayReverse
+            slideIndex={slideIndex}
+            className="mt-4"
+            cellSpacing={2}
+            slidesToShow={5}
+            renderBottomCenterControls={null}
+            defaultControlsConfig={{
+              nextButtonClassName:
+                'bg-black/10 px-2 py-4 rounded-r-sm hover:bg-black/25 text-white',
+              prevButtonClassName:
+                'bg-black/10 px-2 py-4 rounded-r-sm hover:bg-black/25 text-white',
+              pagingDotsContainerClassName: 'hidden'
+            }}>
+            {renderProductImages}
+          </Carousel>
+        </>
+      ) : null}
     </>
   )
 }

@@ -93,61 +93,72 @@ const CategoryPage = () => {
           'pointer-events-none opacity-50': isProductsFetching
         })}
         ref={ref}>
-        {data?.data.data.items.length === 0 && pathname === PATHS.SEARCH_PATH ? (
-          <div className="mx-auto">
-            <img
-              src="/images/loading-image-product.png"
-              alt=""
-              className="mx-auto aspect-square w-36"
-            />
-            <p>Không tìm thấy kết quả nào</p>
-          </div>
-        ) : (
-          <>
-            {/* Filter side */}
-            <div
-              className="hidden min-h-fit basis-1/6 bg-white px-2 pb-2 md:block"
-              style={{ minHeight: ref.current?.clientHeight + 'px' }}>
-              <CategoryFilter
-                headerText="BỘ LỌC TÌM KIẾM"
-                hasFilter={hasFilter}
-                onChangeParam={handleSetParams}
-                className="sticky top-0 z-10"
+        {products ? (
+          products.length === 0 && pathname === PATHS.SEARCH_PATH ? (
+            <div className="mx-auto">
+              <img
+                src="/images/loading-image-product.png"
+                alt="loading-product"
+                className="mx-auto aspect-square w-36"
               />
+              <p>Không tìm thấy kết quả nào</p>
             </div>
-            {/* Product list aside*/}
-            <div className="flex basis-full flex-col md:basis-5/6">
-              {searchParams.get('keyword') && (
-                <p className="py-6">
-                  <AlertOctagon className="float-left mr-3" size={16} />
-                  Kết quả tìm kiếm cho từ khoá &quot;
-                  <span className="text-primary">{searchParams.get('keyword')}</span>
-                  &quot;
-                </p>
+          ) : (
+            <>
+              {/* Filter side */}
+              {products.length > 0 && (
+                <div
+                  className="hidden min-h-fit basis-1/6 bg-white px-2 pb-2 md:block"
+                  style={{ minHeight: ref.current?.clientHeight + 'px' }}>
+                  <CategoryFilter
+                    enabled={products.length > 0}
+                    headerText="BỘ LỌC TÌM KIẾM"
+                    hasFilter={hasFilter}
+                    onChangeParam={handleSetParams}
+                    className="sticky top-0 z-10"
+                  />
+                </div>
               )}
-              {/* Sort bar */}
-              <CategorySortBar
-                className="bg-black/[0.03]"
-                pageCount={data?.data.data.totalPages ?? 1}
-              />
-              {/* Product list*/}
-              <ProductList
-                isFetching={isInitialLoading}
-                className="grid-cols-3 sm:grid-cols-4 lg:grid-cols-5"
-                data={products}
-                onResetParam={handleSetParams}
-                hasFilter={hasFilter}
-              />
-              {products && products.length > 0 && (
-                <Pagination
-                  // key={searchParams.get('page')}
-                  pageCount={data?.data.data.totalPages ?? 1}
-                  onPageChange={handlePageClick}
+              {/* Product list aside*/}
+              <div
+                className={classNames('flex basis-full flex-col md:basis-5/6', {
+                  'md:basis-full': products.length === 0,
+                  'md:basis-5/6': products.length > 0
+                })}>
+                {searchParams.get('keyword') && (
+                  <p className="py-6">
+                    <AlertOctagon className="float-left mr-3" size={16} />
+                    Kết quả tìm kiếm cho từ khoá &quot;
+                    <span className="text-primary">{searchParams.get('keyword')}</span>
+                    &quot;
+                  </p>
+                )}
+                {/* Sort bar */}
+                {products.length > 0 && (
+                  <CategorySortBar
+                    className="bg-black/[0.03]"
+                    pageCount={data?.data.data.totalPages ?? 1}
+                  />
+                )}
+                {/* Product list*/}
+                <ProductList
+                  isFetching={isInitialLoading}
+                  className="grid-cols-3 sm:grid-cols-4 lg:grid-cols-5"
+                  data={products}
+                  onResetParam={handleSetParams}
+                  hasFilter={hasFilter}
                 />
-              )}
-            </div>
-          </>
-        )}
+                {products && products.length > 0 && (
+                  <Pagination
+                    // key={searchParams.get('page')}
+                    pageCount={data?.data.data.totalPages ?? 1}
+                    onPageChange={handlePageClick}
+                  />
+                )}
+              </div>
+            </>
+          )
+        ) : null}
       </div>
     </div>
   )

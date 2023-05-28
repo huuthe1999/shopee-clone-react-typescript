@@ -12,11 +12,10 @@ export const useAddToCartMutation = () => {
 
   return useMutation<
     AxiosResponse<BaseResponse>,
-    AxiosError<BaseErrorResponse<Pick<ICart, 'amount' | 'status' | 'brief_product'>>>,
+    AxiosError<BaseErrorResponse<Pick<ICart, 'amount' | 'status'>>>,
     orderServices.AddToCartProps
   >({
-    mutationFn: ({ amount, productId, brief_product }) =>
-      orderServices.addToCart({ amount, productId, brief_product }),
+    mutationFn: ({ amount, productId }) => orderServices.addToCart({ amount, productId }),
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.order, { status: -1 }] })
     }

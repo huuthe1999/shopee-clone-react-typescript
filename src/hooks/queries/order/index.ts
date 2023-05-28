@@ -15,9 +15,12 @@ export interface OrderQueryProps {
 export const useOrderQuery = ({ status, page, size = SIZE }: OrderQueryProps) => {
   useAxiosPrivate()
   const { accessToken } = useAuthContext()
+
   return useQuery<AxiosResponse<ICartResponse>, AxiosError<BaseResponse>>({
     queryKey: [QUERY_KEYS.order, { status, page, size }],
     queryFn: () => orderServices.getInCart({ status, page, size }),
-    enabled: Boolean(accessToken)
+    enabled: Boolean(accessToken),
+    keepPreviousData: true,
+    staleTime: 60 * 1000
   })
 }

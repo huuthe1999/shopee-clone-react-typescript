@@ -1,25 +1,27 @@
-import { Navigate, Outlet, To, useLocation, useMatch, useSearchParams } from 'react-router-dom'
+import queryString from 'query-string'
+import { Navigate, Outlet, To, useLocation, useMatch } from 'react-router-dom'
 
 import { PATHS } from '@/constants'
 import { useAuthContext } from '@/contexts'
 
 const RejectedRoute = () => {
-  const location = useLocation()
-  const [searchParams] = useSearchParams()
+  const { search } = useLocation()
+  const { callback, ...restParams } = queryString.parse(search, {
+    arrayFormat: 'comma'
+  })
 
-  const callBackParam = searchParams.get('callback')
+  const newParamsObject = queryString.stringify(restParams, {
+    arrayFormat: 'comma',
+    skipNull: true,
+    skipEmptyString: true
+  })
 
   const { accessToken } = useAuthContext()
 
   const matchLogin = useMatch(PATHS.LOGIN_PATH)
 
-  const to: To = callBackParam
-    ? { pathname: callBackParam }
-    : location.state?.from
-    ? {
-        pathname: location.state?.from?.pathname || PATHS.HOME_PATH,
-        search: location.state?.from?.search || ''
-      }
+  const to: To = callback
+    ? { pathname: callback as string, search: newParamsObject }
     : matchLogin
     ? PATHS.HOME_PATH
     : PATHS.LOGIN_PATH

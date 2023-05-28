@@ -1,3 +1,4 @@
+import { IProduct } from '@/types'
 import { BaseResponse, IBaseDataPagination } from '@/types/base'
 
 export interface ICartResponse extends BaseResponse {
@@ -11,17 +12,19 @@ export interface ICart {
   _id: string
   amount: number
   status: ICartStatus
-  product: string
-  brief_product: {
-    name: string
-    image: string
-    price: number
-    _id: string
-    categorySlug: string
-    productSlug: string
-    isActive: boolean
-    discount: number
-  }
+  product: Pick<
+    IProduct,
+    | '_id'
+    | 'name'
+    | 'image'
+    | 'price'
+    | 'categorySlug'
+    | 'slug'
+    | 'isActive'
+    | 'discount'
+    | 'quantity'
+    | 'vouchers'
+  >
   user: string
   createdAt: string
   updatedAt: string

@@ -1,6 +1,6 @@
 export const SkeletonProduct = () => {
   return (
-    <section className="my-1 flex h-full animate-pulse flex-col rounded-sm border border-gray-300 shadow-xl">
+    <section className="my-1 flex h-full w-full animate-pulse flex-col rounded-sm border border-gray-300 shadow-xl">
       {/* Image */}
       <div className="w-full overflow-hidden bg-transparent p-4">
         <img src="/images/loading-image-product.png" alt="" className="h-40 w-full" />
