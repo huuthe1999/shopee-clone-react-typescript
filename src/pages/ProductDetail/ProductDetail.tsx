@@ -34,7 +34,6 @@ const ProductDetail = (props: Props) => {
   })
 
   const productData = productQueryData?.data.data
-  console.log('🚀 ~ ProductDetail ~ productData:', productData)
 
   const { data: productFavQueryData, isInitialLoading } = useProductsQuery({
     size: 18,
@@ -251,15 +250,13 @@ const ProductDetail = (props: Props) => {
             <p className="h-6 w-2/3 rounded-sm bg-gray-200" />
             <p className="h-6 w-2/3 rounded-sm bg-gray-200" />
           </div>
-        ) : productData ? (
+        ) : productData && productData.description ? (
           <div className="bg-white p-6">
             <h1 className="bg-neutral-100 p-4 text-xl uppercase">MÔ TẢ SẢN PHẨM</h1>
             <p
               className="mt-8 whitespace-pre-wrap leading-loose text-black/[0.8]"
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(
-                  'Quần Jogger Nam KAKI CAO CẤP Quần Kaki Nam ống bo chun Kiểu Dáng Hàn trẻ trung Mã JK11\n👉CAM KẾT CỦA SHOP - Shop cam kết không bán hàng giả, hàng nhái, chất lượng luôn là hàng đầu để shop có thể phát triển thương hiệu và vươn xa. \n- Sản phẩm cam kết như hình thật 100% - Tư vấn nhiệt tình, chu đáo luôn lắng nghe khách hàng để phục vụ tốt. \n- Giao hàng nhanh đúng tiến độ không phải để quý khách chờ đợi lâu để nhận hàng. \n- Hàng được kiểm tra kĩ càng, cẩn thận và tư vấn nhiệt tình trước khi gói hàng giao cho Quý Khách \n- Hàng có sẵn, giao hàng ngay khi nhận được đơn \n- Hoàn tiền nếu sản phẩm không giống với mô tả. Chấp nhận đổi hàng khi size không vừa -\n Giao hàng trên toàn quốc, nhận hàng trả tiền - Hỗ trợ đổi trả theo quy định của Shopee \n👉 ĐỊA CHỈ SHOP - , Linh Trung, TP. Thủ Đức'
-                )
+                __html: DOMPurify.sanitize(productData.description)
               }}
             />
           </div>

@@ -1,25 +1,24 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import classNames from 'classnames'
 import { ChevronLeft, ChevronRight } from 'react-feather'
 import { useSearchParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { Button, Modal } from '@/components'
-import { useOrderQuery } from '@/hooks'
-import useBoolean from '@/hooks/useBoolean'
+import { CART_SIZE, PAGE } from '@/constants'
+import { useBoolean, useOrderQuery, useUpdateCartMutation } from '@/hooks'
 import { formatSearchParamUrl } from '@/utils'
 
 import { CartTableFooter, CartTableHeader, CartTableRow } from './components'
 
-interface Props {}
-
-const Cart = (props: Props) => {
+const Cart = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [productSelected, setProductSelected] = useState<string | undefined>()
   const { value, setValue } = useBoolean()
 
   const pageParam = searchParams.get('page')
-  const page = pageParam ? +pageParam : 1
+  const page = pageParam ? +pageParam : PAGE + 1
 
   const {
     data: productsCartQueryData,
@@ -27,8 +26,12 @@ const Cart = (props: Props) => {
     isFetching: isFetchingProductsCart
   } = useOrderQuery({
     status: -1,
-    page: page
+    page: page,
+    size: CART_SIZE
   })
+
+  const updateCartMutation = useUpdateCartMutation()
+
   const productsCartData = productsCartQueryData?.data.data
 
   const handleSelectProduct = useCallback(
@@ -39,40 +42,38 @@ const Cart = (props: Props) => {
     [setValue]
   )
 
-  const renderCartRow = useMemo(() => {
-    return isLoadingProductsCart
-      ? Array(4)
-          .fill(null)
-          .map((_, index) => (
-            <div
-              className="flex overflow-auto rounded-sm px-5 py-4 text-sm text-zinc-500 shadow"
-              key={index}>
-              <div className="flex basis-1/2 animate-pulse items-center gap-x-2">
-                <span className="h-[1.125rem] w-[1.125rem] shrink-0 bg-gray-200" />
+  const renderCartRow = isLoadingProductsCart
+    ? Array(4)
+        .fill(null)
+        .map((_, index) => (
+          <div
+            className="flex overflow-auto rounded-sm px-5 py-4 text-sm text-zinc-500 shadow"
+            key={index}>
+            <div className="flex basis-1/2 animate-pulse items-center gap-x-2">
+              <span className="h-[1.125rem] w-[1.125rem] shrink-0 bg-gray-200" />
 
-                <img
-                  src="/images/loading-image-product.png"
-                  alt="product_loading_img_cart"
-                  className="aspect-square h-fit w-20 bg-gray-200"
-                />
+              <img
+                src="/images/loading-image-product.png"
+                alt="product_loading_img_cart"
+                className="aspect-square h-fit w-20 bg-gray-200"
+              />
 
-                <div className="flex-grow self-stretch">
-                  <p className="mb-2 h-4 bg-gray-200" />
-                  <p className="h-4 bg-gray-200" />
-                </div>
+              <div className="flex-grow self-stretch">
+                <p className="mb-2 h-4 bg-gray-200" />
+                <p className="h-4 bg-gray-200" />
               </div>
             </div>
-          ))
-      : productsCartData?.items.map((cartProduct) => {
-          return (
-            <CartTableRow
-              key={cartProduct._id}
-              data={{ ...cartProduct }}
-              onSelectProduct={handleSelectProduct}
-            />
-          )
-        })
-  }, [isLoadingProductsCart, handleSelectProduct, productsCartData?.items])
+          </div>
+        ))
+    : productsCartData?.items.map((cartProduct) => {
+        return (
+          <CartTableRow
+            key={cartProduct._id}
+            {...cartProduct}
+            onSelectProduct={handleSelectProduct}
+          />
+        )
+      })
 
   const handleSetPrevPage = () => {
     const newParamsObject = formatSearchParamUrl({
@@ -157,14 +158,27 @@ const Cart = (props: Props) => {
             <CartTableFooter />
             <Modal
               onSubmit={() => {
-                alert('Oke')
+                updateCartMutation.mutate(
+                  { actionType: 1, orderId: productSelected as string },
+                  {
+                    onSuccess(data) {
+                      toast.success(data.data.message)
+                    },
+                    onError(error) {
+                      toast.error(error.response?.data.message)
+                    },
+                    onSettled() {
+                      setValue(false)
+                    }
+                  }
+                )
               }}
               isLoading={false}
               setShowModal={setValue}
               heading="Xóa sản phẩm"
               description={`Bạn có muốn xóa sản phẩm ${productSelected} ra khỏi giỏ hàng không ?`}
               buttonText="Xoá"
-              value={value}
+              open={value}
             />
           </>
         )}

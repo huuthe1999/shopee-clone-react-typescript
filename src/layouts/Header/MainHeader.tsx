@@ -14,12 +14,10 @@ import {
   NavItem,
   NavItemWithModal
 } from '@/components'
-import { AUTH, PATHS } from '@/constants'
+import { AUTH, BRIEF_CART_SIZE, PATHS } from '@/constants'
 import { TooltipContent, TooltipProvider, TooltipTrigger, useAuthContext } from '@/contexts'
 import { LEFT_NAV, RIGHT_NAV } from '@/data/header'
 import { useOrderQuery } from '@/hooks'
-
-const MAX_PRODUCT_CART = 5
 
 const MainHeader = () => {
   const { accessToken, currentUser } = useAuthContext()
@@ -53,7 +51,7 @@ const MainHeader = () => {
 
   const { data: productsCartQueryData, isRefetching: isProductsCartRefetching } = useOrderQuery({
     status: -1,
-    size: 5
+    size: BRIEF_CART_SIZE
   })
   const productsCartData = productsCartQueryData?.data.data
 
@@ -100,13 +98,11 @@ const MainHeader = () => {
             className="list-none"
             to={PATHS.HOME_PATH}
             leftIcon={
-              <div className="flex items-end">
+              <div className="flex items-end text-white">
                 <Home className="hidden max-sm:block" size={28} />
                 <LogoIcon className="fill-white max-sm:hidden sm:h-12" />
                 {match && (
-                  <span className="ml-4 border-l-2 border-l-white pl-4 text-2xl text-white">
-                    Giỏ Hàng
-                  </span>
+                  <span className="ml-4 border-l-2 border-l-white pl-4 text-2xl">Giỏ Hàng</span>
                 )}
               </div>
             }
@@ -191,15 +187,19 @@ const MainHeader = () => {
                         key={_id}
                         text={product.name}
                         image={product.image}
-                        price={product.price}
+                        price={
+                          product.discount
+                            ? (product.price * (100 - product.discount)) / 100
+                            : product.price
+                        }
                         buttonClassName="cursor-default"
                       />
                     ))}
                     <div className="flex items-center justify-between p-2">
                       {productsCartData?.totalItems &&
-                        productsCartData?.totalItems > MAX_PRODUCT_CART && (
+                        productsCartData?.totalItems > BRIEF_CART_SIZE && (
                           <p className="text-xs capitalize text-black/70">
-                            {productsCartData?.totalItems - MAX_PRODUCT_CART} sản phầm nữa trong giỏ
+                            {productsCartData?.totalItems - BRIEF_CART_SIZE} sản phầm nữa trong giỏ
                             hàng
                           </p>
                         )}

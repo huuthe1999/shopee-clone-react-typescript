@@ -50,7 +50,7 @@ const backdropVariants: Variants = {
 
 interface Props extends Pick<DropItemMenu, 'heading' | 'description' | 'buttonText'> {
   setShowModal: (showModal: boolean) => void
-  value: boolean
+  open: boolean
   onSubmit: () => void
   isLoading: boolean
 }
@@ -60,14 +60,14 @@ function Modal({
   heading,
   description,
   buttonText,
-  value,
+  open,
   onSubmit,
   isLoading
 }: Props) {
   return (
     <AnimatePresence initial={false}>
       <FloatingPortal id="modal-portal">
-        {value && (
+        {open && (
           <div
             className="relative z-[99999]"
             aria-labelledby="modal-title"

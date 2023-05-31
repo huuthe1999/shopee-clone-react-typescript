@@ -84,6 +84,24 @@ export const FILTER_LIST = [
     ]
   },
   {
+    type: 'shippingOptions',
+    name: 'Đơn vị vận chuyển',
+    data: [
+      {
+        _id: 0,
+        name: 'Hỏa tốc'
+      },
+      {
+        _id: 1,
+        name: 'Nhanh'
+      },
+      {
+        _id: 2,
+        name: 'Tiết kiệm'
+      }
+    ]
+  },
+  {
     type: 'ratingFilter',
     name: 'Đánh Giá',
     data: [

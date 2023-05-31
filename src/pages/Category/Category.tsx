@@ -111,7 +111,6 @@ const CategoryPage = () => {
                   className="hidden min-h-fit basis-1/6 bg-white px-2 pb-2 md:block"
                   style={{ minHeight: ref.current?.clientHeight + 'px' }}>
                   <CategoryFilter
-                    enabled={products.length > 0}
                     headerText="BỘ LỌC TÌM KIẾM"
                     hasFilter={hasFilter}
                     onChangeParam={handleSetParams}
@@ -150,7 +149,6 @@ const CategoryPage = () => {
                 />
                 {products && products.length > 0 && (
                   <Pagination
-                    // key={searchParams.get('page')}
                     pageCount={data?.data.data.totalPages ?? 1}
                     onPageChange={handlePageClick}
                   />

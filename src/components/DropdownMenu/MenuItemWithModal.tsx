@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import { Modal } from '@/components'
 import { AUTH, EVENT_MODALS, QUERY_KEYS } from '@/constants'
 import { useAuthContext } from '@/contexts'
-import useBoolean from '@/hooks/useBoolean'
+import { useBoolean } from '@/hooks'
 import { authServices } from '@/services'
 import { authUtils } from '@/utils'
 
@@ -57,7 +57,7 @@ const MenuItemWithModal = ({
         {...modalProps}
         onSubmit={handleSubmit}
         isLoading={logoutMutation.isLoading}
-        value={value}
+        open={value}
       />
     </>
   )

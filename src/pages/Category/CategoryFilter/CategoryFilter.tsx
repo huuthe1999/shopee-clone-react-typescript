@@ -12,13 +12,12 @@ import { SearchParamsProps } from '@/utils'
 
 import CategoryFilterPrice from './CategoryFilterPrice'
 interface Props extends HTMLAttributes<HTMLDivElement> {
-  enabled?: boolean
   headerText: string
   hasFilter: boolean
   onChangeParam: (params?: SearchParamsProps) => void
 }
 
-function CategoryFilter({ headerText, hasFilter, className, enabled, onChangeParam }: Props) {
+function CategoryFilter({ headerText, hasFilter, className, onChangeParam }: Props) {
   const { categorySlug } = useParams()
   const [searchParams] = useSearchParams()
 

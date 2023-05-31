@@ -8,6 +8,21 @@ export interface ISingleProductResponse extends BaseResponse {
   data: ISingleProduct
 }
 
+export type TVoucher =
+  | {
+      type: 0
+      discount: {
+        percent: number
+      }
+      _id: string
+    }
+  | {
+      type: 1
+      discount: {
+        price: number
+      }
+      _id: string
+    }
 export interface IProduct extends IBaseItem {
   isActive: boolean
   image: string
@@ -19,15 +34,8 @@ export interface IProduct extends IBaseItem {
   rating: number
   discount: number
   province: IProvince
-  vouchers: Array<
-    {
-      type: 0 | 1 // 0:Giảm giá % - 1:Giảm x
-      discount: {
-        percent: number
-        price: number
-      }
-    } & IBaseItem['_id']
-  >
+  // 0:Giảm giá % - 1:Giảm x
+  vouchers: Array<TVoucher>
   shipping: number[]
   shopType: number
   status: number

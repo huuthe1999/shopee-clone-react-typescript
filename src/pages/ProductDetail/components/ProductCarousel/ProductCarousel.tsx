@@ -25,10 +25,6 @@ export const ProductCarousel = ({ images, isLoading }: Props) => {
         className={classNames('border-4 hover:border-primary', {
           'border-primary': index === slideIndex
         })}
-        onClick={() => {
-          setSlideIndex(index)
-          setCurrentImage({ uid, url, name })
-        }}
         onMouseEnter={() => {
           setSlideIndex(index)
           setCurrentImage(images[index])
@@ -95,13 +91,15 @@ export const ProductCarousel = ({ images, isLoading }: Props) => {
             <img
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              src={currentImage ? currentImage.url : '/images/loading-image-product.png'}
+              src={
+                currentImage ? currentImage.url.split('_')[0] : '/images/loading-image-product.png'
+              }
               alt={currentImage ? currentImage.name : 'default_image'}
               className="absolute left-0 top-0 h-full w-full object-cover"
             />
             <img
               ref={zoomImageRef}
-              src={currentImage.url}
+              src={currentImage.url.split('_')[0]}
               alt={'zoom_image'}
               className="clip-circle pointer-events-none absolute left-0 top-0 z-10 h-full w-full scale-150 opacity-0"
             />

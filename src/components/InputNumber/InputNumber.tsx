@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent } from 'react'
+import { ChangeEvent, FocusEvent, KeyboardEvent } from 'react'
 
 import classNames from 'classnames'
 
@@ -6,15 +6,17 @@ import { Button } from '@/components'
 
 export interface InputNumberProps {
   className?: string
+  disabled?: boolean
   quantity: number
   value: string
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
   onDecrease: () => void
   onIncrease: () => void
-  onBlur: () => void
+  onBlur: (e?: FocusEvent<HTMLInputElement>) => void
 }
 
 export const InputNumber = ({
+  disabled,
   className,
   quantity,
   onChange,
@@ -34,7 +36,8 @@ export const InputNumber = ({
     <div
       className={classNames(
         'relative flex flex-row rounded-lg border border-black/[0.09] bg-transparent',
-        [className]
+        [className],
+        { 'pointer-events-none opacity-80': disabled }
       )}>
       <Button
         className="h-full basis-1/3 rounded-l px-2 text-gray-600 outline-none"
