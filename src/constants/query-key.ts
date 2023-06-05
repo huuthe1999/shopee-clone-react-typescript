@@ -1,3 +1,7 @@
 export const QUERY_KEYS = {
-  order: 'order'
-}
+  order: {
+    list: 'order/list',
+    briefList: 'order/briefList'
+  },
+  favProducts: 'favProducts'
+} as const

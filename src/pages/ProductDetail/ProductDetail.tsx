@@ -4,23 +4,20 @@ import { Rating, Star } from '@smastrom/react-rating'
 import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
 import DOMPurify from 'dompurify'
-import { Truck } from 'react-feather'
 import { useParams } from 'react-router-dom'
 
 import { BreadCrumb, BreadCrumbItem, Spinner } from '@/components'
-import { PATHS } from '@/constants'
-import { useProductsQuery } from '@/hooks'
+import { FAV_PRODUCTS_SIZE, PATHS } from '@/constants'
+import { useFavProductsQuery } from '@/hooks'
 import { ProductPurchase } from '@/pages/ProductDetail/components/ProductPurchase'
 import { productServices } from '@/services'
-import { SortByType } from '@/types'
 import { formatCurrency, formatNumber } from '@/utils'
 
 import { ProductCarousel } from './components'
 
 const ProductList = lazy(() => import('@/components/Product/ProductList'))
-interface Props {}
 
-const ProductDetail = (props: Props) => {
+const ProductDetail = () => {
   let { productSlug } = useParams()
 
   productSlug = productSlug as string
@@ -35,14 +32,7 @@ const ProductDetail = (props: Props) => {
 
   const productData = productQueryData?.data.data
 
-  const { data: productFavQueryData, isInitialLoading } = useProductsQuery({
-    size: 18,
-    page: 0,
-    sortBy: 'popular' as SortByType,
-    facet: productData?.subCategory._id,
-    categorySlug: productData?.category.slug,
-    enabled: Boolean(productData)
-  })
+  const { data: productFavQueryData, isInitialLoading } = useFavProductsQuery()
 
   const productFavData = productFavQueryData?.data.data
 
@@ -173,58 +163,29 @@ const ProductDetail = (props: Props) => {
                 )}
               </div>
               {/* Vouchers */}
-              <div className="flex items-center gap-x-4 text-sm">
-                <span className="max-w-[6.875rem] text-neutral-500">Mã Giảm Giá Của Shop</span>
-                <span
-                  className={classNames(
-                    'wave mr-1 block rounded px-2.5 py-0.5 text-sm font-medium uppercase',
-                    {
-                      'bg-red-100 text-red-700': productData.shopType === 1,
-                      'bg-primary text-white': productData.shopType !== 1
-                    }
-                  )}>
-                  Giảm ₫35k
-                </span>
-                <span
-                  className={classNames(
-                    'wave mr-1 block rounded px-2.5 py-0.5 text-sm font-medium uppercase',
-                    {
-                      'bg-red-100 text-red-700': productData.shopType === 1,
-                      'bg-primary text-white': productData.shopType !== 1
-                    }
-                  )}>
-                  Giảm ₫35k
-                </span>
-              </div>
-              {/* Insurance */}
-              <div className="flex items-center gap-x-4 text-sm">
-                <span className="min-w-[6.875rem] text-neutral-500">Bảo Hiểm</span>
-                <p>
-                  Bảo hiểm Thời trang
-                  <span className="ml-2 inline-block rounded-t-md rounded-br-md bg-primary px-2 text-xs text-white">
-                    Mới
-                  </span>
-                </p>
-              </div>
-              {/* Shipping */}
-              <div className="flex gap-x-4 text-sm">
-                <span className="min-w-[6.875rem] text-neutral-500">Vận Chuyển</span>
-                <div className="grid flex-1 grid-cols-[auto,1fr] gap-2">
-                  <img
-                    src="/images/shipping-icon.png"
-                    alt="shipping-icon"
-                    className="col-start-1 h-5 max-w-full"
-                  />
-                  <p className="col-start-2">Miễn phí vận chuyển</p>
-                  <Truck className="col-start-1 h-5 max-w-full" />
-                  <div className="col-start-2 flex gap-x-4">
-                    <span className="min-w-[6.875rem] text-neutral-500">Phí Vận Chuyển</span>
-                    <span>
-                      {formatCurrency(0)} - {formatCurrency(22000)}
-                    </span>
-                  </div>
+              {productData.vouchers.length > 0 && (
+                <div className="flex items-center gap-x-4 text-sm">
+                  <span className="max-w-[6.875rem] text-neutral-500">Mã Giảm Giá Của Shop</span>
+                  {productData.vouchers.map((voucher) => {
+                    return (
+                      <span
+                        key={voucher._id}
+                        className={classNames(
+                          'wave mr-1 block rounded px-2.5 py-0.5 text-sm font-medium uppercase',
+                          {
+                            'bg-red-100 text-red-700': productData.shopType === 1,
+                            'bg-primary text-white': productData.shopType !== 1
+                          }
+                        )}>
+                        Giảm{' '}
+                        {voucher.type === 0
+                          ? voucher.discount.percent + ' %'
+                          : formatCurrency(voucher.discount.price)}
+                      </span>
+                    )
+                  })}
                 </div>
-              </div>
+              )}
               {/* Add to cart & Buy now */}
               <ProductPurchase
                 key={productData._id}
@@ -267,7 +228,7 @@ const ProductDetail = (props: Props) => {
           <div className="p-6">
             <h1 className="py-4 text-xl uppercase">CÓ THỂ BẠN CŨNG THÍCH</h1>
             <ProductList
-              skeletonSize={10}
+              skeletonSize={FAV_PRODUCTS_SIZE}
               isFetching={isInitialLoading}
               data={productFavData?.items}
               className="grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6"

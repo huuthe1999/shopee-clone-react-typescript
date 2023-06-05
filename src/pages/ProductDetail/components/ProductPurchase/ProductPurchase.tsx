@@ -69,7 +69,7 @@ export const ProductPurchase = ({ quantity, shopType, productId }: ProductPurcha
         navigate({ pathname: PATHS.LOGIN_PATH, search: `?callback=${pathname}` })
       })
     }
-  }, [accessToken, amount, productId, pathname])
+  }, [accessToken, amount, productId, pathname, addToCartMutate, navigate])
 
   return (
     <>

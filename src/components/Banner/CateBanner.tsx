@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { UseInfiniteQueryResult } from '@tanstack/react-query'
 import { AxiosResponse } from 'axios'
@@ -31,16 +31,14 @@ const CateBanner = ({
     return data?.pageParams.includes(pageParam)
   }
 
-  const renderSkeleton = useMemo(
-    () => (
-      <div className="grid grid-cols-8 gap-2 py-2">
-        {[...Array(SIZE)].map((_, index) => (
-          <Skeleton key={index} />
-        ))}
-      </div>
-    ),
-    []
+  const renderSkeleton = (
+    <div className="grid grid-cols-8 gap-2 py-2">
+      {[...Array(SIZE)].map((_, index) => (
+        <Skeleton key={index} />
+      ))}
+    </div>
   )
+
   useEffect(() => {
     if (isStale) {
       remove()

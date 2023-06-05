@@ -5,7 +5,6 @@ export interface IProvinceResponse extends BaseResponse {
 }
 
 export interface IProvince extends IBaseItem {
-  idProvince: string
-  createdAt: string
-  updatedAt: string
+  _id: string
+  name: string
 }

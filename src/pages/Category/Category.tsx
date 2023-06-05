@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 
 import classNames from 'classnames'
 import queryString from 'query-string'
@@ -6,7 +6,7 @@ import { AlertOctagon } from 'react-feather'
 import { useLocation, useParams, useSearchParams } from 'react-router-dom'
 
 import { Pagination, ProductList } from '@/components'
-import { PATHS } from '@/constants'
+import { PAGE, PATHS, PRODUCTS_SIZE } from '@/constants'
 import { DEFAULT_FILTER_DATA } from '@/data/category'
 import { useProductsQuery } from '@/hooks'
 import { OrderType, SortByType } from '@/types'
@@ -32,8 +32,8 @@ const CategoryPage = () => {
     isFetching: isProductsFetching,
     isInitialLoading
   } = useProductsQuery({
-    size: 15,
-    page: page ? +page + 1 : 1,
+    size: PRODUCTS_SIZE,
+    page: page ? +page + 1 : PAGE + 1,
     ...(pathname === PATHS.SEARCH_PATH ? { type: 'search', keyword } : { categorySlug }),
     order: order,
     sortBy: sortBy ? sortBy : 'popular',
@@ -43,10 +43,7 @@ const CategoryPage = () => {
   const products = data?.data.data.items
 
   // Check is filtering
-  const hasFilter = useMemo(
-    () => DEFAULT_FILTER_DATA.some((data) => searchParams.has(data)),
-    [searchParams]
-  )
+  const hasFilter = DEFAULT_FILTER_DATA.some((data) => searchParams.has(data))
 
   const handleSetParams = useCallback(
     (params?: SearchParamsProps) => {

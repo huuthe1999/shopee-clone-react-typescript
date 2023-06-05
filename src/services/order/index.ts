@@ -10,9 +10,15 @@ export interface AddToCartProps {
   productId: string
 }
 
-export type UpdateCartProps =
+export type BaseCartProps = { actionType: 0 | 1 }
+
+export type UpdateCartProps = { orderId: string } & AddToCartProps
+
+export type DeleteCartProps = { orderIds: string[] }
+
+export type ModifyCartProps =
   | ({ actionType: 0; orderId: string } & AddToCartProps)
-  | { actionType: 1; orderId: string }
+  | { actionType: 1; orderIds: string[] }
 
 export const addToCart = ({ amount, productId }: AddToCartProps) =>
   authAxios.post<BaseResponse, AxiosResponse<BaseResponse>, AddToCartProps>(
@@ -20,19 +26,20 @@ export const addToCart = ({ amount, productId }: AddToCartProps) =>
     { amount, productId }
   )
 
-export const updateCart = ({ actionType, orderId, ...rest }: UpdateCartProps) => {
-  if (actionType === 0) {
-    const { amount, productId } = rest as AddToCartProps
-    return authAxios.patch<
-      ISingleCartResponse,
-      AxiosResponse<ISingleCartResponse>,
-      UpdateCartProps
-    >(ENDPOINTS.ORDER_END_POINT, { amount, productId, actionType, orderId })
-  }
-  return authAxios.patch<BaseResponse, AxiosResponse<BaseResponse>, UpdateCartProps>(
-    ENDPOINTS.ORDER_END_POINT,
-    { actionType, orderId }
-  )
+export const updateCart = ({ amount, orderId, productId }: UpdateCartProps) => {
+  return authAxios.patch<
+    ISingleCartResponse,
+    AxiosResponse<ISingleCartResponse>,
+    UpdateCartProps & BaseCartProps
+  >(ENDPOINTS.ORDER_END_POINT, { amount, productId, actionType: 0, orderId })
+}
+
+export const deleteCart = ({ orderIds }: DeleteCartProps) => {
+  return authAxios.patch<
+    BaseResponse,
+    AxiosResponse<BaseResponse>,
+    DeleteCartProps & BaseCartProps
+  >(ENDPOINTS.ORDER_END_POINT, { actionType: 1, orderIds })
 }
 
 export const getInCart = (props: OrderQueryProps) =>

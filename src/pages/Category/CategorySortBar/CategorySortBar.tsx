@@ -1,4 +1,4 @@
-import { HTMLAttributes, memo, useCallback } from 'react'
+import { HTMLAttributes, useCallback } from 'react'
 
 import classNames from 'classnames'
 import { motion } from 'framer-motion'
@@ -168,13 +168,13 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
           </p>
 
           <Button
-            className="h-full bg-white px-3 text-center"
+            className="h-full border border-neutral-400 bg-white px-3 text-center"
             disabled={page === 0}
             onClick={handleSetPrevPage}>
             <ChevronLeft size={16} />
           </Button>
           <Button
-            className="h-full bg-white px-3 text-center"
+            className="h-full border border-neutral-400 bg-white px-3 text-center"
             disabled={page === pageCount - 1}
             onClick={handleSetNextPage}>
             <ChevronRight size={16} />
@@ -185,4 +185,4 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
   )
 }
 
-export default memo(CategorySortBar)
+export default CategorySortBar

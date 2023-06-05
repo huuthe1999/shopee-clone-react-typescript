@@ -6,6 +6,7 @@ import { useAuthContext } from '@/contexts'
 
 const RejectedRoute = () => {
   const { search } = useLocation()
+
   const { callback, ...restParams } = queryString.parse(search, {
     arrayFormat: 'comma'
   })
@@ -32,7 +33,7 @@ const RejectedRoute = () => {
   // when they get to the protected page and click the back button, they
   // won't end up back on the login page, which is also really nice for the
   // user experience.
-  return !accessToken ? <Outlet /> : <Navigate to={to} replace />
+  return !accessToken ? <Outlet /> : <Navigate to={to} replace={true} />
 }
 
 export default RejectedRoute

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
-import { MyErrorBoundary } from '@/components'
+import { MyErrorBoundary, Spinner } from '@/components'
 import { PATHS } from '@/constants'
 import { AuthProvider, ProtectedRoute, RejectedRoute } from '@/contexts'
 
@@ -11,6 +11,7 @@ const CredentialPage = React.lazy(() => import('@/pages/Credential'))
 const GuestLayout = React.lazy(() => import('@/layouts/GuestLayout'))
 const MainLayout = React.lazy(() => import('@/layouts/MainLayout'))
 const CartPage = React.lazy(() => import('@/pages/Cart'))
+const CheckOutPage = React.lazy(() => import('@/pages/CheckOut'))
 const CategoryPage = React.lazy(() => import('@/pages/Category'))
 const ProductDetailPage = React.lazy(() => import('@/pages/ProductDetail'))
 
@@ -21,7 +22,9 @@ const RouterElementProvider = () => {
         {
           element: (
             <MyErrorBoundary>
-              <MainLayout />
+              <React.Suspense fallback={<Spinner />}>
+                <MainLayout />
+              </React.Suspense>
             </MyErrorBoundary>
           ),
           children: [
@@ -36,6 +39,10 @@ const RouterElementProvider = () => {
                 {
                   path: PATHS.CART_PATH,
                   element: <CartPage />
+                },
+                {
+                  path: PATHS.CHECKOUT_PATH,
+                  element: <CheckOutPage />
                 }
               ]
             },
@@ -52,7 +59,9 @@ const RouterElementProvider = () => {
         {
           element: (
             <MyErrorBoundary>
-              <GuestLayout />
+              <React.Suspense fallback={<Spinner />}>
+                <GuestLayout />
+              </React.Suspense>
             </MyErrorBoundary>
           ),
           children: [
@@ -60,11 +69,7 @@ const RouterElementProvider = () => {
               element: <RejectedRoute />,
               children: [
                 {
-                  path: PATHS.LOGIN_PATH,
-                  element: <CredentialPage />
-                },
-                {
-                  path: PATHS.REGISTER_PATH,
+                  path: PATHS.LOGIN_PATH || PATHS.REGISTER_PATH,
                   element: <CredentialPage />
                 }
               ]
@@ -86,9 +91,7 @@ const RouterElementProvider = () => {
 
   return (
     <AuthProvider>
-      {/* <React.Suspense fallback={<Spinner />}> */}
       <RouterProvider router={router} />
-      {/* </React.Suspense> */}
     </AuthProvider>
   )
 }

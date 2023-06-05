@@ -1,10 +1,12 @@
 import { Rating, Star, type ItemStyles } from '@smastrom/react-rating'
 import classNames from 'classnames'
+import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 
 import { IProduct } from '@/types'
 import { formatCurrency, formatNumber } from '@/utils'
 
+const LinkMotion = motion(Link)
 export const customItemStyles: ItemStyles = {
   itemShapes: Star,
   itemStrokeWidth: 2,
@@ -16,19 +18,26 @@ export const customItemStyles: ItemStyles = {
 
 const Product = ({
   _id,
+  image,
+  vouchers,
   categorySlug,
   slug,
   discount,
-  images,
   name,
   price,
   rating,
   sold,
   shopType,
   province: { name: provinceName }
-}: IProduct) => {
+}: Omit<IProduct, 'images'>) => {
   return (
-    <Link to={`/${categorySlug}/${slug}-${_id}`}>
+    <LinkMotion
+      key={_id}
+      layout
+      to={`/${categorySlug}/${slug}-${_id}`}
+      transition={{ type: 'tween' }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}>
       <section className="relative my-1 flex h-full flex-col rounded-sm border border-transparent shadow-xl transition ease-linear hover:-translate-y-[2px] hover:border-primary hover:shadow-md">
         {/* Favorite Ribbon */}
         {shopType === 2 && (
@@ -57,7 +66,7 @@ const Product = ({
         {/* Image */}
         <div className="relative min-h-[50%] w-full overflow-hidden bg-transparent">
           <img
-            src={images[0].url}
+            src={image}
             alt={slug}
             className="aspect-square w-full object-cover"
             onError={(e) => {
@@ -74,7 +83,28 @@ const Product = ({
         </div>
         <div className="flex flex-1 flex-col justify-between p-2">
           <p className="line-clamp-2 text-sm">{name}</p>
-          <div className="mt-3 flex flex-col gap-y-2">
+          <div className="mt-2 flex flex-col gap-y-2">
+            {/* Vouchers */}
+            <div className="flex min-h-[1rem] flex-wrap items-center gap-x-2">
+              {vouchers.map((voucher) => {
+                return (
+                  <span
+                    key={voucher._id}
+                    className={classNames(
+                      'box block rounded px-2.5 py-0.5 text-xxs font-medium capitalize',
+                      {
+                        'bg-red-100 text-red-700': shopType === 1,
+                        'bg-primary text-white': shopType !== 1
+                      }
+                    )}>
+                    Giảm{' '}
+                    {voucher.type === 0
+                      ? voucher.discount.percent + ' %'
+                      : formatCurrency(voucher.discount.price)}
+                  </span>
+                )
+              })}
+            </div>
             <div className="inline-flex gap-x-2">
               {/*Original Price */}
               {discount > 0 && (
@@ -108,7 +138,7 @@ const Product = ({
           </div>
         </div>
       </section>
-    </Link>
+    </LinkMotion>
   )
 }
 

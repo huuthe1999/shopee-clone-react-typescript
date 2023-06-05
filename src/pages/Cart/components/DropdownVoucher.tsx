@@ -1,5 +1,3 @@
-import React from 'react'
-
 import classNames from 'classnames'
 import { Check, ChevronDown } from 'react-feather'
 
@@ -11,7 +9,7 @@ import { formatCurrency } from '@/utils'
 interface Props {
   vouchers: IProduct['vouchers']
   voucherSelected?: TVoucher
-  onSelect: React.Dispatch<React.SetStateAction<TVoucher | undefined>>
+  onSelect: (value?: TVoucher) => void
 }
 
 export const DropdownVoucher = ({ vouchers, voucherSelected, onSelect }: Props) => {
@@ -21,7 +19,7 @@ export const DropdownVoucher = ({ vouchers, voucherSelected, onSelect }: Props) 
     <>
       <TooltipProvider placement="bottom-end" click>
         <TooltipTrigger asChild>
-          <div className="flex cursor-pointer flex-nowrap items-center gap-x-2">
+          <div className="flex cursor-pointer flex-nowrap items-center gap-x-2 font-semibold text-primary">
             <span>Mã khuyến mãi</span>
             <ChevronDown size={16} />
           </div>
@@ -36,7 +34,7 @@ export const DropdownVoucher = ({ vouchers, voucherSelected, onSelect }: Props) 
                     <Button
                       key={voucher._id}
                       onClick={() => {
-                        onSelect((prev) => (prev?._id === voucher._id ? undefined : voucher))
+                        onSelect(activeVoucher?._id === voucher._id ? undefined : voucher)
                       }}
                       className={classNames(
                         'group relative border px-8 py-2 transition hover:border-primary hover:text-primary',
@@ -80,7 +78,7 @@ export const DropdownVoucher = ({ vouchers, voucherSelected, onSelect }: Props) 
             )}>
             Giảm
             {activeVoucher.type === 0
-              ? activeVoucher.discount.percent + ' %'
+              ? activeVoucher.discount.percent + ' ﹪'
               : formatCurrency(activeVoucher.discount.price)}
           </span>
         )}

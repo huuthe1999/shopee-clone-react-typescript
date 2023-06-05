@@ -33,9 +33,3 @@ export interface ICart {
   createdAt: string
   updatedAt: string
 }
-
-export function isUpdateCart(
-  data: ISingleCartResponse | BaseResponse
-): data is ISingleCartResponse {
-  return (data as ISingleCartResponse).data !== undefined
-}

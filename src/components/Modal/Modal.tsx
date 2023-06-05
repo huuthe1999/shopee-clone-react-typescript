@@ -1,8 +1,9 @@
 import { FloatingOverlay, FloatingPortal } from '@floating-ui/react'
 import classNames from 'classnames'
 import { AnimatePresence, Variants, motion } from 'framer-motion'
+import { X } from 'react-feather'
 
-import { Button, DropItemMenu } from '@/components'
+import { Button } from '@/components'
 
 const panelVariants: Variants = {
   initial: {
@@ -48,21 +49,26 @@ const backdropVariants: Variants = {
   }
 }
 
-interface Props extends Pick<DropItemMenu, 'heading' | 'description' | 'buttonText'> {
+interface Props {
+  confirmText?: string
+  cancelText?: string
+  headerText?: string
   setShowModal: (showModal: boolean) => void
   open: boolean
   onSubmit: () => void
   isLoading: boolean
+  children: React.ReactNode
 }
 
 function Modal({
   setShowModal,
-  heading,
-  description,
-  buttonText,
+  confirmText = 'Oke',
+  cancelText = 'Cancel',
+  headerText,
   open,
   onSubmit,
-  isLoading
+  isLoading,
+  children
 }: Props) {
   return (
     <AnimatePresence initial={false}>
@@ -92,39 +98,31 @@ function Modal({
                     onClick={(e) => e.stopPropagation()}
                     variants={panelVariants}
                     className="relative overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8 sm:w-full sm:max-w-lg">
-                    {/* Start content */}
-                    <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                      <div className="sm:flex sm:items-start">
-                        {/* Start Icon */}
-                        <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                          <svg
-                            className="h-6 w-6 text-red-600"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth="1.5"
-                            stroke="currentColor"
-                            aria-hidden="true">
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-                            />
-                          </svg>
-                        </div>
-                        {/* End Icon */}
-                        <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                          <h3 className="text-base font-semibold leading-6 text-gray-900">
-                            {heading}
-                          </h3>
-                          <div className="mt-2">
-                            <p className="text-sm text-gray-500">{description}</p>
-                          </div>
-                        </div>
+                    {/* Close button */}
+                    <Button
+                      onClick={() => {
+                        setShowModal(false)
+                        // setOpen(false)
+                      }}
+                      className="absolute right-2.5 top-3 z-10 ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
+                      data-modal-hide="popup-modal">
+                      <X className="h-5 w-5 fill-current" />
+                      <span className="sr-only">Close modal</span>
+                    </Button>
+                    {/* Start header */}
+                    {headerText && (
+                      <div className="relative w-full border-b border-gray-200 bg-gray-50 px-6 py-4 font-medium capitalize sm:text-lg">
+                        {headerText}
                       </div>
+                    )}
+                    {/* End header */}
+                    {/* Start children */}
+                    <div className="relative bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                      {children}
                     </div>
-                    {/* End content */}
+                    {/* End children */}
                     {/* Start Footer */}
-                    <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                    <div className="border-t border-gray-200 bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                       <Button
                         isLoading={isLoading}
                         disabled={isLoading}
@@ -132,7 +130,7 @@ function Modal({
                         className={classNames(
                           'inline-flex w-full items-center justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto'
                         )}>
-                        {buttonText}
+                        {confirmText}
                       </Button>
 
                       <Button
@@ -145,7 +143,7 @@ function Modal({
                         className={classNames(
                           'mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto'
                         )}>
-                        Cancel
+                        {cancelText}
                       </Button>
                     </div>
                     {/* End Footer */}

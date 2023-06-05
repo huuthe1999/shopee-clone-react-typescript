@@ -1,7 +1,7 @@
 import { BaseResponse, IBaseDataPagination, IBaseItem, IFile, IProvince } from '@/types'
 
 export interface IProductResponse extends BaseResponse {
-  data: IBaseDataPagination<IProduct[]>
+  data: IBaseDataPagination<Omit<IProduct, 'images'>[]>
 }
 
 export interface ISingleProductResponse extends BaseResponse {

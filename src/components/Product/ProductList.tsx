@@ -1,8 +1,10 @@
 import { HTMLAttributes, useRef } from 'react'
 
 import classNames from 'classnames'
+import { AnimatePresence } from 'framer-motion'
 
 import { Button, SkeletonProduct } from '@/components'
+import { PRODUCTS_SIZE } from '@/constants'
 import { IProduct } from '@/types'
 import { SearchParamsProps } from '@/utils'
 
@@ -11,13 +13,13 @@ import Product from './Product'
 interface ProductListProps extends HTMLAttributes<HTMLDivElement> {
   skeletonSize?: number
   isFetching?: boolean
-  data?: IProduct[]
+  data?: Omit<IProduct, 'images'>[]
   onResetParam?: (params?: SearchParamsProps) => void
   hasFilter?: boolean
 }
 
 const ProductList = ({
-  skeletonSize = 15,
+  skeletonSize = PRODUCTS_SIZE,
   isFetching,
   data,
   className,
@@ -52,7 +54,7 @@ const ProductList = ({
 
   return (
     <div ref={ref} className={classNames('mt-2 grid place-items-center gap-2', [className])}>
-      {renderData}
+      <AnimatePresence initial={false}>{renderData}</AnimatePresence>
     </div>
   )
 }

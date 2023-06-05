@@ -1,4 +1,4 @@
-import { HTMLAttributes, memo, useMemo } from 'react'
+import { HTMLAttributes, useMemo } from 'react'
 
 import classNames from 'classnames'
 import { Filter } from 'react-feather'
@@ -47,11 +47,11 @@ function CategoryFilter({ headerText, hasFilter, className, onChangeParam }: Pro
 
     const sortLocationSelected: IBaseItem[] = []
 
-    locationData?.forEach(({ idProvince, name }) => {
-      if (locationParams?.includes(idProvince)) {
-        sortLocationSelected.unshift({ _id: idProvince, name })
+    locationData?.forEach(({ _id, name }) => {
+      if (locationParams?.includes(_id)) {
+        sortLocationSelected.unshift({ _id, name })
       } else {
-        sortLocationSelected.push({ _id: idProvince, name })
+        sortLocationSelected.push({ _id, name })
       }
     }) || []
 
@@ -103,4 +103,4 @@ function CategoryFilter({ headerText, hasFilter, className, onChangeParam }: Pro
     </div>
   )
 }
-export default memo(CategoryFilter)
+export default CategoryFilter

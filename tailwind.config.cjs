@@ -20,6 +20,9 @@ module.exports = {
           '60%': { backgroundPosition: '0% 50%, 50% 100%, 100% 0%' },
           '80%': { backgroundPosition: '0% 50%, 50% 50%, 100% 100%' }
         }
+      },
+      fontSize: {
+        xxs: ['0.6rem', { lineHeight: '0.75rem' }]
       }
     }
   },

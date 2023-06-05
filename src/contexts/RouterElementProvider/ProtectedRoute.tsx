@@ -19,7 +19,7 @@ const ProtectedRoute = () => {
         pathname: PATHS.LOGIN_PATH,
         search: `${location.search}&callback=${location.pathname}`
       }}
-      replace
+      replace={true}
     />
   )
 }

@@ -1,6 +1,8 @@
 import classNames from 'classnames'
 import { Link, useLocation } from 'react-router-dom'
 
+import { PATHS } from '@/constants'
+
 import { INavItem } from './type'
 
 const NavItem = ({
@@ -11,7 +13,7 @@ const NavItem = ({
   className,
   children
 }: Omit<INavItem, 'id' | 'menuItems'>) => {
-  const location = useLocation()
+  const { pathname, search } = useLocation()
 
   const content = (
     <>
@@ -24,7 +26,13 @@ const NavItem = ({
   const renderElement = (
     <li className={classNames('px-2', [className])}>
       {to ? (
-        <Link className="flex gap-1 hover:text-neutral-200" to={to} state={{ from: location }}>
+        <Link
+          className="flex w-fit gap-1 hover:text-neutral-200"
+          to={
+            to === PATHS.HOME_PATH || pathname === PATHS.HOME_PATH
+              ? to
+              : { pathname: to, search: `${search}&callback=${pathname}` }
+          }>
           {content}
         </Link>
       ) : children ? (

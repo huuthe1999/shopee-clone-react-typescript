@@ -14,7 +14,7 @@ import {
   NavItem,
   NavItemWithModal
 } from '@/components'
-import { AUTH, BRIEF_CART_SIZE, PATHS } from '@/constants'
+import { AUTH, BRIEF_CART_SIZE, PATHS, QUERY_KEYS } from '@/constants'
 import { TooltipContent, TooltipProvider, TooltipTrigger, useAuthContext } from '@/contexts'
 import { LEFT_NAV, RIGHT_NAV } from '@/data/header'
 import { useOrderQuery } from '@/hooks'
@@ -25,7 +25,10 @@ const MainHeader = () => {
 
   const inputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
-  const match = useMatch(PATHS.CART_PATH)
+  const matchCartPath = useMatch(PATHS.CART_PATH)
+  const matchCheckOutPath = useMatch(PATHS.CHECKOUT_PATH)
+
+  const match = matchCartPath || matchCheckOutPath
 
   const renderNav = useCallback(
     (data: INavItem[]) =>
@@ -49,11 +52,18 @@ const MainHeader = () => {
     [accessToken, currentUser]
   )
 
-  const { data: productsCartQueryData, isRefetching: isProductsCartRefetching } = useOrderQuery({
+  const {
+    data: productsCartQueryData,
+    isRefetching: isProductsCartRefetching,
+    isPreviousData: isPreviousCartQueryData
+  } = useOrderQuery({
     status: -1,
-    size: BRIEF_CART_SIZE
+    enabled: !match,
+    size: BRIEF_CART_SIZE,
+    key: QUERY_KEYS.order.briefList
   })
-  const productsCartData = productsCartQueryData?.data.data
+
+  const productsCartData = isPreviousCartQueryData ? undefined : productsCartQueryData?.data.data
 
   useEffect(() => {
     const searchKeyword = searchParams.get('keyword')
@@ -90,7 +100,7 @@ const MainHeader = () => {
           }
         )}>
         {/* Logo */}
-        <div
+        <ol
           className={classNames('shrink-0 self-start max-sm:self-center', {
             'flex-1': match
           })}>
@@ -101,32 +111,37 @@ const MainHeader = () => {
               <div className="flex items-end text-white">
                 <Home className="hidden max-sm:block" size={28} />
                 <LogoIcon className="fill-white max-sm:hidden sm:h-12" />
-                {match && (
+                {matchCartPath && (
                   <span className="ml-4 border-l-2 border-l-white pl-4 text-2xl">Giỏ Hàng</span>
+                )}
+                {matchCheckOutPath && (
+                  <span className="ml-4 border-l-2 border-l-white pl-4 text-2xl">Thanh Toán</span>
                 )}
               </div>
             }
           />
-        </div>
+        </ol>
         {/* Search Container*/}
-        <div className="flex-1">
-          {/* Search */}
-          <form
-            className="flex flex-nowrap gap-1 rounded-md bg-white max-sm:gap-0"
-            onSubmit={handleSearch}>
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder="Tìm kiếm sản phẩm tại đây"
-              className="rounded-sm pl-4 pr-2 text-black focus:outline focus:outline-2 focus:outline-offset-4 max-sm:outline-none"
-            />
-            <Button
-              className="m-1 flex cursor-pointer items-center rounded-sm bg-primary px-2 py-1 text-white hover:opacity-90 md:px-6 md:py-2"
-              type="submit">
-              <Search className="text-xs sm:text-2xl" size={16} />
-            </Button>
-          </form>
-        </div>
+        {!matchCheckOutPath && (
+          <div className="flex-1">
+            {/* Search */}
+            <form
+              className="flex flex-nowrap gap-1 rounded-md bg-white max-sm:gap-0"
+              onSubmit={handleSearch}>
+              <input
+                ref={inputRef}
+                type="text"
+                placeholder="Tìm kiếm sản phẩm tại đây"
+                className="rounded-sm pl-4 pr-2 text-black focus:outline focus:outline-2 focus:outline-offset-4 max-sm:outline-none"
+              />
+              <Button
+                className="m-1 flex cursor-pointer items-center rounded-sm bg-primary px-2 py-1 text-white hover:opacity-90 md:px-6 md:py-2"
+                type="submit">
+                <Search className="text-xs sm:text-2xl" size={16} />
+              </Button>
+            </form>
+          </div>
+        )}
         {/* Shopping cart */}
         {!match && (
           <TooltipProvider placement="bottom-end" mainAxis={-4}>

@@ -8,19 +8,20 @@ import { orderServices } from '@/services'
 import { BaseResponse, ICartResponse, ICartStatus } from '@/types'
 
 export interface OrderQueryProps {
+  enabled?: boolean
+  key?: string
   status: ICartStatus
   page?: number
   size: number
 }
-export const useOrderQuery = ({ status, page, size }: OrderQueryProps) => {
+export const useOrderQuery = ({ status, page, size, key, enabled }: OrderQueryProps) => {
   useAxiosPrivate()
   const { accessToken } = useAuthContext()
 
   return useQuery<AxiosResponse<ICartResponse>, AxiosError<BaseResponse>>({
-    queryKey: [QUERY_KEYS.order, { status, page, size }],
+    queryKey: [key ?? QUERY_KEYS.order.list, { status, page, size }],
     queryFn: () => orderServices.getInCart({ status, page, size }),
-    enabled: Boolean(accessToken),
-    keepPreviousData: true,
-    staleTime: 60 * 1000
+    enabled: enabled ? enabled && Boolean(accessToken) : Boolean(accessToken),
+    keepPreviousData: true
   })
 }
