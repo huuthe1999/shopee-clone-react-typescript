@@ -37,6 +37,7 @@ const MenuItem = ({
           </Link>
         ) : (
           <button
+            type="button"
             className={classNames('flex w-full gap-2 p-2 text-left', [buttonClassName])}
             onClick={onClick}>
             {image && (

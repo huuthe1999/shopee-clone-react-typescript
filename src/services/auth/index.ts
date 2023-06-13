@@ -3,19 +3,22 @@ import httpAxios from '@/config/http'
 import { ENDPOINTS } from '@/constants'
 import {
   BaseResponse,
-  LoginSuccessResponse,
-  RefreshTokenSuccessResponse,
-  RegisterSuccessResponse
+  IDataResponse,
+  LoginDataResponse,
+  RefreshTokenSuccessResponse
 } from '@/types'
 
 export const loginUser = (data: TCredentialForm) => {
-  return httpAxios.post<LoginSuccessResponse>(ENDPOINTS.LOGIN_END_POINT, data, {
+  return httpAxios.post<IDataResponse<LoginDataResponse>>(ENDPOINTS.LOGIN_END_POINT, data, {
     withCredentials: true
   })
 }
 
 export const registerUser = (data: TCredentialForm) => {
-  return httpAxios.post<RegisterSuccessResponse>(ENDPOINTS.REGISTER_END_POINT, data)
+  return httpAxios.post<IDataResponse<Pick<LoginDataResponse, 'user'>>>(
+    ENDPOINTS.REGISTER_END_POINT,
+    data
+  )
 }
 
 export const getRefreshToken = () => {

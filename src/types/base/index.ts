@@ -43,3 +43,11 @@ export interface RefreshTokenSuccessResponse extends BaseResponse {
     accessToken: string
   }
 }
+
+export interface IDataResponse<T> extends BaseResponse {
+  data: T
+}
+
+export interface IDataPaginationResponse<T> extends BaseResponse {
+  data: IBaseDataPagination<T>
+}

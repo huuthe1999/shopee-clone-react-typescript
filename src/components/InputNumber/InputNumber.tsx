@@ -7,6 +7,7 @@ import { Button } from '@/components'
 export interface InputNumberProps {
   className?: string
   disabled?: boolean
+  canDelete?: boolean
   quantity: number
   value: string
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
@@ -19,6 +20,7 @@ export const InputNumber = ({
   disabled,
   className,
   quantity,
+  canDelete,
   onChange,
   onBlur,
   onDecrease,
@@ -42,7 +44,7 @@ export const InputNumber = ({
       <Button
         className="h-full basis-1/3 rounded-l px-2 text-gray-600 outline-none"
         onClick={onDecrease}
-        disabled={+value === 1}>
+        disabled={canDelete ? +value === 0 : +value === 1}>
         <span className="m-auto text-2xl font-thin">−</span>
       </Button>
       <input

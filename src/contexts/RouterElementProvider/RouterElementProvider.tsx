@@ -12,6 +12,7 @@ const GuestLayout = React.lazy(() => import('@/layouts/GuestLayout'))
 const MainLayout = React.lazy(() => import('@/layouts/MainLayout'))
 const CartPage = React.lazy(() => import('@/pages/Cart'))
 const CheckOutPage = React.lazy(() => import('@/pages/CheckOut'))
+const CheckOutSuccessPage = React.lazy(() => import('@/pages/CheckOutSuccess'))
 const CategoryPage = React.lazy(() => import('@/pages/Category'))
 const ProductDetailPage = React.lazy(() => import('@/pages/ProductDetail'))
 
@@ -43,6 +44,10 @@ const RouterElementProvider = () => {
                 {
                   path: PATHS.CHECKOUT_PATH,
                   element: <CheckOutPage />
+                },
+                {
+                  path: PATHS.CHECKOUT_SUCCESS_PATH,
+                  element: <CheckOutSuccessPage />
                 }
               ]
             },
@@ -69,7 +74,11 @@ const RouterElementProvider = () => {
               element: <RejectedRoute />,
               children: [
                 {
-                  path: PATHS.LOGIN_PATH || PATHS.REGISTER_PATH,
+                  path: PATHS.LOGIN_PATH,
+                  element: <CredentialPage />
+                },
+                {
+                  path: PATHS.REGISTER_PATH,
                   element: <CredentialPage />
                 }
               ]

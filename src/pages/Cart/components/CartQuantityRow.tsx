@@ -10,9 +10,10 @@ interface Props {
   productId: string
   value: string
   quantity: number
+  onDeleteProduct?: (id: string) => void
 }
 
-export const CartQuantityRow = memo(({ quantity, value, orderId, productId }: Props) => {
+const CartQuantityRow = memo(({ quantity, value, orderId, productId, onDeleteProduct }: Props) => {
   const [amount, setAmount] = useState(value)
   const updateCartMutation = useUpdateCartMutation()
 
@@ -29,7 +30,8 @@ export const CartQuantityRow = memo(({ quantity, value, orderId, productId }: Pr
     const currentValue = e?.currentTarget.value
 
     if (!currentValue || currentValue === '0') {
-      setAmount(value)
+      onDeleteProduct?.(orderId)
+      // setAmount(value)
     } else {
       if (currentValue !== value) {
         updateCartMutation.mutate(
@@ -48,6 +50,10 @@ export const CartQuantityRow = memo(({ quantity, value, orderId, productId }: Pr
   }
 
   const handleDecrease = () => {
+    if (+value - 1 === 0) {
+      onDeleteProduct?.(orderId)
+      return
+    }
     updateCartMutation.mutate(
       { actionType: 0, amount: +value - 1, orderId, productId },
       {
@@ -79,6 +85,7 @@ export const CartQuantityRow = memo(({ quantity, value, orderId, productId }: Pr
     <InputNumber
       disabled={updateCartMutation.isLoading}
       quantity={quantity}
+      canDelete
       value={amount}
       onChange={handleChange}
       onBlur={handleBlurChange}
@@ -87,3 +94,5 @@ export const CartQuantityRow = memo(({ quantity, value, orderId, productId }: Pr
     />
   )
 })
+
+export default CartQuantityRow

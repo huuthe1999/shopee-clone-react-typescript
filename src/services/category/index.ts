@@ -1,9 +1,9 @@
 import httpAxios from '@/config/http'
 import { ENDPOINTS } from '@/constants'
-import { ICategoryResponse, ISubCategoryResponse } from '@/types'
+import { ICategory, IDataPaginationResponse, IDataResponse } from '@/types'
 
 export const getCategories = (signal?: AbortSignal, params?: any) =>
-  httpAxios.get<ICategoryResponse>(ENDPOINTS.CATEGORY_END_POINT, {
+  httpAxios.get<IDataPaginationResponse<ICategory[]>>(ENDPOINTS.CATEGORY_END_POINT, {
     signal,
     params
   })
@@ -13,7 +13,10 @@ export const getSubCategoryBySlug = (
   categorySlug?: string,
   params: any = {}
 ) =>
-  httpAxios.get<ISubCategoryResponse>(`${ENDPOINTS.CATEGORY_END_POINT}/${categorySlug}`, {
-    signal,
-    params
-  })
+  httpAxios.get<IDataResponse<Pick<ICategory, 'subCategories'>>>(
+    `${ENDPOINTS.CATEGORY_END_POINT}/${categorySlug}`,
+    {
+      signal,
+      params
+    }
+  )

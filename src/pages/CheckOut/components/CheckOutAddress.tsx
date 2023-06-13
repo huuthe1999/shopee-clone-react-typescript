@@ -1,19 +1,32 @@
 import React from 'react'
 
 import { MapPin, Plus } from 'react-feather'
+import { FormProvider, useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
 import { Button, Modal } from '@/components'
-import { useBoolean } from '@/hooks'
+import { useAddressesQuery, useBoolean, useSetDefaultAddressMutation } from '@/hooks'
 
 const Address = React.lazy(() => import('@/components/Address'))
 
-interface Props {}
-
-const CheckOutAddress = (props: Props) => {
+const CheckOutAddress = () => {
+  const { data: addressesQueryData, isLoading } = useAddressesQuery()
+  const setDefaultAddressMutation = useSetDefaultAddressMutation()
   const { value, setValue } = useBoolean()
+
+  const addressesData = addressesQueryData?.data.data
+
+  const addressSelected = addressesData?.find((address) => address.isSelected)
+
+  const methods = useForm<{ address: string }>({
+    defaultValues: {
+      address: ''
+    }
+  })
+
   return (
     <>
-      <div className="flex flex-col gap-y-3 p-6">
+      <div className="flex w-full flex-col gap-y-3 rounded-b-sm bg-white p-6">
         <div className="flex flex-row flex-nowrap items-center gap-x-2 text-primary">
           <MapPin className="fill-primary text-white" />
           <p className="text-lg">Địa Chỉ Nhận Hàng</p>
@@ -23,30 +36,74 @@ const CheckOutAddress = (props: Props) => {
               setValue(true)
             }}>
             <Plus className="float-left" />
-            <span className="my-auto inline-block text-base">Thêm Địa Chỉ Mới</span>
+            <span className="my-auto inline-block text-base capitalize">Danh sách địa chỉ</span>
           </Button>
         </div>
-        <div className="flex flex-row gap-x-3">
-          <b>fdfg grg (+84) 368921234</b>
-          <p className="capitalize">
-            Số 159, Đường D 16, Thị Trấn Vĩnh Thạnh Trung, Huyện Châu Phú, An Giang
-          </p>
-        </div>
+        {isLoading ? (
+          <div className="flex animate-pulse flex-row items-center gap-x-3">
+            <span className="basis-1/6 rounded-md bg-gray-300 py-4" />
+            <span className="basis-2/6 rounded-md bg-gray-300 py-4" />
+            <span className="basis-1/12 rounded-md bg-gray-300 py-4" />
+            <span className="basis-1/12 rounded-md bg-gray-300 py-4" />
+          </div>
+        ) : (
+          addressSelected && (
+            <div className="flex flex-row items-center gap-x-3">
+              <b>
+                {addressSelected.name} (+84) {addressSelected.phone.slice(1)}
+              </b>
+              <p className="capitalize">
+                {[
+                  addressSelected.address,
+                  addressSelected.ward.name,
+                  addressSelected.district.name,
+                  addressSelected.province.name
+                ].join(', ')}
+              </p>
+              {addressSelected.isDefault && (
+                <span className="shrink-0 rounded-sm border border-primary px-1.5 py-0.5 text-xxs capitalize text-primary">
+                  Mặc định
+                </span>
+              )}
+            </div>
+          )
+        )}
       </div>
 
       <Modal
         headerText="Địa Chỉ Của Tôi"
         isLoading={false}
         setShowModal={setValue}
-        confirmText="Hoàn thành"
+        isHiddenFooter={addressesData?.length === 0}
+        confirmText="Xác nhận"
         cancelText="Hủy"
         open={value}
         onSubmit={() => {
-          alert('Oke')
+          const addressIdSelected = methods.getValues('address')
+          if (addressIdSelected === addressSelected?._id) {
+            setValue(false)
+            return
+          }
+          setDefaultAddressMutation.mutate(
+            { _id: addressIdSelected },
+            {
+              onSuccess(data) {
+                toast.success(data.data.message)
+              },
+              onError(error) {
+                toast.error(error.response?.data.message)
+              },
+              onSettled() {
+                setValue(false)
+              }
+            }
+          )
         }}>
         <React.Suspense
-          fallback={<div className="dots animate-[dots_1s_linear_infinite] text-center" />}>
-          <Address />
+          fallback={<div className="dots mx-auto animate-[dots_1s_linear_infinite] text-center" />}>
+          <FormProvider {...methods}>
+            <Address />
+          </FormProvider>
         </React.Suspense>
       </Modal>
     </>

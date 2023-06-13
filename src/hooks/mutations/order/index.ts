@@ -1,11 +1,20 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosError, AxiosResponse } from 'axios'
 import { useSearchParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
-import { BRIEF_CART_SIZE, CART_SIZE, PAGE, QUERY_KEYS } from '@/constants'
+import { AUTH, BRIEF_CART_SIZE, CART_SIZE, PAGE, QUERY_KEYS } from '@/constants'
 import { useAxiosPrivate } from '@/hooks'
 import { orderServices } from '@/services'
-import { BaseErrorResponse, BaseResponse, ICart, ICartResponse, ISingleCartResponse } from '@/types'
+import {
+  BaseErrorResponse,
+  BaseResponse,
+  ICart,
+  IDataPaginationResponse,
+  IDataResponse,
+  IProductSelected
+} from '@/types'
+import { authUtils } from '@/utils'
 
 export const useAddToCartMutation = () => {
   useAxiosPrivate()
@@ -39,10 +48,11 @@ export const useUpdateCartMutation = () => {
   const page = pageParam ? +pageParam : PAGE + 1
 
   return useMutation<
-    AxiosResponse<ISingleCartResponse | BaseResponse>,
+    AxiosResponse<IDataResponse<ICart> | BaseResponse>,
     AxiosError<BaseResponse>,
     orderServices.ModifyCartProps
   >({
+    mutationKey: [QUERY_KEYS.order.update],
     mutationFn: ({ actionType, ...rest }) => {
       if (actionType === 0) {
         // Update cart
@@ -55,8 +65,12 @@ export const useUpdateCartMutation = () => {
       }
     },
     onSuccess(data, variables) {
+      const productsCartPersistData: IProductSelected[] | undefined = authUtils.getItem(
+        AUTH.CART_CHECKOUT
+      )
+
       if (variables.actionType === 1) {
-        // Case update order
+        // Case delete order
         queryClient.invalidateQueries({
           queryKey: [QUERY_KEYS.order.list, { size: CART_SIZE, status: -1 }]
         })
@@ -64,11 +78,19 @@ export const useUpdateCartMutation = () => {
         queryClient.invalidateQueries({
           queryKey: [QUERY_KEYS.order.briefList, { status: -1, size: BRIEF_CART_SIZE }]
         })
+        // Update cart checkout if exist
+        if (productsCartPersistData) {
+          authUtils.setItem(
+            AUTH.CART_CHECKOUT,
+            productsCartPersistData?.filter((order) => order._id !== variables.orderIds[0])
+          )
+        }
+
         return
       } else {
         // Case update order
-        const singleCartData = data as AxiosResponse<ISingleCartResponse>
-        queryClient.setQueryData<AxiosResponse<ICartResponse>>(
+        const singleCartData = data as AxiosResponse<IDataResponse<ICart>>
+        queryClient.setQueryData<AxiosResponse<IDataPaginationResponse<ICart[]>>>(
           [QUERY_KEYS.order.list, { page, size: CART_SIZE, status: -1 }],
 
           (oldData) => {
@@ -93,7 +115,56 @@ export const useUpdateCartMutation = () => {
             return oldData
           }
         )
+        // Update cart checkout if exist
+        if (productsCartPersistData) {
+          authUtils.setItem(
+            AUTH.CART_CHECKOUT,
+            productsCartPersistData?.map((order) => {
+              if (order._id === variables.orderId) {
+                const data = singleCartData.data.data
+
+                let totalPriceItem =
+                  (data.product.price * (100 - data.product.discount) * data.amount) / 100
+
+                if (order.voucher) {
+                  if (order.voucher.type === 0) {
+                    totalPriceItem = (totalPriceItem * (100 - order.voucher.discount.percent)) / 100
+                  } else {
+                    totalPriceItem = totalPriceItem - order.voucher.discount.price
+                  }
+                }
+
+                return { ...order, ...singleCartData.data.data, totalPriceItem }
+              }
+              return order
+            })
+          )
+        }
       }
+    }
+  })
+}
+
+export const useCheckoutMutation = () => {
+  useAxiosPrivate()
+  const queryClient = useQueryClient()
+
+  return useMutation<AxiosResponse<BaseResponse>, AxiosError<BaseResponse>, string[]>({
+    mutationFn: (data) => orderServices.checkoutCart(data),
+    onSuccess(data) {
+      toast.success(data.data.message)
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.order.briefList, { status: -1, size: BRIEF_CART_SIZE }],
+        refetchType: 'none'
+      })
+
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.order.list, { size: CART_SIZE, status: -1 }],
+        refetchType: 'none'
+      })
+    },
+    onError(error) {
+      toast.error(error.response?.data.message)
     }
   })
 }

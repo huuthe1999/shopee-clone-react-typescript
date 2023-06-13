@@ -12,7 +12,7 @@ interface Props {
   onSelect: (value?: TVoucher) => void
 }
 
-export const DropdownVoucher = ({ vouchers, voucherSelected, onSelect }: Props) => {
+const DropdownVoucher = ({ vouchers, voucherSelected, onSelect }: Props) => {
   const activeVoucher = vouchers.find((voucher) => voucher._id === voucherSelected?._id)
 
   return (
@@ -86,3 +86,5 @@ export const DropdownVoucher = ({ vouchers, voucherSelected, onSelect }: Props) 
     </>
   )
 }
+
+export default DropdownVoucher

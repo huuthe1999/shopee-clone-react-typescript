@@ -179,6 +179,7 @@ const CredentialForm = () => {
 
       {/* Button */}
       <Button
+        type="submit"
         isLoading={isSubmitting}
         disabled={!isValid || isSubmitting}
         className={classNames(

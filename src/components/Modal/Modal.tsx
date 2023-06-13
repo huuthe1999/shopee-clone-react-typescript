@@ -52,11 +52,15 @@ const backdropVariants: Variants = {
 interface Props {
   confirmText?: string
   cancelText?: string
-  headerText?: string
+  headerText?: React.ReactNode
   setShowModal: (showModal: boolean) => void
   open: boolean
+  isHiddenFooter?: boolean
   onSubmit: () => void
+  onCancel?: () => void
   isLoading: boolean
+  disabledBlur?: boolean
+  disabledSubmitButton?: boolean
   children: React.ReactNode
 }
 
@@ -65,8 +69,12 @@ function Modal({
   confirmText = 'Oke',
   cancelText = 'Cancel',
   headerText,
+  disabledBlur = false,
+  isHiddenFooter = false,
   open,
+  onCancel,
   onSubmit,
+  disabledSubmitButton,
   isLoading,
   children
 }: Props) {
@@ -75,7 +83,7 @@ function Modal({
       <FloatingPortal id="modal-portal">
         {open && (
           <div
-            className="relative z-[99999]"
+            className="relative z-[9998]"
             aria-labelledby="modal-title"
             role="dialog"
             aria-modal="true">
@@ -88,7 +96,7 @@ function Modal({
               className="fixed inset-0 bg-gray-700 bg-opacity-75">
               <FloatingOverlay
                 onClick={() => {
-                  setShowModal(false)
+                  !disabledBlur && setShowModal(false)
                   // setOpen(false)
                 }}
                 className="fixed inset-0 z-10"
@@ -97,21 +105,21 @@ function Modal({
                   <motion.div
                     onClick={(e) => e.stopPropagation()}
                     variants={panelVariants}
-                    className="relative overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8 sm:w-full sm:max-w-lg">
+                    className="relative w-full overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8 sm:max-w-lg">
                     {/* Close button */}
                     <Button
                       onClick={() => {
-                        setShowModal(false)
+                        onCancel?.() ?? setShowModal(false)
                         // setOpen(false)
                       }}
-                      className="absolute right-2.5 top-3 z-10 ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
+                      className="absolute right-2.5 top-3 z-50 ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
                       data-modal-hide="popup-modal">
                       <X className="h-5 w-5 fill-current" />
                       <span className="sr-only">Close modal</span>
                     </Button>
                     {/* Start header */}
                     {headerText && (
-                      <div className="relative w-full border-b border-gray-200 bg-gray-50 px-6 py-4 font-medium capitalize sm:text-lg">
+                      <div className="relative z-40 w-full border-b border-gray-200 bg-gray-50 px-6 py-4 font-medium capitalize sm:text-lg">
                         {headerText}
                       </div>
                     )}
@@ -122,30 +130,31 @@ function Modal({
                     </div>
                     {/* End children */}
                     {/* Start Footer */}
-                    <div className="border-t border-gray-200 bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                      <Button
-                        isLoading={isLoading}
-                        disabled={isLoading}
-                        onClick={onSubmit}
-                        className={classNames(
-                          'inline-flex w-full items-center justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto'
-                        )}>
-                        {confirmText}
-                      </Button>
-
-                      <Button
-                        isLoading={isLoading}
-                        disabled={isLoading}
-                        onClick={() => {
-                          setShowModal(false)
-                          // setOpen(false)
-                        }}
-                        className={classNames(
-                          'mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto'
-                        )}>
-                        {cancelText}
-                      </Button>
-                    </div>
+                    {!isHiddenFooter && (
+                      <div className="z-50 border-t border-gray-200 bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                        <Button
+                          type="submit"
+                          isLoading={isLoading}
+                          disabled={disabledSubmitButton ?? isLoading}
+                          onClick={onSubmit}
+                          className={classNames(
+                            'inline-flex w-full items-center justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto'
+                          )}>
+                          {confirmText}
+                        </Button>
+                        <Button
+                          disabled={isLoading}
+                          onClick={() => {
+                            onCancel?.() ?? setShowModal(false)
+                            // setOpen(false)
+                          }}
+                          className={classNames(
+                            'mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto'
+                          )}>
+                          {cancelText}
+                        </Button>
+                      </div>
+                    )}
                     {/* End Footer */}
                   </motion.div>
                 </div>

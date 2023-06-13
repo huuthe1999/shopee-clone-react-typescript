@@ -6,7 +6,7 @@ import classNames from 'classnames'
 
 import { Carousel, CateCard, Skeleton } from '@/components'
 import { SIZE } from '@/constants'
-import { CateCardBannerSuccessResponse, ICategoryResponse, isCategoryResponse } from '@/types'
+import { CateCardBanner, ICategory, IDataPaginationResponse, isCategoryResponse } from '@/types'
 
 type Props<T> = UseInfiniteQueryResult<AxiosResponse<T>> & {
   header?: string
@@ -23,7 +23,7 @@ const CateBanner = ({
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage
-}: Props<CateCardBannerSuccessResponse | ICategoryResponse>) => {
+}: Props<IDataPaginationResponse<CateCardBanner[]> | IDataPaginationResponse<ICategory[]>>) => {
   const refMaxSlideIndex = useRef(0)
 
   // Check if the desired pageParam value is already in the cache

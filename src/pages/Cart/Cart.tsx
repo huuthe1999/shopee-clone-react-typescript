@@ -5,21 +5,18 @@ import { ChevronLeft, ChevronRight } from 'react-feather'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import emptyCheckout from '@/assets/images/emptyCheckout.png'
 import { Button, Modal, ProductList, Spinner } from '@/components'
 import { CART_SIZE, FAV_PRODUCTS_SIZE, PAGE } from '@/constants'
 import { useBoolean, useFavProductsQuery, useOrderQuery, useUpdateCartMutation } from '@/hooks'
+import { IProductSelected } from '@/types'
 import { formatSearchParamUrl } from '@/utils'
 
 import { CartTableFooter, CartTableHeader, CartTableRow, CartTableRowSkeleton } from './components'
 
-export interface ProductSelected {
-  _id: string
-  totalPriceItem: number
-}
-
 const Cart = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const [productsSelected, setProductsSelected] = useState<Array<ProductSelected>>([])
+  const [productsSelected, setProductsSelected] = useState<Array<IProductSelected>>([])
   const [productSelected, setProductSelected] = useState<string | undefined>()
   const { value, setValue } = useBoolean()
   const [typeDelete, setTypeDelete] = useState<0 | 1>(0)
@@ -60,7 +57,7 @@ const Cart = () => {
   }
 
   const handleCheckProduct = useCallback(
-    (check: boolean, product: ProductSelected) => {
+    (check: boolean, product: IProductSelected) => {
       if (check) {
         const existProductIndex = productsSelected.findIndex(
           (existProduct) => existProduct._id === product._id
@@ -70,7 +67,7 @@ const Cart = () => {
           newProductsSelected.splice(existProductIndex, 1, product)
           setProductsSelected(newProductsSelected)
         } else {
-          setProductsSelected((prev) => [...prev, product])
+          setProductsSelected((prev) => [product, ...prev])
         }
       } else {
         setProductsSelected((prev) =>
@@ -95,7 +92,7 @@ const Cart = () => {
           // Trả về những phần tử đã lưu trước đó + những phần tử mới không trùng lặp
           return prevProductsSelected.concat(
             restProductsSelected.map((productCart) => ({
-              _id: productCart._id,
+              ...productCart,
               totalPriceItem:
                 (productCart.product.price *
                   (100 - productCart.product.discount) *
@@ -127,6 +124,7 @@ const Cart = () => {
         return (
           <CartTableRow
             key={cartProduct._id}
+            voucher={productsSelected.find((product) => product._id === cartProduct._id)?.voucher}
             {...cartProduct}
             isCheck={productsSelected.some((product) => product._id === cartProduct._id)}
             onDeleteProduct={handleDeleteProduct}
@@ -171,7 +169,13 @@ const Cart = () => {
 
       handleResetPage(productsCartData.currentPage - 1)
     }
-  }, [productsCartData?.currentPage, productsCartData?.hasPrevPage, productsCartData?.items.length])
+  }, [
+    searchParams,
+    setSearchParams,
+    productsCartData?.currentPage,
+    productsCartData?.hasPrevPage,
+    productsCartData?.items.length
+  ])
 
   return (
     <>
@@ -181,8 +185,8 @@ const Cart = () => {
         })}>
         {productsCartData?.items.length === 0 ? (
           <div className="col-span-full my-10 flex flex-col items-center gap-y-4">
-            <img src="/images/loading-image-product.png" alt="" className="aspect-square w-36" />
-            <p>Giỏ hàng rỗng</p>
+            <img src={emptyCheckout} alt="empty-order" className="aspect-square max-w-xs" />
+            <p className="text-md line-clamp-2 lg:text-xl">Giỏ hàng rỗng</p>
           </div>
         ) : (
           <>

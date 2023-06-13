@@ -1,12 +1,4 @@
-import { BaseResponse, IBaseDataPagination, IBaseItem, IFile, IProvince } from '@/types'
-
-export interface IProductResponse extends BaseResponse {
-  data: IBaseDataPagination<Omit<IProduct, 'images'>[]>
-}
-
-export interface ISingleProductResponse extends BaseResponse {
-  data: ISingleProduct
-}
+import { IBaseItem, IFile, IProvince } from '@/types'
 
 export type TVoucher =
   | {

@@ -1,13 +1,4 @@
-import { IProduct } from '@/types'
-import { BaseResponse, IBaseDataPagination } from '@/types/base'
-
-export interface ICartResponse extends BaseResponse {
-  data: IBaseDataPagination<ICart[]>
-}
-
-export interface ISingleCartResponse extends BaseResponse {
-  data: ICart
-}
+import { IProduct, TVoucher } from '@/types'
 
 //-1:In cart,0:All, 1:Pending, 2:Shipping,3:Shipped,4:Canceled
 export type ICartStatus = -1 | 0 | 1 | 2 | 3 | 4
@@ -32,4 +23,9 @@ export interface ICart {
   user: string
   createdAt: string
   updatedAt: string
+}
+
+export interface IProductSelected extends Omit<ICart, 'user'> {
+  totalPriceItem?: number
+  voucher?: TVoucher
 }

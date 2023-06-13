@@ -1,19 +1,20 @@
-import { memo, useMemo, useState } from 'react'
+import { Suspense, lazy, memo, useMemo, useState } from 'react'
 
+import classNames from 'classnames'
 import { Link } from 'react-router-dom'
 
 import voucherImg from '@/assets/images/vouchers.png'
 import { Button } from '@/components'
-import { ProductSelected } from '@/pages/Cart/Cart'
-import { ICart, TVoucher } from '@/types'
+import { IProductSelected, TVoucher } from '@/types'
 import { formatCurrency, formatNumber } from '@/utils'
 
-import { CartQuantityRow } from './CartQuantityRow'
-import { DropdownVoucher } from './DropdownVoucher'
-interface CartTableRowProps extends ICart {
-  onDeleteProduct: (id: string) => void
-  onCheck: (check: boolean, product: ProductSelected) => void
-  isCheck: boolean
+const CartQuantityRow = lazy(() => import('./CartQuantityRow'))
+const DropdownVoucher = lazy(() => import('./DropdownVoucher'))
+
+interface CartTableRowProps extends IProductSelected {
+  onDeleteProduct?: (id: string) => void
+  onCheck?: (check: boolean, product: IProductSelected) => void
+  isCheck?: boolean
 }
 
 export const CartTableRow = memo(
@@ -21,6 +22,8 @@ export const CartTableRow = memo(
     _id,
     isCheck,
     amount,
+    voucher,
+    totalPriceItem: totalPriceItemCheckout = 0,
     product: {
       isActive,
       image,
@@ -34,9 +37,10 @@ export const CartTableRow = memo(
       _id: productId
     },
     onDeleteProduct,
-    onCheck
+    onCheck,
+    ...rest
   }: CartTableRowProps) => {
-    const [voucherSelected, setVoucherSelected] = useState<TVoucher>()
+    const [voucherSelected, setVoucherSelected] = useState<TVoucher | undefined>(voucher)
 
     const totalPriceItem = useMemo(() => {
       let totalPrice = (price * (100 - discount) * amount) / 100
@@ -53,7 +57,25 @@ export const CartTableRow = memo(
     const isInValidOrder = !isActive || !quantity
 
     const handleChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
-      onCheck(e.target.checked, { _id, totalPriceItem })
+      onCheck?.(e.target.checked, {
+        _id,
+        ...rest,
+        voucher: voucherSelected,
+        totalPriceItem,
+        amount,
+        product: {
+          isActive,
+          image,
+          name,
+          price,
+          discount,
+          quantity,
+          categorySlug,
+          slug: productSlug,
+          vouchers,
+          _id: productId
+        }
+      })
     }
 
     const handleSetVoucher = (value?: TVoucher) => {
@@ -69,7 +91,25 @@ export const CartTableRow = memo(
         }
       }
 
-      onCheck(isCheck, { _id, totalPriceItem: totalPrice })
+      onCheck?.(Boolean(isCheck), {
+        _id,
+        ...rest,
+        totalPriceItem: totalPrice,
+        amount,
+        voucher: value,
+        product: {
+          isActive,
+          image,
+          name,
+          price,
+          discount,
+          quantity,
+          categorySlug,
+          slug: productSlug,
+          vouchers,
+          _id: productId
+        }
+      })
     }
 
     return (
@@ -81,17 +121,19 @@ export const CartTableRow = memo(
               HẾT HÀNG
             </span>
           ) : (
-            <input
-              checked={isCheck}
-              type="checkbox"
-              onChange={handleChecked}
-              className={
-                'h-[1.125rem] w-[1.125rem] shrink-0 cursor-pointer rounded border-gray-300 px-2 text-primary accent-primary'
-              }
-            />
+            onCheck && (
+              <input
+                checked={isCheck}
+                type="checkbox"
+                onChange={handleChecked}
+                className={
+                  'h-[1.125rem] w-[1.125rem] shrink-0 cursor-pointer rounded border-gray-300 px-2 text-primary accent-primary'
+                }
+              />
+            )
           )}
 
-          {isInValidOrder ? (
+          {!onCheck || isInValidOrder ? (
             <span className="aspect-square w-20 shrink-0">
               <img
                 src={image}
@@ -118,8 +160,13 @@ export const CartTableRow = memo(
           )}
 
           <div className="flex-grow text-black/80">
-            {isInValidOrder ? (
-              <span className="mb-1 line-clamp-2 line-through opacity-30">{name}</span>
+            {!onCheck || isInValidOrder ? (
+              <span
+                className={classNames('mb-1 line-clamp-2', {
+                  'line-through opacity-30': onCheck
+                })}>
+                {name}
+              </span>
             ) : (
               <Link
                 to={`/${categorySlug}/${productSlug}-${productId}`}
@@ -131,17 +178,22 @@ export const CartTableRow = memo(
           </div>
 
           <div className="flex shrink-0 flex-col gap-y-4">
-            {!isInValidOrder && vouchers.length > 0 && (
-              <DropdownVoucher
-                vouchers={vouchers}
-                voucherSelected={voucherSelected}
-                onSelect={handleSetVoucher}
-              />
-            )}
+            <Suspense
+              fallback={
+                <div className="dots mx-auto animate-[dots_1s_linear_infinite] text-center" />
+              }>
+              {onCheck && !isInValidOrder && vouchers.length > 0 && (
+                <DropdownVoucher
+                  vouchers={vouchers}
+                  voucherSelected={voucherSelected}
+                  onSelect={handleSetVoucher}
+                />
+              )}
+            </Suspense>
           </div>
         </div>
 
-        <div className="flex basis-1/2 flex-nowrap items-baseline gap-x-2 text-center">
+        <div className="flex basis-1/2 flex-nowrap items-center gap-x-2 text-center">
           <div className="gap-x flex basis-1/4 flex-col">
             {isInValidOrder ? (
               <span className="line-clamp-1 w-full break-all text-sm text-black/[0.54]">
@@ -163,38 +215,62 @@ export const CartTableRow = memo(
           <div className="basis-1/4">
             {isInValidOrder ? (
               <span className="opacity-30">{amount}</span>
+            ) : onCheck ? (
+              <Suspense
+                fallback={
+                  <div className="dots mx-auto animate-[dots_1s_linear_infinite] text-center" />
+                }>
+                <>
+                  <CartQuantityRow
+                    key={_id + amount}
+                    value={amount.toString()}
+                    quantity={quantity}
+                    orderId={_id}
+                    productId={productId}
+                    onDeleteProduct={onDeleteProduct}
+                  />
+                  <div className="mt-1 line-clamp-2 text-xs italic text-black/[0.54]">
+                    Còn {formatNumber(quantity)} sản phẩm
+                  </div>
+                </>
+              </Suspense>
             ) : (
-              <>
-                <CartQuantityRow
-                  key={_id + amount}
-                  value={amount.toString()}
-                  quantity={quantity}
-                  orderId={_id}
-                  productId={productId}
-                />
-                <div className="mt-1 line-clamp-2 text-xs italic text-black/[0.54]">
-                  Còn {formatNumber(quantity)} sản phẩm
-                </div>
-              </>
+              <span>{amount}</span>
             )}
           </div>
-          <div className="basis-1/4">
+          <div
+            className={classNames('basis-1/4', {
+              'order-1': !onCheck
+            })}>
             {isInValidOrder ? (
               <span className="text-primary">{formatCurrency(0)}</span>
             ) : (
               <span className="line-clamp-1 w-full break-words text-sm text-primary">
-                {formatCurrency(totalPriceItem)}
+                {onCheck ? formatCurrency(totalPriceItem) : formatCurrency(totalPriceItemCheckout)}
               </span>
             )}
           </div>
           <div className="basis-1/4">
-            <Button
-              className="rounded-sm bg-primary px-4 py-2 text-white transition hover:opacity-80"
-              onClick={() => {
-                onDeleteProduct(_id)
-              }}>
-              Xóa
-            </Button>
+            {onCheck ? (
+              <Button
+                className="rounded-sm bg-primary px-4 py-2 text-white transition hover:opacity-80"
+                onClick={() => {
+                  onDeleteProduct?.(_id)
+                }}>
+                Xóa
+              </Button>
+            ) : (
+              voucher && (
+                <span
+                  className={classNames(
+                    'box mx-auto block w-fit rounded bg-primary px-2 py-0.5 text-center text-xs uppercase text-white'
+                  )}>
+                  {voucher.type === 0
+                    ? voucher.discount.percent + ' ﹪'
+                    : formatCurrency(voucher.discount.price)}
+                </span>
+              )
+            )}
           </div>
         </div>
       </div>

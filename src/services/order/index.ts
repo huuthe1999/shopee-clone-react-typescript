@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios'
 import { authAxios } from '@/config/http'
 import { ENDPOINTS } from '@/constants'
 import { OrderQueryProps } from '@/hooks'
-import { BaseResponse, ICartResponse, ISingleCartResponse } from '@/types'
+import { BaseResponse, ICart, IDataPaginationResponse, IDataResponse } from '@/types'
 
 export interface AddToCartProps {
   amount: number
@@ -28,8 +28,8 @@ export const addToCart = ({ amount, productId }: AddToCartProps) =>
 
 export const updateCart = ({ amount, orderId, productId }: UpdateCartProps) => {
   return authAxios.patch<
-    ISingleCartResponse,
-    AxiosResponse<ISingleCartResponse>,
+    IDataResponse<ICart>,
+    AxiosResponse<IDataResponse<ICart>>,
     UpdateCartProps & BaseCartProps
   >(ENDPOINTS.ORDER_END_POINT, { amount, productId, actionType: 0, orderId })
 }
@@ -43,6 +43,12 @@ export const deleteCart = ({ orderIds }: DeleteCartProps) => {
 }
 
 export const getInCart = (props: OrderQueryProps) =>
-  authAxios.get<ICartResponse, AxiosResponse<ICartResponse>>(ENDPOINTS.ORDER_END_POINT, {
-    params: { ...props }
-  })
+  authAxios.get<IDataPaginationResponse<ICart[]>, AxiosResponse<IDataPaginationResponse<ICart[]>>>(
+    ENDPOINTS.ORDER_END_POINT,
+    {
+      params: { ...props }
+    }
+  )
+
+export const checkoutCart = (data: string[]) =>
+  authAxios.post<BaseResponse>(ENDPOINTS.ORDER_CHECKOUT_END_POINT, { data })

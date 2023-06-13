@@ -37,9 +37,6 @@ const CategoryFilterPrice = () => {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name
     const value = event.target.value
-    // Remove zero-numeric characters at first from the input value
-    // const newValue = value.replace(/^0+/, '')
-    // console.log('🚀 ~ handleChange ~ newValue:', newValue)
 
     setValue((prev) => ({ ...prev, [name]: value }))
   }

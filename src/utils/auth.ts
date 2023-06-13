@@ -10,3 +10,7 @@ export const getItem = (key: string) => {
 export const removeItem = (key: string) => {
   window.localStorage.removeItem(key)
 }
+
+export const clearAll = () => {
+  window.localStorage.clear()
+}
