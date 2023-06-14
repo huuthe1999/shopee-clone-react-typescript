@@ -103,10 +103,11 @@ export function useTooltip({
       setOpen,
       ...interactions,
       ...data,
+      controlledClick,
       arrowRef,
       noArrowRef
     }),
-    [open, setOpen, interactions, data, noArrowRef]
+    [open, setOpen, interactions, data, noArrowRef, controlledClick]
   )
 }
 
@@ -211,6 +212,9 @@ export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
                 type: 'tween',
                 ease: [0.4, 0, 0.6, 1],
                 duration: 0.2
+              }}
+              onClick={() => {
+                context.controlledClick && context.setOpen(false)
               }}
               {...context.getFloatingProps(props)}>
               {children}

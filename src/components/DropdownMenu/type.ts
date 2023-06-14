@@ -9,7 +9,7 @@ export interface DropItemMenu {
   className?: string
   image?: string
   price?: number
-  text: string
+  text: React.ReactNode
   to?: To
 }
 

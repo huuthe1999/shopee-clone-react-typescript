@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useEffect, useRef } from 'react'
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react'
 
 import classNames from 'classnames'
 import { Home, Search, ShoppingCart } from 'react-feather'
@@ -17,13 +17,16 @@ import {
 import { AUTH, BRIEF_CART_SIZE, PATHS, QUERY_KEYS } from '@/constants'
 import { TooltipContent, TooltipProvider, TooltipTrigger, useAuthContext } from '@/contexts'
 import { LEFT_NAV, RIGHT_NAV } from '@/data/header'
-import { useOrderQuery } from '@/hooks'
+import { useDebounce, useOrderQuery, useProductsQuery } from '@/hooks'
+import { authUtils, saveSearchHistory } from '@/utils'
 
 const MainHeader = () => {
   const { accessToken, currentUser } = useAuthContext()
+  const [query, setQuery] = useState('')
+  const deferredQuery = useDebounce(query.trim())
+  const inputRef = useRef<HTMLInputElement>(null)
   const [searchParams] = useSearchParams()
 
-  const inputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
   const matchCartPath = useMatch(PATHS.CART_PATH)
   const matchCheckOutPath = useMatch(PATHS.CHECKOUT_PATH)
@@ -52,6 +55,15 @@ const MainHeader = () => {
     [accessToken, currentUser]
   )
 
+  const { data: searchProductsQuery } = useProductsQuery({
+    size: BRIEF_CART_SIZE,
+    type: 'search',
+    enabled: Boolean(deferredQuery),
+    keyword: deferredQuery
+  })
+
+  const searchProducts = searchProductsQuery?.data.data
+
   const {
     data: productsCartQueryData,
     isRefetching: isProductsCartRefetching,
@@ -67,18 +79,21 @@ const MainHeader = () => {
 
   useEffect(() => {
     const searchKeyword = searchParams.get('keyword')
-    if (inputRef.current) {
-      inputRef.current.value = searchKeyword || ''
+    if (searchKeyword && searchKeyword.trim()) {
+      setQuery(searchKeyword)
     }
   }, [searchParams])
 
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const value = inputRef.current?.value
-    if (value?.trim()) {
-      navigate({ pathname: PATHS.SEARCH_PATH, search: `?keyword=${value.trim()}` })
+    inputRef?.current?.blur()
+    if (query.trim()) {
+      saveSearchHistory(query.trim())
+      navigate({ pathname: PATHS.SEARCH_PATH, search: `?keyword=${query.trim()}` })
     }
   }
+
+  const history: string[] | null = authUtils.getItem(AUTH.SEARCH_HISTORY)
 
   return (
     <header className="bg-gradient-to-b from-primary to-secondary px-4 pb-4 pt-2 text-white">
@@ -128,12 +143,62 @@ const MainHeader = () => {
             <form
               className="flex flex-nowrap gap-1 rounded-md bg-white max-sm:gap-0"
               onSubmit={handleSearch}>
-              <input
-                ref={inputRef}
-                type="text"
-                placeholder="Tìm kiếm sản phẩm tại đây"
-                className="rounded-sm pl-4 pr-2 text-black focus:outline focus:outline-2 focus:outline-offset-4 max-sm:outline-none"
-              />
+              <TooltipProvider placement="bottom-end" noArrowRef mainAxis={8} matchRefWidth click>
+                <TooltipTrigger asChild>
+                  <input
+                    ref={inputRef}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    type="text"
+                    placeholder="Tìm kiếm sản phẩm tại đây"
+                    className="rounded-sm pl-4 pr-2 text-black focus:outline focus:outline-2 focus:outline-offset-4 max-sm:outline-none"
+                  />
+                </TooltipTrigger>
+                <TooltipContent className={classNames({ hidden: !deferredQuery && !history })}>
+                  <DropdownMenu className="py-2">
+                    {!deferredQuery && history ? (
+                      <>
+                        {history.map((item) => (
+                          <MenuItem
+                            key={item}
+                            text={item}
+                            onClick={() => {
+                              navigate({
+                                pathname: PATHS.SEARCH_PATH,
+                                search: `?keyword=${item}`
+                              })
+                            }}
+                          />
+                        ))}
+                      </>
+                    ) : deferredQuery && searchProducts?.items.length === 0 ? (
+                      <MenuItem
+                        text={
+                          <>
+                            Không tìm thấy sản phẩm nào cho từ khóa{' '}
+                            <span className="italic text-primary">&quot;{deferredQuery}&quot;</span>
+                          </>
+                        }
+                        buttonClassName="cursor-default"
+                        className="hover:bg-transparent hover:text-inherit"
+                      />
+                    ) : (
+                      deferredQuery && (
+                        <>
+                          {searchProducts?.items.map(({ image, name, _id, categorySlug, slug }) => (
+                            <MenuItem
+                              key={_id}
+                              text={name}
+                              image={image}
+                              to={`/${categorySlug}/${slug}-${_id}`}
+                            />
+                          ))}
+                        </>
+                      )
+                    )}
+                  </DropdownMenu>
+                </TooltipContent>
+              </TooltipProvider>
               <Button
                 className="m-1 flex cursor-pointer items-center rounded-sm bg-primary px-2 py-1 text-white hover:opacity-90 md:px-6 md:py-2"
                 type="submit">
@@ -207,7 +272,7 @@ const MainHeader = () => {
                             ? (product.price * (100 - product.discount)) / 100
                             : product.price
                         }
-                        buttonClassName="cursor-default"
+                        to={`/${product.categorySlug}/${product.slug}-${product._id}`}
                       />
                     ))}
                     <div className="flex items-center justify-between p-2">

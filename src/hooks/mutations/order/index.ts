@@ -154,8 +154,7 @@ export const useCheckoutMutation = () => {
     onSuccess(data) {
       toast.success(data.data.message)
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.order.briefList, { status: -1, size: BRIEF_CART_SIZE }],
-        refetchType: 'none'
+        queryKey: [QUERY_KEYS.order.briefList, { status: -1, size: BRIEF_CART_SIZE }]
       })
 
       queryClient.invalidateQueries({

@@ -27,7 +27,13 @@ const MenuItem = ({
               </div>
             )}
             <div className="flex flex-1 flex-nowrap overflow-hidden">
-              <p className="line-clamp-1 h-fit basis-4/6">{text}</p>
+              <p
+                className={classNames('line-clamp-1 h-fit', {
+                  'basis-full': !price,
+                  'basis-4/6': price
+                })}>
+                {text}
+              </p>
               {price && (
                 <div className="ml-10 basis-1/6 text-right text-primary">
                   {formatCurrency(price)}
