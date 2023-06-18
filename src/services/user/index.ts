@@ -1,6 +1,17 @@
+import { AxiosResponse } from 'axios'
+
 import { authAxios } from '@/config/http'
 import { ENDPOINTS } from '@/constants'
-import { IDataResponse, UserResponse } from '@/types'
+import { IDataResponse, TUserUpdate, UserResponse } from '@/types'
 
-export const getProfile = (signal?: AbortSignal) =>
-  authAxios.get<IDataResponse<UserResponse>>(ENDPOINTS.PROFILE_END_POINT, { signal })
+export const getProfile = () =>
+  authAxios.get<IDataResponse<UserResponse>>(ENDPOINTS.USER_PROFILE_END_POINT)
+
+export const updateProfile = async (updateData: TUserUpdate) => {
+  const { data } = await authAxios.patch<
+    IDataResponse<UserResponse>,
+    AxiosResponse<IDataResponse<UserResponse>>,
+    TUserUpdate
+  >(ENDPOINTS.USER_PROFILE_END_POINT, updateData)
+  return data
+}

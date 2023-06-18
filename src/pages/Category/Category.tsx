@@ -1,29 +1,37 @@
-import { useCallback, useRef } from 'react'
+import { useRef } from 'react'
 
 import classNames from 'classnames'
 import queryString from 'query-string'
 import { AlertOctagon } from 'react-feather'
-import { useLocation, useParams, useSearchParams } from 'react-router-dom'
+import { Navigate, useLocation, useMatch, useParams, useSearchParams } from 'react-router-dom'
 
 import { Pagination, ProductList } from '@/components'
 import { PAGE, PATHS, PRODUCTS_SIZE } from '@/constants'
 import { DEFAULT_FILTER_DATA } from '@/data/category'
 import { useProductsQuery } from '@/hooks'
 import { OrderType, SortByType } from '@/types'
-import { SearchParamsProps, formatCommaSearchParamUrl, formatSearchParamUrl } from '@/utils'
+import {
+  SearchParamsProps,
+  formatCommaSearchParamUrl,
+  formatSearchParamUrl,
+  splittingId
+} from '@/utils'
 
 import CategoryFilter from './CategoryFilter'
 import CategorySortBar from './CategorySortBar'
 
 const CategoryPage = () => {
   const { categorySlug } = useParams()
+  const matchSearchPage = useMatch(PATHS.SEARCH_PATH)
+
+  const categoryId = splittingId(categorySlug)
   const { pathname } = useLocation()
 
   // Calculate height of filter side
   const ref = useRef<HTMLDivElement>(null)
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const { page, order, sortBy, keyword, ...rest } = queryString.parse(searchParams.toString(), {
+  const { page, order, sortBy, ...rest } = queryString.parse(searchParams.toString(), {
     arrayFormat: 'comma'
   })
 
@@ -34,45 +42,46 @@ const CategoryPage = () => {
   } = useProductsQuery({
     size: PRODUCTS_SIZE,
     page: page ? +page + 1 : PAGE + 1,
-    ...(pathname === PATHS.SEARCH_PATH ? { type: 'search', keyword } : { categorySlug }),
     order: order,
+    categoryId,
     sortBy: sortBy ? sortBy : 'popular',
     ...(rest && { ...rest })
   })
+
+  if (!categoryId && !matchSearchPage) {
+    return <Navigate to={PATHS.NOT_FOUND_PATH} replace />
+  }
 
   const products = data?.data.data.items
 
   // Check is filtering
   const hasFilter = DEFAULT_FILTER_DATA.some((data) => searchParams.has(data))
 
-  const handleSetParams = useCallback(
-    (params?: SearchParamsProps) => {
-      if (params) {
-        const newParamsObject = formatCommaSearchParamUrl({ searchParams, params })
-        setSearchParams(newParamsObject)
-      } else {
-        // Reset params
-        setSearchParams(
-          queryString.stringify(
-            {
-              page: 0,
-              minPrice: '',
-              maxPrice: '',
-              keyword: searchParams.get('keyword') || '',
-              order: (searchParams.get('order') as OrderType) || '',
-              sortBy: (searchParams.get('sortBy') as SortByType) || 'popular'
-            },
-            {
-              arrayFormat: 'comma',
-              skipNull: true,
-              skipEmptyString: true
-            }
-          )
+  const handleSetParams = (params?: SearchParamsProps) => {
+    if (params) {
+      const newParamsObject = formatCommaSearchParamUrl({ searchParams, params })
+      setSearchParams(newParamsObject)
+    } else {
+      // Reset params
+      setSearchParams(
+        queryString.stringify(
+          {
+            page: 0,
+            minPrice: '',
+            maxPrice: '',
+            keyword: searchParams.get('keyword') || '',
+            order: (searchParams.get('order') as OrderType) || '',
+            sortBy: (searchParams.get('sortBy') as SortByType) || 'popular'
+          },
+          {
+            arrayFormat: 'comma',
+            skipNull: true,
+            skipEmptyString: true
+          }
         )
-      }
-    },
-    [setSearchParams, searchParams]
-  )
+      )
+    }
+  }
 
   const handlePageClick = (event: { selected: number }) => {
     const newParamsObject = formatSearchParamUrl({

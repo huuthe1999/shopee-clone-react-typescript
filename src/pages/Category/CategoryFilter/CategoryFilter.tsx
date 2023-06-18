@@ -2,7 +2,7 @@ import { HTMLAttributes, useMemo } from 'react'
 
 import classNames from 'classnames'
 import { Filter } from 'react-feather'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
 import { Button, CateSection, PingIcon } from '@/components'
 import { FILTER_LIST } from '@/data/category'
@@ -18,13 +18,9 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 }
 
 function CategoryFilter({ headerText, hasFilter, className, onChangeParam }: Props) {
-  const { categorySlug } = useParams()
   const [searchParams] = useSearchParams()
 
-  const { data: categoryData } = useSubCategoryBySlugQuery({
-    categorySlug,
-    select: ['subCategories']
-  })
+  const { data: categoryData } = useSubCategoryBySlugQuery()
 
   const { data: provincesData } = useProvincesQuery()
 

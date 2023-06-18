@@ -1,4 +1,3 @@
-import {} from '@tanstack/react-query'
 import axios, { AxiosInstance, isCancel } from 'axios'
 import { toast } from 'react-toastify'
 
@@ -62,14 +61,6 @@ httpAxios.interceptors.response.use(
         theme: 'colored'
       })
     }
-    // else {
-    //   // Check Network Error
-    //   if (!error.status && !isCancel(error)) {
-    //     toast.error('Mất kết nối internet. Vui lòng thử lại!', {
-    //       theme: 'colored'
-    //     })
-    //   }
-    // }
 
     return Promise.reject(error)
   }

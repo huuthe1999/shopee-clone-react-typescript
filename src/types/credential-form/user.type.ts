@@ -1,15 +1,12 @@
-enum Roles {
-  User = 'User',
-  Admin = 'Admin'
-}
+import { Roles, Sexes } from '@/types'
+
 export interface UserResponse {
   _id: string
   email: string
+  avatar?: string
   name: string
-  date_of_birth: Date | null
-  address?: string
-  phone?: string
+  date_of_birth: number
+  phone: string
+  sex: Sexes
   roles: Roles[]
-  createdAt?: Date
-  updatedAt?: Date
 }

@@ -42,6 +42,12 @@ const Cart = () => {
 
   const productsCartData = productsCartQueryData?.data.data
 
+  const productsData = productsCartData?.items.map((product) => ({
+    ...product,
+    amount: Math.min(product.amount, product.product.quantity),
+    isStale: product.amount > product.product.quantity ? true : false
+  }))
+
   const handleDeleteProduct = useCallback(
     (id: string) => {
       setValue(true)
@@ -86,7 +92,7 @@ const Cart = () => {
           // Lọc ra những sản phẩm không có trong danh sách đã thêm vào trước đó
 
           const restProductsSelected =
-            productsCartData?.items.filter(
+            productsData?.filter(
               (productCart) => !prevProductsSelected.some((item) => item._id === productCart._id)
             ) || []
           // Trả về những phần tử đã lưu trước đó + những phần tử mới không trùng lặp
@@ -106,21 +112,21 @@ const Cart = () => {
         setProductsSelected((prevProductsSelected) => {
           return prevProductsSelected.filter(
             (prevProduct) =>
-              productsCartData?.items.findIndex(
+              productsData?.findIndex(
                 (productCartData) => productCartData._id === prevProduct._id
               ) === -1
           )
         })
       }
     },
-    [productsCartData?.items]
+    [productsData]
   )
 
   const renderCartRow = isLoadingProductsCart
     ? Array(4)
         .fill(null)
         .map((_, index) => <Fragment key={index}>{CartTableRowSkeleton}</Fragment>)
-    : productsCartData?.items.map((cartProduct) => {
+    : productsData?.map((cartProduct) => {
         return (
           <CartTableRow
             key={cartProduct._id}
@@ -133,7 +139,7 @@ const Cart = () => {
         )
       })
 
-  const isCheck = productsCartData?.items.every((productCart) =>
+  const isCheck = productsData?.every((productCart) =>
     productsSelected.some((productSelect) => productSelect._id === productCart._id)
   )
 
@@ -183,7 +189,7 @@ const Cart = () => {
         className={classNames('mx-auto flex max-w-6xl flex-col gap-y-4 py-5', {
           'pointer-events-none opacity-60': isFetchingProductsCart
         })}>
-        {productsCartData?.items.length === 0 ? (
+        {productsData?.length === 0 ? (
           <div className="col-span-full my-10 flex flex-col items-center gap-y-4">
             <img src={emptyCheckout} alt="empty-order" className="aspect-square max-w-xs" />
             <p className="text-md line-clamp-2 lg:text-xl">Giỏ hàng rỗng</p>
@@ -248,7 +254,7 @@ const Cart = () => {
               isCheck={isCheck}
               isLoading={isLoadingProductsCart}
               productsSelected={productsSelected}
-              quantity={productsCartData?.items.length}
+              quantity={productsData?.length}
               onSelect={handleSelectAllProduct}
               onMultipleDelete={handleDeleteMultipleProduct}
             />

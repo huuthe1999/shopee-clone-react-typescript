@@ -4,35 +4,34 @@ import { Rating, Star } from '@smastrom/react-rating'
 import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
 import DOMPurify from 'dompurify'
-import { useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 
 import { BreadCrumb, BreadCrumbItem, Spinner } from '@/components'
-import { FAV_PRODUCTS_SIZE, PATHS } from '@/constants'
+import { FAV_PRODUCTS_SIZE, PATHS, QUERY_KEYS } from '@/constants'
 import { useFavProductsQuery } from '@/hooks'
 import { ProductPurchase } from '@/pages/ProductDetail/components/ProductPurchase'
 import { productServices } from '@/services'
-import { formatCurrency, formatNumber } from '@/utils'
+import { checkIfValidId, formatCurrency, formatNumber, splittingId } from '@/utils'
 
 import { ProductCarousel } from './components'
 
 const ProductList = lazy(() => import('@/components/Product/ProductList'))
 
 const ProductDetail = () => {
-  let { productSlug } = useParams()
+  const { productSlug } = useParams()
 
-  productSlug = productSlug as string
-  const productId = productSlug.substring(productSlug.lastIndexOf('-') + 1)
-
+  const productId = splittingId(productSlug) as string
   const { data: productQueryData, isFetching: isFetchingProductQueryData } = useQuery({
-    queryKey: [PATHS.PRODUCT_DETAIL_PATH, productId],
+    queryKey: [QUERY_KEYS.product.detail, productId],
     queryFn: () => productServices.getProduct(productId),
-    staleTime: 2 * 60 * 1000,
-    keepPreviousData: true
+    enabled: checkIfValidId(productId)
   })
 
   const productData = productQueryData?.data.data
 
-  const { data: productFavQueryData, isInitialLoading } = useFavProductsQuery()
+  const { data: productFavQueryData, isInitialLoading } = useFavProductsQuery(
+    checkIfValidId(productId)
+  )
 
   const productFavData = productFavQueryData?.data.data
 
@@ -43,12 +42,12 @@ const ProductDetail = () => {
           name: 'Shopee'
         },
         {
-          path: `/${productData?.category.slug}`,
+          path: `/${productData?.category.slug}-${productData.category._id}`,
           name: productData?.category.name
         },
         {
           path: {
-            pathname: `/${productData?.category.slug}`,
+            pathname: `/${productData?.category.slug}-${productData.category._id}`,
             search: `?facet=${productData.subCategory._id}`
           },
           name: productData.subCategory.name
@@ -58,6 +57,10 @@ const ProductDetail = () => {
         }
       ]
     : null
+
+  if (!checkIfValidId(productId)) {
+    return <Navigate to={PATHS.NOT_FOUND_PATH} replace />
+  }
 
   return (
     <>

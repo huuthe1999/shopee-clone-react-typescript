@@ -1,22 +1,20 @@
 import { useQuery } from '@tanstack/react-query'
+import { useParams } from 'react-router-dom'
 
-import { ENDPOINTS, PATHS } from '@/constants'
+import { QUERY_KEYS } from '@/constants'
 import { categoryServices } from '@/services'
-import { ICategory } from '@/types'
+import { splittingId } from '@/utils'
 
-export const useSubCategoryBySlugQuery = ({
-  categorySlug,
-  select
-}: {
-  categorySlug?: string
-  select?: Array<keyof ICategory>
-}) => {
+export const useSubCategoryBySlugQuery = () => {
+  const { categorySlug } = useParams()
+  const categoryId = splittingId(categorySlug)
+
   return useQuery({
-    queryKey: [ENDPOINTS.CATEGORY_END_POINT, categorySlug, select],
-    queryFn: ({ signal }) =>
-      categoryServices.getSubCategoryBySlug(signal, categorySlug, { select }),
+    queryKey: [QUERY_KEYS.subCategory, categoryId],
+    queryFn: () =>
+      categoryServices.getSubCategory(categoryId as string, { select: ['subCategories'] }),
     keepPreviousData: true,
-    enabled: categorySlug !== undefined && !PATHS.SEARCH_PATH.includes(categorySlug),
+    enabled: !!categoryId,
     staleTime: Infinity
   })
 }

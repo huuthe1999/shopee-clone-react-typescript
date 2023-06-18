@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 import { formatCurrency } from '@/utils'
 
@@ -18,18 +18,29 @@ const MenuItem = ({
 }: MenuItemProps) => {
   return (
     <>
-      <li className={classNames('hover:bg-gray-200 hover:text-primary', [className])}>
+      <li
+        className={classNames('transition-colors hover:bg-gray-200 hover:text-primary', [
+          className
+        ])}>
         {to ? (
-          <Link to={to} className="flex flex-nowrap justify-between gap-2 p-2">
+          <NavLink
+            to={to}
+            end
+            className={({ isActive }) =>
+              classNames('flex flex-nowrap justify-between gap-2 p-2', {
+                'text-primary': isActive
+              })
+            }>
             {image && (
               <div className="h-10 w-10 flex-shrink-0 overflow-hidden">
                 <img src={image} alt="Ảnh sản phẩm" />
               </div>
             )}
-            <div className="flex flex-1 flex-nowrap overflow-hidden">
+            <div className="flex flex-1 flex-nowrap items-center overflow-hidden">
+              {leftButtonIcon}
               <p
                 className={classNames('line-clamp-1 h-fit', {
-                  'basis-full': !price,
+                  'my-auto basis-full self-stretch': !price,
                   'basis-4/6': price
                 })}>
                 {text}
@@ -40,7 +51,7 @@ const MenuItem = ({
                 </div>
               )}
             </div>
-          </Link>
+          </NavLink>
         ) : (
           <button
             type="button"

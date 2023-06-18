@@ -38,6 +38,11 @@ export interface IFile {
   url: string
 }
 
+export interface ImageResponse {
+  secure_url: string
+  public_id: string
+}
+
 export interface RefreshTokenSuccessResponse extends BaseResponse {
   data: {
     accessToken: string

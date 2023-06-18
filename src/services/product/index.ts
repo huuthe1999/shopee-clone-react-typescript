@@ -2,11 +2,10 @@ import httpAxios from '@/config/http'
 import { ENDPOINTS, SIZE } from '@/constants'
 import { IDataPaginationResponse, IDataResponse, IProduct, ISingleProduct } from '@/types'
 
-export const getDailyProducts = (signal?: AbortSignal, page?: number, size?: number) =>
+export const getDailyProducts = (page?: number, size?: number) =>
   httpAxios.get<IDataPaginationResponse<Array<Omit<IProduct, 'images'>>>>(
     ENDPOINTS.PRODUCT_END_POINT,
     {
-      signal,
       params: {
         page,
         size: size ?? SIZE
@@ -14,11 +13,10 @@ export const getDailyProducts = (signal?: AbortSignal, page?: number, size?: num
     }
   )
 
-export const getProducts = (signal?: AbortSignal, params?: any) =>
+export const getProducts = (params?: any) =>
   httpAxios.get<IDataPaginationResponse<Array<Omit<IProduct, 'images'>>>>(
     ENDPOINTS.PRODUCT_END_POINT,
     {
-      signal,
       params
     }
   )

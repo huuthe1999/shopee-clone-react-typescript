@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Play } from 'react-feather'
 import { UseControllerProps, useController, useForm, useFormContext } from 'react-hook-form'
 
-import { DropdownMenu } from '@/components'
+import { DropdownMenu, FormInput } from '@/components'
 import { useDistrictsQuery, useProvincesQuery, useWardsQuery } from '@/hooks'
 
 import { ContentTab, TabButton } from './TabButton'
@@ -19,11 +19,10 @@ interface Props {
 }
 
 const AddressFormInput = ({
-  className,
   label,
   disabled = false,
   ...rest
-}: Props & UseControllerProps<TAddressForm>) => {
+}: Omit<Props, 'className'> & UseControllerProps<TAddressForm>) => {
   const [isFocus, setIsFocus] = useState(false)
   const {
     field,
@@ -32,57 +31,23 @@ const AddressFormInput = ({
 
   return (
     <>
-      <div className={classNames('flex w-full flex-col', [className])}>
-        <div className="relative z-0 w-full">
-          <input
-            {...field}
-            value={field.value.toString()}
-            disabled={disabled}
-            onFocus={() => {
-              setIsFocus(true)
-            }}
-            onBlur={() => {
-              field.onBlur()
-              setIsFocus(false)
-            }}
-            id={field.name}
-            className={classNames(
-              'peer/label block w-full appearance-none rounded-sm border p-2 text-sm text-gray-900 focus:border-black/[0.54] focus:outline-none focus:ring-0',
-              {
-                'border-red-600 bg-red-50': invalid,
-                'border-gray-300 bg-transparent': !invalid,
-                'cursor-not-allowed': disabled
-              }
-            )}
-            placeholder=" "
-            autoComplete="off"
-          />
-          <label
-            htmlFor={field.name}
-            className={classNames(
-              'absolute left-3 top-1/2 z-10 origin-[0] -translate-y-[1.8rem] scale-75 transform px-1 text-sm duration-100 peer-placeholder-shown/label:-translate-y-1/2 peer-placeholder-shown/label:scale-100 peer-placeholder-shown/label:bg-transparent peer-focus/label:-translate-y-[1.8rem] peer-focus/label:scale-75 peer-focus/label:bg-white peer-focus/label:text-inherit',
-              {
-                'text-red-500': invalid,
-                'text-inherit': !invalid,
-                'bg-white': isDirty
-              }
-            )}>
-            {label}
-          </label>
-        </div>
-        <AnimatePresence>
-          {!isFocus && error?.message && (
-            <motion.p
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: '1.25rem' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ type: 'tween', duration: 0.1 }}
-              className="mt-1 text-xs text-red-500">
-              {error?.message}
-            </motion.p>
-          )}
-        </AnimatePresence>
-      </div>
+      <FormInput
+        label={label}
+        {...field}
+        value={field.value.toString()}
+        disabled={disabled}
+        onFocus={() => {
+          setIsFocus(true)
+        }}
+        onBlur={() => {
+          field.onBlur()
+          setIsFocus(false)
+        }}
+        invalid={invalid}
+        isDirty={isDirty}
+        isShowError={!isFocus}
+        errorMessage={error?.message}
+      />
     </>
   )
 }

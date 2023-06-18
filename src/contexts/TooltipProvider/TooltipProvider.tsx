@@ -28,6 +28,7 @@ interface TooltipOptions {
   placement?: Placement
   open?: boolean
   click?: boolean
+  keepOpen?: boolean
   noArrowRef?: boolean
   matchRefWidth?: boolean
   onOpenChange?: (open: boolean) => void
@@ -40,6 +41,7 @@ export function useTooltip({
   click: controlledClick,
   open: controlledOpen,
   noArrowRef = false,
+  keepOpen = true,
   matchRefWidth = false,
   onOpenChange: setControlledOpen
 }: TooltipOptions = {}) {
@@ -101,13 +103,14 @@ export function useTooltip({
     () => ({
       open,
       setOpen,
+      keepOpen,
       ...interactions,
       ...data,
       controlledClick,
       arrowRef,
       noArrowRef
     }),
-    [open, setOpen, interactions, data, noArrowRef, controlledClick]
+    [open, setOpen, interactions, data, noArrowRef, controlledClick, keepOpen]
   )
 }
 
@@ -214,7 +217,7 @@ export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
                 duration: 0.2
               }}
               onClick={() => {
-                context.controlledClick && context.setOpen(false)
+                context.controlledClick && !context.keepOpen && context.setOpen(false)
               }}
               {...context.getFloatingProps(props)}>
               {children}

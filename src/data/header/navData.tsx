@@ -71,7 +71,7 @@ export const RIGHT_NAV: INavItem[] = [
   {
     id: 6,
     menuItems: [
-      { text: 'Cá nhân', to: PATHS.HOME_PATH, className: 'hover:text-teal-500' },
+      { text: 'Cá nhân', to: PATHS.USER_ACCOUNT_PATH, className: 'hover:text-teal-500' },
       {
         text: 'Đăng xuất',
         className: 'hover:text-teal-500',
@@ -86,6 +86,7 @@ export const RIGHT_NAV: INavItem[] = [
     text: AUTH.USER_INFO, //Condition to show username
     leftIcon: (
       <div className="h-5 w-5 overflow-hidden rounded-full bg-[url('https://down-vn.img.susercontent.com/file/mx-11134226-23020-6nbhtbltvynvfb_tn')] bg-contain bg-center bg-no-repeat" />
-    )
+    ),
+    rightIcon: <ChevronDown size={16} />
   }
 ]

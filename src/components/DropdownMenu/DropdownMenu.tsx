@@ -10,7 +10,7 @@ const DropdownMenu = ({ title, className, children }: Props) => {
   return (
     <div
       className={classNames(
-        'divide-y divide-gray-100 overflow-y-auto overflow-x-hidden rounded-sm border border-gray-300 bg-white shadow-xl',
+        'divide-y divide-gray-100 overflow-y-auto overflow-x-hidden rounded-sm bg-white shadow-xl',
         [className]
       )}>
       {title && <p className="p-2 text-black/50">{title}</p>}

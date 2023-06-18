@@ -21,6 +21,7 @@ const Product = ({
   image,
   vouchers,
   categorySlug,
+  categoryId,
   slug,
   discount,
   name,
@@ -34,7 +35,7 @@ const Product = ({
     <LinkMotion
       key={_id}
       layout
-      to={`/${categorySlug}/${slug}-${_id}`}
+      to={`/${categorySlug}-${categoryId}/${slug}-${_id}`}
       transition={{ type: 'tween' }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}>

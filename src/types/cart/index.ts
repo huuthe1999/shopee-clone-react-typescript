@@ -6,6 +6,7 @@ export type ICartStatus = -1 | 0 | 1 | 2 | 3 | 4
 export interface ICart {
   _id: string
   amount: number
+  isStale: boolean
   status: ICartStatus
   product: Pick<
     IProduct,
@@ -14,6 +15,7 @@ export interface ICart {
     | 'image'
     | 'price'
     | 'categorySlug'
+    | 'categoryId'
     | 'slug'
     | 'isActive'
     | 'discount'

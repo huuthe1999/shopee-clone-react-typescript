@@ -2,7 +2,6 @@ export const AUTH_ROUTE = '/auth'
 export const LOGIN_END_POINT = `${AUTH_ROUTE}/login`
 export const REGISTER_END_POINT = `${AUTH_ROUTE}/register`
 export const REFRESH_END_POINT = `${AUTH_ROUTE}/refreshToken`
-export const PROFILE_END_POINT = `${AUTH_ROUTE}/me`
 export const LOGOUT_END_POINT = `${AUTH_ROUTE}/logout`
 
 // Banner
@@ -25,3 +24,8 @@ export const PRODUCT_END_POINT = `/products`
 // Cart
 export const ORDER_END_POINT = `/orders`
 export const ORDER_CHECKOUT_END_POINT = `/orders/checkout`
+// Upload
+export const UPLOAD_END_POINT = `/uploads`
+// User
+export const USER_ROUTE = '/user'
+export const USER_PROFILE_END_POINT = `${USER_ROUTE}/profile`

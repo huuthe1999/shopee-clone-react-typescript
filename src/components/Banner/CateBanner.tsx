@@ -85,7 +85,7 @@ const CateBanner = ({
                         <CateCard
                           key={item._id}
                           name={item.name}
-                          link={item.slug}
+                          link={`${item.slug}-${item._id}`}
                           image={item.images[0].url}
                         />
                       ) : (

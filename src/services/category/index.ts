@@ -8,15 +8,10 @@ export const getCategories = (signal?: AbortSignal, params?: any) =>
     params
   })
 
-export const getSubCategoryBySlug = (
-  signal?: AbortSignal,
-  categorySlug?: string,
-  params: any = {}
-) =>
+export const getSubCategory = (categoryId: string, params: any = {}) =>
   httpAxios.get<IDataResponse<Pick<ICategory, 'subCategories'>>>(
-    `${ENDPOINTS.CATEGORY_END_POINT}/${categorySlug}`,
+    `${ENDPOINTS.CATEGORY_END_POINT}/${categoryId}`,
     {
-      signal,
       params
     }
   )

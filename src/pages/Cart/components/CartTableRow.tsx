@@ -23,6 +23,7 @@ export const CartTableRow = memo(
     isCheck,
     amount,
     voucher,
+    isStale,
     totalPriceItem: totalPriceItemCheckout = 0,
     product: {
       isActive,
@@ -32,6 +33,7 @@ export const CartTableRow = memo(
       discount,
       quantity,
       categorySlug,
+      categoryId,
       slug: productSlug,
       vouchers,
       _id: productId
@@ -62,6 +64,7 @@ export const CartTableRow = memo(
         ...rest,
         voucher: voucherSelected,
         totalPriceItem,
+        isStale,
         amount,
         product: {
           isActive,
@@ -71,6 +74,7 @@ export const CartTableRow = memo(
           discount,
           quantity,
           categorySlug,
+          categoryId,
           slug: productSlug,
           vouchers,
           _id: productId
@@ -96,6 +100,7 @@ export const CartTableRow = memo(
         ...rest,
         totalPriceItem: totalPrice,
         amount,
+        isStale,
         voucher: value,
         product: {
           isActive,
@@ -105,6 +110,7 @@ export const CartTableRow = memo(
           discount,
           quantity,
           categorySlug,
+          categoryId,
           slug: productSlug,
           vouchers,
           _id: productId
@@ -146,7 +152,7 @@ export const CartTableRow = memo(
             </span>
           ) : (
             <Link
-              to={`/${categorySlug}/${productSlug}-${productId}`}
+              to={`/${categorySlug}-${categoryId}/${productSlug}-${productId}`}
               className="aspect-square w-20 shrink-0">
               <img
                 src={image}
@@ -169,12 +175,17 @@ export const CartTableRow = memo(
               </span>
             ) : (
               <Link
-                to={`/${categorySlug}/${productSlug}-${productId}`}
+                to={`/${categorySlug}-${categoryId}/${productSlug}-${productId}`}
                 className="mb-1 line-clamp-2">
                 {name}
               </Link>
             )}
-            <img src={voucherImg} alt="vouchers_img" className="h-5" />
+            <img src={voucherImg} alt="vouchers_img" className="h-5 w-fit" />
+            {isStale && (
+              <span className="inline shrink-0 rounded-sm border border-primary px-1.5 py-0.5 text-xxs capitalize text-primary">
+                Số lượng sản phẩm đã được cập nhật mới
+              </span>
+            )}
           </div>
 
           <div className="flex shrink-0 flex-col gap-y-4">

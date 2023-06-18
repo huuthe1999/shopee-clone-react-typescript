@@ -1,20 +1,22 @@
 import { useEffect, useRef } from 'react'
 
+import { useQueryClient } from '@tanstack/react-query'
 import { AxiosError, AxiosResponse, HttpStatusCode, isAxiosError } from 'axios'
 import { toast } from 'react-toastify'
 
 import { authAxios } from '@/config/http'
-import { AUTH, ISSERVER } from '@/constants'
+import { ISSERVER } from '@/constants'
 import { useAuthContext } from '@/contexts'
 import { authServices } from '@/services'
 import { BaseResponse, RefreshTokenSuccessResponse } from '@/types'
 import { authUtils } from '@/utils'
 
 function useAxiosPrivate() {
+  const queryClient = useQueryClient()
   const isRefreshTokenExpired = useRef(true) // Chỉ toast 1 lần duy nhất khi RefreshToken hết hạn
   const refreshingToken = useRef<Promise<AxiosResponse<RefreshTokenSuccessResponse>> | null>(null)
   // const refresh = useRefreshToken()
-  const { accessToken, handleSetAccessToken } = useAuthContext()
+  const { accessToken, handleSetAccessToken, handleResetAuth } = useAuthContext()
 
   useEffect(() => {
     const requestInterceptor = authAxios.interceptors.request.use(
@@ -65,9 +67,10 @@ function useAxiosPrivate() {
           } catch (err) {
             if (isAxiosError<BaseResponse>(err) && isRefreshTokenExpired.current) {
               // Reset context
-              authUtils.removeItem(AUTH.IS_LOGGING)
-              authUtils.removeItem(AUTH.USER_INFO)
-              handleSetAccessToken(null!)
+              authUtils.clearAll()
+              handleResetAuth()
+
+              queryClient.clear()
 
               isRefreshTokenExpired.current = false
               // Xử lí refresh token hết hạn, cho log out, auto redirect về trang login được set trong protected route

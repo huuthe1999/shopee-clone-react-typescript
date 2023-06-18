@@ -1,14 +1,21 @@
 export const QUERY_KEYS = {
   order: {
     list: 'order/list',
-    briefList: 'order/briefList',
-    update: 'order/updateOrDelete'
+    briefList: 'order/brief-list',
+    update: 'order/update-or-delete'
   },
-  favProducts: 'favProducts',
+  favProducts: 'favorite-products',
   address: {
     list: 'address/list',
     province: 'province',
     district: 'district',
     ward: 'ward'
-  }
+  },
+  subCategory: 'sub-category',
+  product: {
+    list: 'product/list',
+    infinity: 'product/list-infinity',
+    detail: 'product-detail'
+  },
+  profile: 'profile'
 } as const

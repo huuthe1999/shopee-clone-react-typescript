@@ -85,8 +85,6 @@ export const useUpdateCartMutation = () => {
             productsCartPersistData?.filter((order) => order._id !== variables.orderIds[0])
           )
         }
-
-        return
       } else {
         // Case update order
         const singleCartData = data as AxiosResponse<IDataResponse<ICart>>

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import { MyErrorBoundary, Spinner } from '@/components'
 import { PATHS } from '@/constants'
@@ -15,19 +15,19 @@ const CheckOutPage = React.lazy(() => import('@/pages/CheckOut'))
 const CheckOutSuccessPage = React.lazy(() => import('@/pages/CheckOutSuccess'))
 const CategoryPage = React.lazy(() => import('@/pages/Category'))
 const ProductDetailPage = React.lazy(() => import('@/pages/ProductDetail'))
+const UserPage = React.lazy(() => import('@/pages/User'))
+const UserProfilePage = React.lazy(() => import('@/pages/User/UserProfile'))
+const UserAddressPage = React.lazy(() => import('@/pages/User/UserAddress'))
+const UserPasswordPage = React.lazy(() => import('@/pages/User/UserPassword'))
+const UserPurchasePage = React.lazy(() => import('@/pages/User/UserPurchase'))
+const NotFoundPage = React.lazy(() => import('@/pages/NotFound'))
 
 const RouterElementProvider = () => {
   const router = useMemo(
     () =>
       createBrowserRouter([
         {
-          element: (
-            <MyErrorBoundary>
-              <React.Suspense fallback={<Spinner />}>
-                <MainLayout />
-              </React.Suspense>
-            </MyErrorBoundary>
-          ),
+          element: <MainLayout />,
           children: [
             {
               path: PATHS.HOME_PATH,
@@ -48,6 +48,33 @@ const RouterElementProvider = () => {
                 {
                   path: PATHS.CHECKOUT_SUCCESS_PATH,
                   element: <CheckOutSuccessPage />
+                },
+                {
+                  path: PATHS.USER_PATH,
+                  element: <UserPage />,
+                  children: [
+                    {
+                      path: PATHS.USER_PROFILE_PATH,
+                      element: <UserProfilePage />,
+                      index: true
+                    },
+                    {
+                      path: PATHS.USER_ADDRESS_PATH,
+                      element: <UserAddressPage />
+                    },
+                    {
+                      path: PATHS.USER_PASSWORD_PATH,
+                      element: <UserPasswordPage />
+                    },
+                    {
+                      path: PATHS.USER_PURCHASE_PATH,
+                      element: <UserPurchasePage />
+                    },
+                    {
+                      path: PATHS.CATCH_ALL_PATH,
+                      element: <Navigate to={PATHS.USER_PROFILE_PATH} replace />
+                    }
+                  ]
                 }
               ]
             },
@@ -62,13 +89,7 @@ const RouterElementProvider = () => {
           ]
         },
         {
-          element: (
-            <MyErrorBoundary>
-              <React.Suspense fallback={<Spinner />}>
-                <GuestLayout />
-              </React.Suspense>
-            </MyErrorBoundary>
-          ),
+          element: <GuestLayout />,
           children: [
             {
               element: <RejectedRoute />,
@@ -93,14 +114,19 @@ const RouterElementProvider = () => {
             }
           ]
         },
-        { path: PATHS.NOTFOUND_PATH, element: <h1>404 Not Found page</h1> }
+        { path: PATHS.NOT_FOUND_PATH, element: <NotFoundPage /> },
+        { path: PATHS.CATCH_ALL_PATH, element: <Navigate to={PATHS.NOT_FOUND_PATH} replace /> }
       ]),
     []
   )
 
   return (
     <AuthProvider>
-      <RouterProvider router={router} />
+      <MyErrorBoundary>
+        <React.Suspense fallback={<Spinner />}>
+          <RouterProvider router={router} />
+        </React.Suspense>
+      </MyErrorBoundary>
     </AuthProvider>
   )
 }

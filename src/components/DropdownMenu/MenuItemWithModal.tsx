@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 
 import { Modal } from '@/components'
-import { EVENT_MODALS, QUERY_KEYS } from '@/constants'
+import { EVENT_MODALS } from '@/constants'
 import { useAuthContext } from '@/contexts'
 import { useBoolean } from '@/hooks'
 import { authServices } from '@/services'
@@ -34,8 +34,7 @@ const MenuItemWithModal = ({
             authUtils.clearAll()
             handleResetAuth()
 
-            queryClient.removeQueries({ queryKey: [QUERY_KEYS.order.list] })
-            queryClient.removeQueries({ queryKey: [QUERY_KEYS.order.briefList] })
+            queryClient.clear()
             // navigate(PATHS.LOGIN_PATH, { replace: true })
             // Close modal
             setValue(false)

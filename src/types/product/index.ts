@@ -20,6 +20,7 @@ export interface IProduct extends IBaseItem {
   image: string
   images: IFile[]
   categorySlug: string
+  categoryId: string
   subCategory: string
   price: number
   quantity: number
@@ -39,7 +40,8 @@ export interface IProduct extends IBaseItem {
   updatedAt: string
 }
 
-export interface ISingleProduct extends Omit<IProduct, 'categorySlug' | 'subCategory'> {
+export interface ISingleProduct
+  extends Omit<IProduct, 'categorySlug' | 'subCategory' | 'categoryId'> {
   category: IBaseItem & {
     slug: string
   }

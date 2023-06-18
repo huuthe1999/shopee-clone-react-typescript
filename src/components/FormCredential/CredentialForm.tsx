@@ -22,7 +22,7 @@ import {
 } from './validate'
 
 const CredentialForm = () => {
-  const { handleSetAccessToken, handleSetUser } = useAuthContext()
+  const { handleSetAccessToken } = useAuthContext()
   const matchLogin = useMatch(PATHS.LOGIN_PATH)
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
@@ -74,10 +74,6 @@ const CredentialForm = () => {
               onSuccess({ data }) {
                 // isLogging dùng để xác nhận người dùng đang logging ==> giúp lấy lại token
                 authUtils.setItem(AUTH.IS_LOGGING, true)
-                // Lưu thông tin user vào LocalStorage để tránh refresh trang gọi lại api
-                authUtils.setItem(AUTH.USER_INFO, data.data.user)
-
-                handleSetUser(data.data.user)
                 handleSetAccessToken(data.data.accessToken)
                 toast.success(data.message)
                 reset()
