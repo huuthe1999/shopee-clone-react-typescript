@@ -12,4 +12,7 @@ export enum Roles {
   Admin = 'Admin'
 }
 
-export type TUserUpdate = Omit<UserResponse, '_id' | 'email' | 'roles'> & { avatarId?: string }
+export type TUserUpdate = Omit<UserResponse, '_id' | 'email' | 'roles'> & {
+  avatarId?: string
+  password?: string
+}

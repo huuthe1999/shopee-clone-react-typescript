@@ -10,11 +10,21 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   isShowError?: boolean
   showLabel?: boolean
   errorMessage?: string
+  rightIcon?: React.ReactNode
 }
 
 export const FormInput = forwardRef<HTMLInputElement, Props>(
   (
-    { invalid, isDirty, label, isShowError = true, showLabel = false, errorMessage, ...props },
+    {
+      invalid,
+      isDirty,
+      label,
+      isShowError = true,
+      showLabel = false,
+      errorMessage,
+      rightIcon,
+      ...props
+    },
     ref
   ) => {
     return (
@@ -46,6 +56,7 @@ export const FormInput = forwardRef<HTMLInputElement, Props>(
             placeholder=" "
             autoComplete="off"
           />
+          {rightIcon}
           {!showLabel && label && (
             <label
               htmlFor={props.name}
@@ -68,7 +79,7 @@ export const FormInput = forwardRef<HTMLInputElement, Props>(
               exit={{ opacity: 0, height: 0 }}
               transition={{ type: 'tween', duration: 0.1 }}
               className={classNames('mt-1 text-xs text-red-500', {
-                'ml-auto w-4/5 pl-3 md:w-3/4': showLabel
+                'ml-auto w-4/5 pl-4 md:w-3/4': showLabel
               })}>
               {errorMessage}
             </motion.p>

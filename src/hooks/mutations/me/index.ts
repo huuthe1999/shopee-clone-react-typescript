@@ -9,13 +9,16 @@ export const useUpdateProfile = () => {
   useAxiosPrivate()
   const queryClient = useQueryClient()
 
-  return useMutation<BaseResponse, BaseResponse, TUserUpdate>({
+  return useMutation<BaseResponse, BaseResponse, Partial<TUserUpdate>>({
     mutationFn: (data) => userServices.updateProfile(data),
-    onSuccess(data) {
+    onSuccess(data, { password }) {
+      toast.success(data.message)
+      if (password) {
+        return
+      }
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.profile]
       })
-      toast.success(data.message)
     },
     onError(error) {
       toast.error(error.message)

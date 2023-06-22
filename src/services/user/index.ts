@@ -7,11 +7,11 @@ import { IDataResponse, TUserUpdate, UserResponse } from '@/types'
 export const getProfile = () =>
   authAxios.get<IDataResponse<UserResponse>>(ENDPOINTS.USER_PROFILE_END_POINT)
 
-export const updateProfile = async (updateData: TUserUpdate) => {
+export const updateProfile = async (updateData: Partial<TUserUpdate>) => {
   const { data } = await authAxios.patch<
     IDataResponse<UserResponse>,
     AxiosResponse<IDataResponse<UserResponse>>,
-    TUserUpdate
+    Partial<TUserUpdate>
   >(ENDPOINTS.USER_PROFILE_END_POINT, updateData)
   return data
 }
