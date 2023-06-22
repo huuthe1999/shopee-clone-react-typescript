@@ -8,22 +8,22 @@ import { Button } from '@/components'
 const panelVariants: Variants = {
   initial: {
     opacity: 0,
-    scale: 0.6
+    scale: 0.4
   },
   enter: {
     opacity: 1,
     scale: 1,
     transition: {
       duration: 0.1,
-      ease: 'circIn'
+      ease: 'easeIn'
     }
   },
   exit: {
     opacity: 0,
-    scale: 0.6,
+    scale: 0.4,
     transition: {
       duration: 0.1,
-      ease: 'circOut'
+      ease: 'easeOut'
     }
   }
 }
@@ -37,14 +37,14 @@ const backdropVariants: Variants = {
     backdropFilter: 'blur(2px)',
     transition: {
       ease: 'circIn',
-      duration: 0.2
+      duration: 0.1
     }
   },
   exit: {
     opacity: 0,
     transition: {
-      ease: 'circInOut',
-      duration: 0.2
+      ease: 'circOut',
+      duration: 0.1
     }
   }
 }
@@ -80,10 +80,10 @@ function Modal({
 }: Props) {
   return (
     <AnimatePresence initial={false}>
-      <FloatingPortal id="modal-portal">
-        {open && (
+      {open && (
+        <FloatingPortal id="modal-portal">
           <div
-            className="relative z-[9998]"
+            className="relative z-[9999]"
             aria-labelledby="modal-title"
             role="dialog"
             aria-modal="true">
@@ -96,7 +96,9 @@ function Modal({
               className="fixed inset-0 bg-gray-700 bg-opacity-75">
               <FloatingOverlay
                 onClick={() => {
-                  !disabledBlur && setShowModal(false)
+                  if (!disabledBlur) {
+                    onCancel?.() ?? setShowModal(false)
+                  }
                   // setOpen(false)
                 }}
                 className="fixed inset-0 z-10"
@@ -161,8 +163,8 @@ function Modal({
               </FloatingOverlay>
             </motion.div>
           </div>
-        )}
-      </FloatingPortal>
+        </FloatingPortal>
+      )}
     </AnimatePresence>
   )
 }

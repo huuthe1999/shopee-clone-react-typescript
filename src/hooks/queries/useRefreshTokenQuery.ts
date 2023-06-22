@@ -3,7 +3,7 @@ import { AxiosError } from 'axios'
 import { useMatch } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { AUTH, ENDPOINTS, PATHS } from '@/constants'
+import { AUTH, PATHS, QUERY_KEYS } from '@/constants'
 import { useAuthContext } from '@/contexts'
 import { authServices } from '@/services'
 import { BaseResponse } from '@/types'
@@ -17,11 +17,17 @@ const useRefreshTokenQuery = () => {
   const { accessToken, handleSetAccessToken, handleResetAuth } = useAuthContext()
 
   return useQuery({
-    queryKey: [ENDPOINTS.REFRESH_END_POINT],
+    queryKey: [QUERY_KEYS.refreshToken],
     queryFn: authServices.getRefreshToken,
     enabled: Boolean(isLogging) && !accessToken && !matchNotFound,
     onSuccess({ data }) {
-      handleSetAccessToken(data.data.accessToken)
+      if (data.isSuccess) {
+        handleSetAccessToken(data.data.accessToken)
+      } else {
+        handleResetAuth()
+        authUtils.removeItem(AUTH.IS_LOGGING)
+        toast.info(data.message)
+      }
     },
     onError(err: AxiosError<BaseResponse>) {
       handleResetAuth()

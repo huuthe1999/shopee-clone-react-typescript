@@ -35,7 +35,7 @@ export const FormInput = forwardRef<HTMLInputElement, Props>(
             ref={ref}
             id={props.name}
             className={classNames(
-              'peer/label block w-full appearance-none rounded-sm border p-2 text-sm text-gray-900 focus:border-black/[0.54] focus:outline-none focus:ring-0',
+              'peer/label block w-full appearance-none rounded-sm border p-2 text-sm text-gray-900 focus:border-black/[0.54] focus:bg-transparent focus:outline-none focus:ring-0',
               {
                 'border-red-600 bg-red-50': invalid,
                 'border-gray-300 bg-transparent': !invalid && !props.disabled,
@@ -50,11 +50,10 @@ export const FormInput = forwardRef<HTMLInputElement, Props>(
             <label
               htmlFor={props.name}
               className={classNames(
-                'absolute left-3 top-1/2 z-10 origin-[0] -translate-y-[1.8rem] scale-75 transform px-1 text-sm duration-100 peer-placeholder-shown/label:-translate-y-1/2 peer-placeholder-shown/label:scale-100 peer-placeholder-shown/label:bg-transparent peer-focus/label:-translate-y-[1.8rem] peer-focus/label:scale-75 peer-focus/label:bg-white peer-focus/label:text-inherit',
+                'absolute left-3 top-1/2 z-10 origin-[0] -translate-y-[1.8rem] scale-75 transform bg-white px-1 text-sm duration-100 peer-placeholder-shown/label:-translate-y-1/2 peer-placeholder-shown/label:scale-100 peer-placeholder-shown/label:bg-transparent peer-focus/label:-translate-y-[1.8rem] peer-focus/label:scale-75 peer-focus/label:bg-white peer-focus/label:text-inherit',
                 {
-                  'text-red-500': invalid,
-                  'text-inherit': !invalid,
-                  'bg-white': isDirty
+                  'bg-white text-red-500': invalid,
+                  'text-inherit': !invalid
                 }
               )}>
               {label}

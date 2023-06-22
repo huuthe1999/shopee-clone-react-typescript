@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { startTransition } from 'react'
 
 import { motion } from 'framer-motion'
 import { Edit2, ShoppingBag, User as UserIcon } from 'react-feather'
@@ -52,7 +52,9 @@ const User = () => {
             <MenuItem
               text="Tài khoản của tôi"
               onClick={() => {
-                navigate(PATHS.USER_PROFILE_PATH)
+                startTransition(() => {
+                  navigate(PATHS.USER_PROFILE_PATH)
+                })
               }}
               className="capitalize hover:bg-transparent"
               leftButtonIcon={<UserIcon className="shrink-0 text-blue-700" size={20} />}

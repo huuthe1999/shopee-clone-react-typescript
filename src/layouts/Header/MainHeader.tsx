@@ -236,7 +236,7 @@ const MainHeader = () => {
         )}
         {/* Shopping cart */}
         {!match && (
-          <TooltipProvider placement="bottom-end" mainAxis={-4}>
+          <TooltipProvider placement="bottom-end" mainAxis={-4} keepOpen={false}>
             <TooltipTrigger asChild>
               <div className="flex-shrink-0 p-4 max-sm:translate-y-2 max-sm:p-2 max-sm:pb-4">
                 <Link to={PATHS.CART_PATH} className="relative block -translate-x-1">

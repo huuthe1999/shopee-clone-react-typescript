@@ -1,5 +1,3 @@
-import { startTransition } from 'react'
-
 import classNames from 'classnames'
 
 import { MenuItem } from '@/components'
@@ -24,9 +22,7 @@ export const ContentTab = ({ isLoading, itemActive, data, onClick }: Props) => {
           className={classNames('bg-inherit')}
           buttonClassName={item._id === itemActive ? 'text-primary' : undefined}
           onClick={() => {
-            startTransition(() => {
-              onClick(item._id)
-            })
+            onClick(item._id)
           }}
         />
       ))}

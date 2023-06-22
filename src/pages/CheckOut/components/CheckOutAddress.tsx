@@ -2,25 +2,27 @@ import React from 'react'
 
 import { MapPin, Plus } from 'react-feather'
 import { FormProvider, useForm } from 'react-hook-form'
-import { toast } from 'react-toastify'
 
 import { Button, Modal } from '@/components'
-import { useAddressesQuery, useBoolean, useSetDefaultAddressMutation } from '@/hooks'
+import { useAddressesQuery, useBoolean, useSetDefaultOrSelectedAddressMutation } from '@/hooks'
+import { IAddressSelect } from '@/types'
 
 const Address = React.lazy(() => import('@/components/Address'))
 
 const CheckOutAddress = () => {
   const { data: addressesQueryData, isLoading } = useAddressesQuery()
-  const setDefaultAddressMutation = useSetDefaultAddressMutation()
+  const setDefaultOrSelectedAddressMutation = useSetDefaultOrSelectedAddressMutation()
   const { value, setValue } = useBoolean()
 
   const addressesData = addressesQueryData?.data.data
 
   const addressSelected = addressesData?.find((address) => address.isSelected)
 
-  const methods = useForm<{ address: string }>({
+  const methods = useForm<IAddressSelect>({
     defaultValues: {
-      address: ''
+      addressSelected: '',
+      address: '',
+      type: 2
     }
   })
 
@@ -79,22 +81,17 @@ const CheckOutAddress = () => {
         cancelText="Hủy"
         open={value}
         onSubmit={() => {
-          const addressIdSelected = methods.getValues('address')
+          const addressIdSelected = methods.getValues('addressSelected')
           if (addressIdSelected === addressSelected?._id) {
             setValue(false)
             return
           }
-          setDefaultAddressMutation.mutate(
-            { _id: addressIdSelected },
+          setDefaultOrSelectedAddressMutation.mutate(
+            { id: addressIdSelected, type: 1 },
             {
-              onSuccess(data) {
-                toast.success(data.data.message)
-              },
-              onError(error) {
-                toast.error(error.response?.data.message)
-              },
               onSettled() {
                 setValue(false)
+                methods.reset()
               }
             }
           )

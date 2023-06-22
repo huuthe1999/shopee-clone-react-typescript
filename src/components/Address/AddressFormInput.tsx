@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import classNames from 'classnames'
@@ -7,7 +7,8 @@ import { Play } from 'react-feather'
 import { UseControllerProps, useController, useForm, useFormContext } from 'react-hook-form'
 
 import { DropdownMenu, FormInput } from '@/components'
-import { useDistrictsQuery, useProvincesQuery, useWardsQuery } from '@/hooks'
+import { TooltipContent, TooltipProvider, TooltipTrigger } from '@/contexts'
+import { useBoolean, useDistrictsQuery, useProvincesQuery, useWardsQuery } from '@/hooks'
 
 import { ContentTab, TabButton } from './TabButton'
 import { TAddressField, TAddressForm, addressField } from './validate'
@@ -52,17 +53,24 @@ const AddressFormInput = ({
   )
 }
 
-export const AddressFormSelect = ({ className, label }: Props) => {
+export const AddressFormSelect = ({
+  className,
+  label,
+  province,
+  ward,
+  district
+}: Props & Partial<TAddressField>) => {
   const [activeTab, setActiveTab] = useState<keyof TAddressField>('province')
+  const { value: open, toggle, setTrue, setFalse } = useBoolean()
   const [isFocus, setIsFocus] = useState(false)
+
   const {
     getValues: getAddressFieldValues,
-    control: controlAddressField,
-    resetField: resetFieldAddressField,
     setValue: setValueAddressField,
-    formState: { dirtyFields, isValid },
-    setFocus,
-    clearErrors
+    formState: { dirtyFields, isValid, errors, isDirty },
+    getFieldState: getAddressFieldState,
+    trigger: triggerAddressField,
+    setFocus
   } = useForm<TAddressField>({
     defaultValues: addressField.getDefault(),
     resolver: yupResolver(addressField),
@@ -72,18 +80,11 @@ export const AddressFormSelect = ({ className, label }: Props) => {
   const {
     setValue: setValueAddressForm,
     getFieldState,
-    clearErrors: clearErrorsAddressForm
+    reset: resetAddressForm
   } = useFormContext<TAddressForm>()
 
-  const {
-    field,
-    fieldState: { invalid, error }
-  } = useController<TAddressField>({
-    name: activeTab,
-    control: controlAddressField
-  })
-
   const { error: fillAddressError, invalid: fillAddressInvalid } = getFieldState('fillAddress')
+  const { error: errorActiveTab } = getAddressFieldState(activeTab)
 
   const provinceValue = getAddressFieldValues('province')
   const districtValue = getAddressFieldValues('district')
@@ -111,15 +112,35 @@ export const AddressFormSelect = ({ className, label }: Props) => {
   const handleSetValue = (id: string) => {
     setValueAddressField(activeTab, id, {
       shouldValidate: true,
-      shouldDirty: true
+      shouldDirty: true,
+      shouldTouch: true
     })
   }
 
-  useLayoutEffect(() => {
-    if (activeTab !== 'province' || (activeTab === 'province' && dirtyFields.province)) {
-      setFocus(activeTab)
+  useEffect(() => {
+    if (province && district && ward) {
+      setValueAddressField('province', province, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true
+      })
+      setValueAddressField('district', district, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true
+      })
+      setValueAddressField('ward', ward, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true
+      })
+      setValueAddressForm('fillAddress', true, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true
+      })
     }
-  }, [activeTab, setFocus, dirtyFields.province])
+  }, [setValueAddressField, setValueAddressForm, province, district, ward])
 
   useEffect(() => {
     if (isValid && provinceSelected && districtSelected && wardSelected) {
@@ -143,96 +164,87 @@ export const AddressFormSelect = ({ className, label }: Props) => {
         shouldDirty: true,
         shouldTouch: true
       })
-      clearErrors()
     }
-  }, [isValid, clearErrors, setValueAddressForm, provinceSelected, districtSelected, wardSelected])
+  }, [isValid, setValueAddressForm, provinceSelected, districtSelected, wardSelected])
 
   return (
     <>
-      <div
-        className={classNames('flex w-full flex-col', [className])}
-        onFocus={() => {
-          clearErrorsAddressForm('fillAddress')
-          setIsFocus(true)
-        }}
-        onBlur={() => {
-          setIsFocus(false)
-          field.onBlur()
-        }}>
-        <div className="relative z-0 mb-1 w-full">
-          <input
-            {...field}
-            value={value}
-            readOnly
-            id={activeTab}
-            className={classNames(
-              'peer/label block w-full appearance-none rounded-sm border p-2 text-sm text-gray-900 focus:border-black/[0.54] focus:outline-none focus:ring-0',
-              {
-                'border-red-600 bg-red-50': fillAddressInvalid || invalid,
-                'border-gray-300 bg-transparent': !invalid
-              }
-            )}
-            placeholder=" "
-            autoComplete="off"
-          />
-          <Play
-            className={classNames(
-              'absolute right-2 top-1/2 -translate-y-1/2 fill-gray-400 text-gray-400 transition-transform',
-              {
-                'rotate-90': !isFocus,
-                '-rotate-90': isFocus
-              }
-            )}
-            size={10}
-          />
-          <label
-            htmlFor={activeTab}
-            className={classNames(
-              'absolute left-3 top-1/2 z-10 origin-[0] -translate-y-[1.8rem] scale-75 transform bg-white px-1 text-sm duration-100 peer-placeholder-shown/label:-translate-y-1/2 peer-placeholder-shown/label:scale-100 peer-placeholder-shown/label:bg-transparent peer-focus/label:-translate-y-[1.8rem] peer-focus/label:scale-75 peer-focus/label:bg-white peer-focus/label:text-inherit',
-              {
-                'bg-white text-red-500': invalid,
-                'text-inherit': !invalid
-              }
-            )}>
-            {label}
-          </label>
-        </div>
+      <div className={classNames('flex w-full flex-col', [className])}>
+        <TooltipProvider
+          placement="bottom"
+          noArrowRef
+          mainAxis={0}
+          matchRefWidth
+          click
+          open={open}
+          onOpenChange={(openValue) => {
+            toggle()
+            if (!openValue && !isFocus) {
+              triggerAddressField()
+            }
+          }}>
+          <TooltipTrigger asChild onClick={setTrue}>
+            <div>
+              <div className="relative z-0 mb-1 w-full">
+                <input
+                  value={value}
+                  onFocus={() => {
+                    setIsFocus(true)
+                  }}
+                  onBlur={() => {
+                    setIsFocus(false)
+                  }}
+                  readOnly
+                  id={activeTab}
+                  className={classNames(
+                    'peer/label block w-full appearance-none rounded-sm border p-2 text-sm text-gray-900 focus:border-black/[0.54] focus:bg-transparent focus:outline-none focus:ring-0',
+                    {
+                      'border-red-600 bg-red-50':
+                        !open && (fillAddressInvalid || (isDirty && !isValid)),
+                      'border-gray-300 bg-transparent': isValid
+                    }
+                  )}
+                  placeholder=" "
+                  autoComplete="off"
+                />
+                <Play
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rotate-90 fill-gray-400 text-gray-400 transition-transform peer-focus/label:-rotate-90"
+                  size={10}
+                />
+                <label
+                  htmlFor={activeTab}
+                  className={classNames(
+                    'absolute left-3 top-1/2 z-10 origin-[0] -translate-y-[1.8rem] scale-75 transform bg-white px-1 text-sm duration-100 peer-placeholder-shown/label:-translate-y-1/2 peer-placeholder-shown/label:scale-100 peer-placeholder-shown/label:bg-transparent peer-focus/label:-translate-y-[1.8rem] peer-focus/label:scale-75 peer-focus/label:bg-white peer-focus/label:text-inherit',
+                    {
+                      'bg-white text-red-500':
+                        !open && (fillAddressInvalid || (isDirty && !isValid)),
+                      'text-inherit': isValid
+                    }
+                  )}>
+                  {label}
+                </label>
+              </div>
 
-        <AnimatePresence>
-          {!isFocus && (error?.message || fillAddressError?.message) && (
-            <motion.p
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: '1.25rem' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ type: 'tween', duration: 0.1 }}
-              className="text-xs text-red-500">
-              {error?.message || fillAddressError?.message}
-            </motion.p>
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {isFocus && (
-            <motion.div
-              initial={{
-                opacity: 0,
-                height: 0
-              }}
-              animate={{
-                opacity: 1,
-                height: 'fit-content',
-                transition: {
-                  type: 'tween',
-                  duration: 0.2
-                }
-              }}
-              exit={{
-                opacity: 0.8,
-                height: 0,
-                zIndex: -1,
-                transition: { type: 'tween', duration: 0.2 }
-              }}
-              className={classNames('w-full rounded-sm border border-gray-300 bg-white')}>
+              <AnimatePresence>
+                {(errorActiveTab?.message ||
+                  Object.values(errors)?.[0] ||
+                  fillAddressError?.message) && (
+                  <motion.p
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: '1.25rem' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ type: 'tween', duration: 0.1 }}
+                    className="text-xs text-red-500">
+                    {errorActiveTab?.message ||
+                      Object.values(errors)?.[0]?.message ||
+                      fillAddressError?.message}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent className="z-[10000]">
+            <div className="w-full rounded-sm border border-gray-300 bg-white">
               <div className="h-full text-center text-sm font-medium text-gray-500">
                 <ul className="flex flex-wrap border-b border-gray-200">
                   <TabButton
@@ -240,6 +252,7 @@ export const AddressFormSelect = ({ className, label }: Props) => {
                     isActive={activeTab === 'province'}
                     onClick={() => {
                       setActiveTab('province')
+                      setFocus('province')
                     }}
                   />
                   <TabButton
@@ -248,6 +261,7 @@ export const AddressFormSelect = ({ className, label }: Props) => {
                     isActive={activeTab === 'district'}
                     onClick={() => {
                       setActiveTab('district')
+                      setFocus('district')
                     }}
                   />
                   <TabButton
@@ -256,6 +270,7 @@ export const AddressFormSelect = ({ className, label }: Props) => {
                     isActive={activeTab === 'ward'}
                     onClick={() => {
                       setActiveTab('ward')
+                      setFocus('ward')
                     }}
                   />
                 </ul>
@@ -267,12 +282,29 @@ export const AddressFormSelect = ({ className, label }: Props) => {
                       itemActive={provinceValue}
                       onClick={(id) => {
                         if (provinceValue && provinceValue !== id) {
-                          resetFieldAddressField('district')
-                          resetFieldAddressField('ward')
+                          resetAddressForm(
+                            {
+                              fillAddress: false
+                            },
+                            {
+                              keepDirtyValues: true,
+                              keepErrors: true
+                            }
+                          )
+                          setValueAddressField('district', '', {
+                            shouldValidate: true,
+                            shouldDirty: true,
+                            shouldTouch: true
+                          })
+                          setValueAddressField('ward', '', {
+                            shouldValidate: true,
+                            shouldDirty: true,
+                            shouldTouch: true
+                          })
                         }
-
-                        setActiveTab('district')
+                        setFocus('district')
                         handleSetValue(id)
+                        setActiveTab('district')
                       }}
                     />
                   )}
@@ -283,9 +315,28 @@ export const AddressFormSelect = ({ className, label }: Props) => {
                       itemActive={districtValue}
                       onClick={(id) => {
                         if (districtValue && districtValue !== id) {
-                          resetFieldAddressField('ward')
+                          resetAddressForm(
+                            {
+                              fillAddress: false
+                            },
+                            {
+                              keepDirty: true,
+                              keepDefaultValues: true,
+                              keepErrors: true,
+                              keepDirtyValues: true
+                            }
+                          )
+                          setValueAddressForm('fillAddress', false, {
+                            shouldDirty: true,
+                            shouldValidate: true
+                          })
+                          setValueAddressField('ward', '', {
+                            shouldValidate: true,
+                            shouldDirty: true,
+                            shouldTouch: true
+                          })
                         }
-
+                        setFocus('ward')
                         setActiveTab('ward')
                         handleSetValue(id)
                       }}
@@ -298,16 +349,21 @@ export const AddressFormSelect = ({ className, label }: Props) => {
                       itemActive={wardValue}
                       onClick={(id) => {
                         handleSetValue(id)
-                        setIsFocus(false)
-                        field.onBlur()
+                        setActiveTab('province')
+                        setFalse()
+                        setValueAddressForm('fillAddress', true, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                          shouldTouch: true
+                        })
                       }}
                     />
                   )}
                 </DropdownMenu>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
+          </TooltipContent>
+        </TooltipProvider>
       </div>
     </>
   )

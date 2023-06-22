@@ -187,8 +187,7 @@ export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
                 top: context.y ?? 0,
                 left: context.x ?? 0,
                 width: 'max-content',
-                visibility: context.x == null ? 'hidden' : 'visible',
-                zIndex: 1000
+                visibility: context.x == null ? 'hidden' : 'visible'
               }}
               initial={{
                 opacity: 0,
@@ -214,9 +213,12 @@ export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
               transition={{
                 type: 'tween',
                 ease: [0.4, 0, 0.6, 1],
-                duration: 0.2
+                duration: 0.1
               }}
               onClick={() => {
+                if (context.controlledClick === undefined && !context.keepOpen) {
+                  context.setOpen(false)
+                }
                 context.controlledClick && !context.keepOpen && context.setOpen(false)
               }}
               {...context.getFloatingProps(props)}>

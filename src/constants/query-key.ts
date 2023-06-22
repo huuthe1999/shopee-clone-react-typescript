@@ -17,5 +17,6 @@ export const QUERY_KEYS = {
     infinity: 'product/list-infinity',
     detail: 'product-detail'
   },
-  profile: 'profile'
+  profile: 'profile',
+  refreshToken: 'refreshToken'
 } as const

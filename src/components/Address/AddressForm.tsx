@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 import classNames from 'classnames'
 import { useFormContext } from 'react-hook-form'
 
@@ -7,13 +5,7 @@ import AddressFormInput, { AddressFormSelect } from './AddressFormInput'
 import { TAddressForm } from './validate'
 
 const AddressForm = () => {
-  const { control, formState, reset } = useFormContext<TAddressForm>()
-
-  useEffect(() => {
-    if (formState.isSubmitSuccessful) {
-      reset()
-    }
-  }, [formState, reset])
+  const { control, getValues } = useFormContext<TAddressForm>()
 
   return (
     <form className={classNames('flex flex-col gap-3 bg-white')} noValidate>
@@ -21,7 +13,12 @@ const AddressForm = () => {
         <AddressFormInput control={control} name="name" label="Họ và tên" />
         <AddressFormInput control={control} name="phone" label="Số điện thoại" />
       </div>
-      <AddressFormSelect label="Tỉnh/ Thành phố, Quận/Huyện, Phường/Xã" />
+      <AddressFormSelect
+        label="Tỉnh/ Thành phố, Quận/Huyện, Phường/Xã"
+        province={getValues('province._id')}
+        district={getValues('district._id')}
+        ward={getValues('ward._id')}
+      />
       <AddressFormInput control={control} name="address" label="Địa chỉ cụ thể" />
     </form>
   )

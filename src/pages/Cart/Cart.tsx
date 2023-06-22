@@ -1,4 +1,4 @@
-import { Fragment, Suspense, useCallback, useEffect, useState } from 'react'
+import { Fragment, Suspense, lazy, useCallback, useEffect, useState } from 'react'
 
 import classNames from 'classnames'
 import { ChevronLeft, ChevronRight } from 'react-feather'
@@ -13,6 +13,8 @@ import { IProductSelected } from '@/types'
 import { formatSearchParamUrl } from '@/utils'
 
 import { CartTableFooter, CartTableHeader, CartTableRow, CartTableRowSkeleton } from './components'
+
+const ModalConfirm = lazy(() => import('@/components/Modal/ModalConfirm'))
 
 const Cart = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -321,36 +323,15 @@ const Cart = () => {
               confirmText="Xoá"
               cancelText="Hủy"
               open={value}>
-              {/* Start content */}
-              <div className="sm:flex sm:items-start">
-                {/* Start Icon */}
-                <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                  <svg
-                    className="h-6 w-6 text-red-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    aria-hidden="true">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-                    />
-                  </svg>
-                </div>
-                {/* End Icon */}
-                <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                  <h3 className="text-base font-semibold leading-6 text-gray-900">Xóa sản phẩm</h3>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Bạn có muốn xóa {typeDelete === 1 && ' những '}sản phẩm đã chọn ra khỏi giỏ
-                      hàng ?
-                    </p>
-                  </div>
-                </div>
-              </div>
-              {/* End content */}
+              <Suspense fallback={<Spinner />}>
+                <ModalConfirm
+                  title="Xóa sản phẩm"
+                  description={`Bạn có muốn xóa ${
+                    typeDelete === 1 ? ' những ' : ''
+                  } sản phẩm đã chọn ra khỏi giỏ
+                      hàng ?`}
+                />
+              </Suspense>
             </Modal>
           </>
         )}

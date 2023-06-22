@@ -71,7 +71,7 @@ export const RIGHT_NAV: INavItem[] = [
   {
     id: 6,
     menuItems: [
-      { text: 'Cá nhân', to: PATHS.USER_ACCOUNT_PATH, className: 'hover:text-teal-500' },
+      { text: 'Cá nhân', to: PATHS.USER_PROFILE_PATH, className: 'hover:text-teal-500' },
       {
         text: 'Đăng xuất',
         className: 'hover:text-teal-500',

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import classNames from 'classnames'
 import { AnimatePresence, motion } from 'framer-motion'
-import { SubmitErrorHandler, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 import { Avatar, Button, FormInput } from '@/components'
 import { useProfileQuery, useUpdateProfile, useUploadImage } from '@/hooks'
@@ -50,10 +50,6 @@ const UserProfile = () => {
     }
   }
 
-  const handleErrorForm: SubmitErrorHandler<TProfileFormSchema> = async (errors) => {
-    console.log('🚀 ~ handleSubmitForm ~ error:', errors)
-  }
-
   const handleClick = () => {
     fileInput.current?.click()
   }
@@ -92,7 +88,7 @@ const UserProfile = () => {
       {/* Body */}
       <form
         className="flex flex-col gap-x-6 gap-y-4 pb-6 pt-4 md:flex-row"
-        onSubmit={handleSubmit(handleSubmitForm, handleErrorForm)}>
+        onSubmit={handleSubmit(handleSubmitForm)}>
         <div className="flex basis-full flex-col gap-y-4 md:basis-2/3">
           <FormInput
             showLabel
@@ -205,23 +201,29 @@ const UserProfile = () => {
               </select>
             </div>
           </div>
-          <Button
-            disabled={!isDirty || mutateUpdateProfile.isLoading || mutateUploadImage.isLoading}
-            onClick={handleReset}
-            className="ml-auto w-fit overflow-hidden rounded-sm bg-primary px-6 py-2 text-white transition-colors hover:bg-secondary">
-            Reset
-          </Button>
-          <Button
-            disabled={!isDirty || mutateUpdateProfile.isLoading || mutateUploadImage.isLoading}
-            isLoading={mutateUpdateProfile.isLoading || mutateUploadImage.isLoading}
-            type="submit"
-            className="ml-auto w-fit overflow-hidden rounded-sm bg-primary px-6 py-2 text-white transition-colors hover:bg-secondary">
-            Lưu
-          </Button>
+          <div className="ml-auto flex flex-wrap gap-2">
+            <Button
+              disabled={!isDirty || mutateUpdateProfile.isLoading || mutateUploadImage.isLoading}
+              onClick={handleReset}
+              className="w-fit overflow-hidden rounded-sm bg-primary px-6 py-2 text-white transition-colors hover:bg-secondary">
+              Reset
+            </Button>
+            <Button
+              disabled={!isDirty || mutateUpdateProfile.isLoading || mutateUploadImage.isLoading}
+              isLoading={mutateUpdateProfile.isLoading || mutateUploadImage.isLoading}
+              type="submit"
+              className="w-fit overflow-hidden rounded-sm bg-primary px-6 py-2 text-white transition-colors hover:bg-secondary">
+              Lưu
+            </Button>
+          </div>
         </div>
         <div className="flex basis-full flex-col md:basis-1/3">
           <div className="flex flex-col flex-nowrap items-center gap-y-3 border-l border-zinc-200 px-6">
-            <label htmlFor="file" className="cursor-pointer">
+            <label
+              htmlFor="file"
+              className={classNames('cursor-pointer', {
+                'pointer-events-none': mutateUploadImage.isLoading
+              })}>
               {image ? (
                 <img
                   src={image}
