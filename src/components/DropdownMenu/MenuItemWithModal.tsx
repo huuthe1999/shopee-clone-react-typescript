@@ -3,7 +3,7 @@ import { toast } from 'react-toastify'
 
 import { Modal } from '@/components'
 import { EVENT_MODALS } from '@/constants'
-import { useAuthContext } from '@/contexts'
+import { useAuthContext, useTooltipContext } from '@/contexts'
 import { useBoolean } from '@/hooks'
 import { authServices } from '@/services'
 import { authUtils } from '@/utils'
@@ -18,6 +18,7 @@ const MenuItemWithModal = ({
   buttonText,
   ...props
 }: Omit<MenuItemProps, 'onClick'>) => {
+  const { setOpen } = useTooltipContext()
   const { value, setTrue, setValue } = useBoolean()
   const queryClient = useQueryClient()
   const logoutMutation = useMutation({
@@ -53,6 +54,9 @@ const MenuItemWithModal = ({
         setShowModal={setValue}
         confirmText={buttonText}
         onSubmit={handleSubmit}
+        onCancel={() => {
+          setOpen(false)
+        }}
         isLoading={logoutMutation.isLoading}
         open={value}>
         {/* Start content */}
