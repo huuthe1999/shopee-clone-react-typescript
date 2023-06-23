@@ -17,7 +17,7 @@ const DropdownVoucher = ({ vouchers, voucherSelected, onSelect }: Props) => {
 
   return (
     <>
-      <TooltipProvider placement="bottom-end" click>
+      <TooltipProvider placement="bottom-end" click keepOpen={false}>
         <TooltipTrigger asChild>
           <div className="flex cursor-pointer flex-nowrap items-center gap-x-2 font-semibold text-primary">
             <span>Mã khuyến mãi</span>

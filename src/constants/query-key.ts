@@ -1,6 +1,7 @@
 export const QUERY_KEYS = {
   order: {
     list: 'order/list',
+    complete: 'order/complete',
     briefList: 'order/brief-list',
     update: 'order/update-or-delete'
   },

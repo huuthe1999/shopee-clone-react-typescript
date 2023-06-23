@@ -3,7 +3,14 @@ import { AxiosResponse } from 'axios'
 import { authAxios } from '@/config/http'
 import { ENDPOINTS } from '@/constants'
 import { OrderQueryProps } from '@/hooks'
-import { BaseResponse, ICart, IDataPaginationResponse, IDataResponse } from '@/types'
+import {
+  BaseResponse,
+  ICart,
+  ICartCompleted,
+  IDataPaginationResponse,
+  IDataResponse,
+  IProductOrdered
+} from '@/types'
 
 export interface AddToCartProps {
   amount: number
@@ -50,5 +57,17 @@ export const getInCart = (props: OrderQueryProps) =>
     }
   )
 
-export const checkoutCart = (data: string[]) =>
+export const getCompletedCart = async (
+  props: Pick<OrderQueryProps, 'size' | 'page'> & Pick<ICart, 'status'>
+) => {
+  const data = await authAxios.get<
+    IDataPaginationResponse<ICartCompleted[]>,
+    AxiosResponse<IDataPaginationResponse<ICartCompleted[]>>
+  >(ENDPOINTS.ORDER_END_POINT, {
+    params: { ...props }
+  })
+  return data.data
+}
+
+export const checkoutCart = (data: IProductOrdered[]) =>
   authAxios.post<BaseResponse>(ENDPOINTS.ORDER_CHECKOUT_END_POINT, { data })

@@ -3,7 +3,7 @@ import { AxiosError, AxiosResponse } from 'axios'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { AUTH, BRIEF_CART_SIZE, CART_SIZE, PAGE, QUERY_KEYS } from '@/constants'
+import { AUTH, BRIEF_CART_SIZE, CART_SIZE, PAGE, QUERY_KEYS, SIZE } from '@/constants'
 import { useAxiosPrivate } from '@/hooks'
 import { orderServices } from '@/services'
 import {
@@ -12,6 +12,7 @@ import {
   ICart,
   IDataPaginationResponse,
   IDataResponse,
+  IProductOrdered,
   IProductSelected
 } from '@/types'
 import { authUtils } from '@/utils'
@@ -147,7 +148,7 @@ export const useCheckoutMutation = () => {
   useAxiosPrivate()
   const queryClient = useQueryClient()
 
-  return useMutation<AxiosResponse<BaseResponse>, AxiosError<BaseResponse>, string[]>({
+  return useMutation<AxiosResponse<BaseResponse>, AxiosError<BaseResponse>, IProductOrdered[]>({
     mutationFn: (data) => orderServices.checkoutCart(data),
     onSuccess(data) {
       toast.success(data.data.message)
@@ -157,6 +158,11 @@ export const useCheckoutMutation = () => {
 
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.order.list, { size: CART_SIZE, status: -1 }],
+        refetchType: 'none'
+      })
+
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.order.complete, { size: SIZE, status: 1 }],
         refetchType: 'none'
       })
     },

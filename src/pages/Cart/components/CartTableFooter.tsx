@@ -31,7 +31,17 @@ export const CartTableFooter = ({
 
   const addressesData = addressesQueryData?.data.data
 
-  const hasAddressSelected = addressesData?.find((address) => address.isSelected)
+  const addressSelected = addressesData?.find((address) => address.isSelected)
+
+  const address =
+    (addressSelected &&
+      [
+        addressSelected.address,
+        addressSelected.ward.name,
+        addressSelected.district.name,
+        addressSelected.province.name
+      ].join(', ')) ??
+    ''
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onSelect?.(e.target.checked)
@@ -114,12 +124,31 @@ export const CartTableFooter = ({
                   authUtils.setItem(AUTH.CART_CHECKOUT, productsSelected)
                   navigate(PATHS.CHECKOUT_PATH)
                 } else {
-                  if (!hasAddressSelected) {
+                  if (!addressSelected) {
                     toast.warn('Vui lòng chọn địa chỉ giao hàng')
                     return
                   }
                   checkoutMutation.mutate(
-                    productsSelected.map((product) => product._id),
+                    productsSelected.map((product) => {
+                      const voucher = product.voucher
+                      const totalPrice = product.totalPriceItem as number
+                      if (voucher) {
+                        return {
+                          _id: product._id,
+                          address,
+                          totalPrice,
+                          voucher:
+                            voucher && voucher.type === 0
+                              ? '-' + voucher.discount.percent + ' ﹪'
+                              : '-' + formatCurrency(voucher.discount.price)
+                        }
+                      }
+                      return {
+                        _id: product._id,
+                        totalPrice,
+                        address
+                      }
+                    }),
                     {
                       onSuccess() {
                         // Handle confirm order

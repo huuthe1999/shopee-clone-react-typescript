@@ -61,6 +61,7 @@ const User = () => {
             />
             <motion.div
               className="flex flex-col pl-7"
+              initial={{ height: 0 }}
               animate={{ height: pathname.includes(PATHS.USER_ACCOUNT_PATH) ? 'auto' : 0 }}
               transition={{ type: 'tween' }}>
               <MenuItem

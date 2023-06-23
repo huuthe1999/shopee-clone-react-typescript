@@ -18,8 +18,8 @@ const ModalConfirm = lazy(() => import('@/components/Modal/ModalConfirm'))
 
 const Cart = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const [productsSelected, setProductsSelected] = useState<Array<IProductSelected>>([])
   const [productSelected, setProductSelected] = useState<string | undefined>()
+  const [productsSelected, setProductsSelected] = useState<Array<IProductSelected>>([])
   const { value, setValue } = useBoolean()
   const [typeDelete, setTypeDelete] = useState<0 | 1>(0)
 
@@ -70,6 +70,7 @@ const Cart = () => {
         const existProductIndex = productsSelected.findIndex(
           (existProduct) => existProduct._id === product._id
         )
+
         if (existProductIndex !== -1) {
           const newProductsSelected = productsSelected.slice()
           newProductsSelected.splice(existProductIndex, 1, product)
@@ -132,8 +133,8 @@ const Cart = () => {
         return (
           <CartTableRow
             key={cartProduct._id}
-            voucher={productsSelected.find((product) => product._id === cartProduct._id)?.voucher}
             {...cartProduct}
+            voucher={productsSelected.find((product) => product._id === cartProduct._id)?.voucher}
             isCheck={productsSelected.some((product) => product._id === cartProduct._id)}
             onDeleteProduct={handleDeleteProduct}
             onCheck={handleCheckProduct}

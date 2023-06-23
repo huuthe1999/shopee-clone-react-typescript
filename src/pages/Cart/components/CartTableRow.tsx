@@ -82,6 +82,34 @@ export const CartTableRow = memo(
       })
     }
 
+    const handleChangeAmount = (currentAmount: number) => {
+      // Recalculate totalPriceItem
+
+      const totalPrice = (price * (100 - discount) * currentAmount) / 100
+
+      onCheck?.(Boolean(isCheck), {
+        _id,
+        ...rest,
+        voucher: voucherSelected,
+        totalPriceItem: totalPrice,
+        isStale,
+        amount: currentAmount,
+        product: {
+          isActive,
+          image,
+          name,
+          price,
+          discount,
+          quantity,
+          categorySlug,
+          categoryId,
+          slug: productSlug,
+          vouchers,
+          _id: productId
+        }
+      })
+    }
+
     const handleSetVoucher = (value?: TVoucher) => {
       setVoucherSelected(value)
       // Recalculate totalPriceItem
@@ -140,9 +168,10 @@ export const CartTableRow = memo(
           )}
 
           {!onCheck || isInValidOrder ? (
-            <span className="aspect-square w-20 shrink-0">
+            <span className="aspect-square w-20 shrink-0 overflow-hidden border border-gray-200">
               <img
                 src={image}
+                className="h-full w-full"
                 alt="product_img_cart"
                 onError={(e) => {
                   e.currentTarget.onerror = null
@@ -153,9 +182,10 @@ export const CartTableRow = memo(
           ) : (
             <Link
               to={`/${categorySlug}-${categoryId}/${productSlug}-${productId}`}
-              className="aspect-square w-20 shrink-0">
+              className="aspect-square w-20 shrink-0 overflow-hidden">
               <img
                 src={image}
+                className="h-full w-full"
                 alt="product_img_cart"
                 onError={(e) => {
                   e.currentTarget.onerror = null
@@ -239,6 +269,7 @@ export const CartTableRow = memo(
                     orderId={_id}
                     productId={productId}
                     onDeleteProduct={onDeleteProduct}
+                    onChangeAmount={handleChangeAmount}
                   />
                   <div className="mt-1 line-clamp-2 text-xs italic text-black/[0.54]">
                     Còn {formatNumber(quantity)} sản phẩm

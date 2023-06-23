@@ -217,10 +217,7 @@ export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
                 duration: 0.1
               }}
               onClick={() => {
-                if (context.controlledClick === undefined && !context.keepOpen) {
-                  context.setOpen(false)
-                }
-                context.controlledClick && !context.keepOpen && context.setOpen(true)
+                context.controlledClick && !context.keepOpen && context.setOpen(false)
               }}
               {...context.getFloatingProps(props)}>
               {children}
