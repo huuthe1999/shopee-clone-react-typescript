@@ -94,9 +94,9 @@ export const CartTableFooter = ({
                 onClick={onMultipleDelete}>
                 Xóa ({productsSelected.length})
               </Button>
-              <Button className="line-clamp-1 rounded-sm bg-primary px-4 py-2 text-white transition-opacity hover:opacity-80">
+              {/* <Button className="line-clamp-1 rounded-sm bg-primary px-4 py-2 text-white transition-opacity hover:opacity-80">
                 Lưu vào thư mục yêu thích
-              </Button>
+              </Button> */}
             </div>
           )}
           <div

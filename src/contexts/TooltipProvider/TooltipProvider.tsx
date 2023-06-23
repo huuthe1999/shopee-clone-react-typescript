@@ -172,12 +172,13 @@ export const TooltipTrigger = React.forwardRef<
 
 export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElement>>(
   function TooltipContent({ children, ...props }, propRef) {
+    const className = props.className ? props.className : 'z-[9998]'
     const { arrowRef, noArrowRef, context: floatingContext, ...context } = useTooltipContext()
     const ref = useMergeRefs([context.refs.setFloating, propRef])
 
     return (
       <FloatingPortal>
-        <AnimatePresence initial={false}>
+        <AnimatePresence>
           {context.open && (
             <motion.div
               ref={ref}
@@ -187,9 +188,9 @@ export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
                 top: context.y ?? 0,
                 left: context.x ?? 0,
                 width: 'max-content',
-                visibility: context.x == null ? 'hidden' : 'visible',
-                zIndex: 100
+                visibility: context.x == null ? 'hidden' : 'visible'
               }}
+              className={className}
               initial={{
                 opacity: 0,
                 scale: 0,

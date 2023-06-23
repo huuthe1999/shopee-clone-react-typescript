@@ -195,6 +195,7 @@ const ProductDetail = () => {
                 shopType={productData.shopType}
                 quantity={productData.quantity}
                 productId={productData._id}
+                isOutOfStock={!productData.isActive || !productData.quantity}
               />
             </div>
           ) : (

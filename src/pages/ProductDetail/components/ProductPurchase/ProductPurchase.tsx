@@ -11,12 +11,18 @@ import { useAuthContext } from '@/contexts'
 import { useAddToCartMutation } from '@/hooks'
 
 interface ProductPurchaseProps {
+  isOutOfStock: boolean
   quantity: number
   shopType: number
   productId: string
 }
 
-export const ProductPurchase = ({ quantity, shopType, productId }: ProductPurchaseProps) => {
+export const ProductPurchase = ({
+  quantity,
+  shopType,
+  productId,
+  isOutOfStock
+}: ProductPurchaseProps) => {
   const [amount, setAmount] = useState('1')
 
   const { accessToken } = useAuthContext()
@@ -49,6 +55,7 @@ export const ProductPurchase = ({ quantity, shopType, productId }: ProductPurcha
   }, [])
 
   const handlePurchase = useCallback(() => {
+    console.log('111111')
     if (accessToken) {
       addToCartMutate(
         {
@@ -78,6 +85,7 @@ export const ProductPurchase = ({ quantity, shopType, productId }: ProductPurcha
         <span className="min-w-[6.875rem] text-neutral-500">Số Lượng</span>
         <div className="flex flex-wrap gap-4">
           <InputNumber
+            disabled={isOutOfStock}
             value={amount}
             quantity={quantity}
             onChange={handleChange}
@@ -85,13 +93,15 @@ export const ProductPurchase = ({ quantity, shopType, productId }: ProductPurcha
             onIncrease={handleIncrease}
             onDecrease={handleDecrease}
           />
-          <span className="m-auto text-neutral-500">{quantity} sản phẩm có sẵn</span>
+          {!isOutOfStock && (
+            <span className="m-auto text-neutral-500">{quantity} sản phẩm có sẵn</span>
+          )}
         </div>
       </div>
       {/* Cart & Buy now */}
       <div className="flex gap-x-4">
         <Button
-          disabled={isLoading}
+          disabled={isOutOfStock || isLoading}
           className={classNames(
             'text-md flex flex-nowrap items-center gap-x-2 rounded-sm border bg-neutral-100 px-4 py-3 capitalize transition hover:bg-neutral-50',
             {
@@ -101,16 +111,20 @@ export const ProductPurchase = ({ quantity, shopType, productId }: ProductPurcha
           )}
           onClick={handlePurchase}>
           <ShoppingCart />
-          <span className="font-medium">Thêm Vào Giỏ Hàng</span>
+          <span className="font-medium">
+            {isOutOfStock ? 'Tạm thời hết hàng' : 'Thêm Vào Giỏ Hàng'}
+          </span>
         </Button>
-        <Button
-          disabled={isLoading}
-          className={classNames('text-md rounded-sm px-4 py-3 capitalize text-white transition', {
-            'bg-primary hover:bg-primary/90': shopType !== 1,
-            'bg-red-700 hover:bg-red-700/90': shopType === 1
-          })}>
-          Mua Ngay
-        </Button>
+        {!isOutOfStock && (
+          <Button
+            disabled={isLoading}
+            className={classNames('text-md rounded-sm px-4 py-3 capitalize text-white transition', {
+              'bg-primary hover:bg-primary/90': shopType !== 1,
+              'bg-red-700 hover:bg-red-700/90': shopType === 1
+            })}>
+            Mua Ngay
+          </Button>
+        )}
       </div>
     </>
   )

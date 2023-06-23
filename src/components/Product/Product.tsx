@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 
+import stockOutImg from '@/assets/images/sold_out.png'
 import { IProduct } from '@/types'
 import { formatCurrency, formatNumber } from '@/utils'
 
@@ -19,6 +20,8 @@ export const customItemStyles: ItemStyles = {
 const Product = ({
   _id,
   image,
+  isActive,
+  quantity,
   vouchers,
   categorySlug,
   categoryId,
@@ -31,6 +34,7 @@ const Product = ({
   shopType,
   province: { name: provinceName }
 }: Omit<IProduct, 'images'>) => {
+  const isOutOfStock = !isActive || !quantity
   return (
     <LinkMotion
       key={_id}
@@ -78,9 +82,17 @@ const Product = ({
           {/* Overlay image */}
           <img
             src="/images/overlay-image-product.png"
-            alt=""
+            alt="banner-product-img"
             className="absolute inset-0 z-10 bg-transparent object-cover"
           />
+          {/* Stock out image */}
+          {isOutOfStock && (
+            <img
+              src={stockOutImg}
+              alt="stock-out-img"
+              className="absolute inset-0 z-10 m-auto bg-transparent object-cover"
+            />
+          )}
         </div>
         <div className="flex flex-1 flex-col justify-between p-2">
           <p className="line-clamp-2 text-sm">{name}</p>
