@@ -15,8 +15,12 @@ export const QUERY_KEYS = {
   subCategory: 'sub-category',
   product: {
     list: 'product/list',
-    infinity: 'product/list-infinity',
+    suggest: 'product/suggest',
     detail: 'product-detail'
+  },
+  category: {
+    list: 'category/list',
+    banner: 'category/banner'
   },
   profile: 'profile',
   refreshToken: 'refreshToken'

@@ -9,15 +9,23 @@ interface CateCardProps {
 }
 const CateCard = ({ image, name, link = PATHS.HOME_PATH }: CateCardProps) => {
   return (
-    <Link to={link}>
-      <div className="flex flex-col items-center justify-center transition-transform hover:-translate-y-1">
-        <div className="mx-6 mb-0 mt-4 aspect-square overflow-hidden">
-          <img src={image} alt="" className="block overflow-hidden rounded-2xl p-4" />
+    <Link to={link} className="h-full w-full">
+      <div className="m-auto flex flex-col items-center justify-center transition-transform hover:-translate-y-1">
+        <div className="h-full w-full shrink-0 overflow-hidden rounded-2xl px-2 md:px-4 lg:px-6">
+          <img
+            src={image}
+            alt="banner-img"
+            className="aspect-square w-full lg:p-2"
+            onError={(e) => {
+              e.currentTarget.onerror = null
+              e.currentTarget.src = '/images/default-image-product.png'
+            }}
+          />
         </div>
 
-        <div className="mb-2 overflow-hidden">
-          <p className="line-clamp-2 h-fit text-center text-xs">{name}</p>
-        </div>
+        <p className="my-2 line-clamp-2 h-fit shrink-0 whitespace-pre-line break-words text-center text-xs">
+          {name}
+        </p>
       </div>
     </Link>
   )

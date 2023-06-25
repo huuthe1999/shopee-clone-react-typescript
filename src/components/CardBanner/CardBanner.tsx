@@ -7,7 +7,15 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 const CardBanner = ({ image }: Props) => {
   return (
     <div className="h-full">
-      <img className="h-full w-full" src={image} alt="" loading="lazy" />
+      <img
+        className="h-full w-full"
+        src={image}
+        alt=""
+        onError={(e) => {
+          e.currentTarget.onerror = null
+          e.currentTarget.src = '/images/default-image-product.png'
+        }}
+      />
     </div>
   )
 }

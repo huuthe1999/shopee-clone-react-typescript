@@ -1,7 +1,7 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react'
 
 import classNames from 'classnames'
-import { Home, Search, ShoppingCart } from 'react-feather'
+import { ArrowLeft, Home, ShoppingCart, User } from 'react-feather'
 import { Link, useMatch, useNavigate, useSearchParams } from 'react-router-dom'
 
 import {
@@ -19,19 +19,23 @@ import {
 import { AUTH, BRIEF_CART_SIZE, PATHS, QUERY_KEYS } from '@/constants'
 import { TooltipContent, TooltipProvider, TooltipTrigger, useAuthContext } from '@/contexts'
 import { LEFT_NAV, RIGHT_NAV } from '@/data/header'
-import { useDebounce, useOrderQuery, useProductsQuery, useProfileQuery } from '@/hooks'
-import { authUtils, saveSearchHistory } from '@/utils'
+import { useDebounce, useOrderQuery, useProfileQuery } from '@/hooks'
+import { saveSearchHistory } from '@/utils'
+
+import { SearchInput } from './components'
 
 const MainHeader = () => {
   const { accessToken } = useAuthContext()
   const { data, isFetching, isRefetching } = useProfileQuery()
   const [query, setQuery] = useState('')
   const deferredQuery = useDebounce(query.trim())
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLInputElement | null>(null)
+  const headerRef = useRef<HTMLElement | null>(null)
   const [searchParams] = useSearchParams()
 
   const navigate = useNavigate()
   const matchCartPath = useMatch(PATHS.CART_PATH)
+  const matchHomePath = useMatch(PATHS.HOME_PATH)
   const matchCheckOutPath = useMatch(PATHS.CHECKOUT_PATH)
 
   const profile = data?.data.data
@@ -72,15 +76,6 @@ const MainHeader = () => {
     [accessToken, profile, isFetching, isRefetching]
   )
 
-  const { data: searchProductsQuery } = useProductsQuery({
-    size: BRIEF_CART_SIZE,
-    type: 'search',
-    enabled: Boolean(deferredQuery),
-    keyword: deferredQuery
-  })
-
-  const searchProducts = searchProductsQuery?.data.data
-
   const {
     data: productsCartQueryData,
     isRefetching: isProductsCartRefetching,
@@ -112,206 +107,181 @@ const MainHeader = () => {
     }
   }
 
-  const history: string[] | null = authUtils.getItem(AUTH.SEARCH_HISTORY)
+  const renderCart = (
+    <div className="flex-shrink-0 p-4 max-sm:px-1 max-sm:py-2">
+      <Link to={PATHS.CART_PATH} className="relative m-auto block">
+        <ShoppingCart className="h-7 w-7 cursor-pointer max-sm:h-6 max-sm:w-6" />
+        {/* Badge */}
+        {productsCartData?.totalItems ? (
+          <div className="absolute -right-1/3 -top-1/3 h-fit min-w-fit overflow-hidden rounded-full border-2 border-primary bg-white px-1 text-center text-xs text-primary max-sm:border-white max-sm:bg-primary max-sm:text-white">
+            {isProductsCartRefetching ? (
+              <LoadingIcon className="fill-primary text-gray-200" />
+            ) : (
+              <>
+                {productsCartData?.totalItems && Math.min(productsCartData?.totalItems, 10)}
+                {productsCartData?.totalItems && productsCartData?.totalItems > 10 && <sup>+</sup>}
+              </>
+            )}
+          </div>
+        ) : null}
+      </Link>
+    </div>
+  )
 
   return (
-    <header className="bg-gradient-to-b from-primary to-secondary px-4 pb-4 pt-2 text-white">
-      {/* Navbar */}
-      <nav className="mx-auto mb-2 flex max-w-6xl flex-row items-center justify-between overflow-hidden text-xs font-semibold max-sm:hidden">
-        {/* Left Nav */}
-        <ul className="flex divide-x divide-slate-400">{renderNav(LEFT_NAV)}</ul>
-        {/* Right Nav */}
-        <ul className="flex items-center divide-x divide-slate-400">{renderNav(RIGHT_NAV)}</ul>
-      </nav>
-
-      {/* Header with search */}
-      <div
+    <>
+      {/* Header on mobile device */}
+      <header
         className={classNames(
-          'mx-auto flex max-w-6xl flex-nowrap justify-between gap-4 bg-transparent pt-2',
+          'sticky top-0 z-[100] hidden flex-nowrap items-center gap-x-2 bg-white p-2 shadow-sm',
           {
-            'items-center': !match,
-            'items-end': match
+            'max-sm:flex': !matchHomePath
           }
         )}>
-        {/* Logo */}
-        <ol
-          className={classNames('shrink-0 self-start max-sm:self-center', {
-            'flex-1': match
-          })}>
-          <NavItem
-            className="list-none"
-            to={PATHS.HOME_PATH}
-            leftIcon={
-              <div className="flex items-end text-white">
-                <Home className="hidden max-sm:block" size={28} />
-                <LogoIcon className="fill-white max-sm:hidden sm:h-12" />
-                {matchCartPath && (
-                  <span className="ml-4 border-l-2 border-l-white pl-4 text-2xl">Giỏ Hàng</span>
-                )}
-                {matchCheckOutPath && (
-                  <span className="ml-4 border-l-2 border-l-white pl-4 text-2xl">Thanh Toán</span>
-                )}
-              </div>
+        <ArrowLeft
+          className="mx-2 my-1 h-7 w-7 shrink-0 text-primary"
+          onClick={() => {
+            navigate(-1)
+          }}
+        />
+        <p className="line-clamp-1 break-all">
+          {matchCartPath && 'Giỏ Hàng'}
+          {matchCheckOutPath && 'Thanh Toán'}
+        </p>
+      </header>
+      <header
+        ref={headerRef}
+        className={classNames(
+          'bg-gradient-to-b from-primary to-secondary px-4 pb-4 pt-2 text-white max-sm:absolute max-sm:z-20 max-sm:w-full max-sm:bg-none max-sm:p-2',
+          {
+            'max-sm:hidden': !matchHomePath
+          }
+        )}>
+        {/* Navbar */}
+        <nav className="mx-auto mb-2 flex max-w-6xl flex-row items-center justify-between overflow-hidden text-xs font-semibold max-sm:hidden">
+          {/* Left Nav */}
+          <ul className="flex divide-x divide-slate-400">{renderNav(LEFT_NAV)}</ul>
+          {/* Right Nav */}
+          <ul className="flex items-center divide-x divide-slate-400">{renderNav(RIGHT_NAV)}</ul>
+        </nav>
+
+        {/* Header with search */}
+        <div
+          className={classNames(
+            'mx-auto flex max-w-6xl flex-nowrap justify-between gap-4 bg-transparent pt-2 max-sm:gap-2 max-sm:pt-0',
+            {
+              'items-center': !match,
+              'items-end': match
             }
-          />
-        </ol>
-        {/* Search Container*/}
-        {!matchCheckOutPath && (
-          <div className="flex-1">
-            {/* Search */}
-            <form
-              className="flex flex-nowrap gap-1 rounded-md bg-white max-sm:gap-0"
-              onSubmit={handleSearch}>
-              <TooltipProvider
-                placement="bottom-end"
-                noArrowRef
-                mainAxis={8}
-                matchRefWidth
-                click
-                keepOpen={false}>
-                <TooltipTrigger asChild>
-                  <input
-                    ref={inputRef}
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    type="text"
-                    placeholder="Tìm kiếm sản phẩm tại đây"
-                    className="rounded-sm pl-4 pr-2 text-black focus:outline focus:outline-2 focus:outline-offset-4 max-sm:outline-none"
-                  />
-                </TooltipTrigger>
-                <TooltipContent className={classNames({ hidden: !deferredQuery && !history })}>
-                  <DropdownMenu className="py-2">
-                    {!deferredQuery && history ? (
-                      <>
-                        {history.map((item) => (
-                          <MenuItem
-                            key={item}
-                            text={item}
-                            onClick={() => {
-                              navigate({
-                                pathname: PATHS.SEARCH_PATH,
-                                search: `?keyword=${item}`
-                              })
-                            }}
-                          />
-                        ))}
-                      </>
-                    ) : deferredQuery && searchProducts?.items.length === 0 ? (
-                      <MenuItem
-                        text={
-                          <>
-                            Không tìm thấy sản phẩm nào cho từ khóa{' '}
-                            <span className="italic text-primary">&quot;{deferredQuery}&quot;</span>
-                          </>
-                        }
-                        buttonClassName="cursor-default"
-                        className="hover:bg-transparent hover:text-inherit"
-                      />
-                    ) : (
-                      deferredQuery && (
-                        <>
-                          {searchProducts?.items.map(
-                            ({ image, name, _id, categorySlug, slug, categoryId }) => (
-                              <MenuItem
-                                key={_id}
-                                text={name}
-                                image={image}
-                                to={`/${categorySlug}-${categoryId}/${slug}-${_id}`}
-                              />
-                            )
+          )}>
+          {/* Logo */}
+          <ol
+            className={classNames('shrink-0 self-start max-sm:hidden', {
+              'flex-1': match
+            })}>
+            <NavItem
+              className="list-none max-sm:hidden"
+              to={PATHS.HOME_PATH}
+              leftIcon={
+                <div className="flex items-end text-white">
+                  <Home className="hidden max-sm:block" size={28} />
+                  <LogoIcon className="fill-white max-sm:hidden sm:h-12" />
+                  {matchCartPath && (
+                    <span className="ml-4 border-l-2 border-l-white pl-4 text-2xl">Giỏ Hàng</span>
+                  )}
+                  {matchCheckOutPath && (
+                    <span className="ml-4 border-l-2 border-l-white pl-4 text-2xl">Thanh Toán</span>
+                  )}
+                </div>
+              }
+            />
+          </ol>
+          {/* Search Container*/}
+          {!matchCheckOutPath && (
+            <SearchInput
+              className="flex-1"
+              onSearch={handleSearch}
+              value={query}
+              deferredQuery={deferredQuery}
+              setValue={setQuery}
+            />
+          )}
+          {/* Shopping cart on mobile*/}
+          {!match && <div className="hidden max-sm:block">{renderCart}</div>}
+          {/* Shopping cart */}
+          {!match && (
+            <TooltipProvider placement="bottom-end" keepOpen={false}>
+              <TooltipTrigger asChild className="block p-2 max-sm:hidden">
+                {renderCart}
+              </TooltipTrigger>
+              <TooltipContent>
+                <DropdownMenu
+                  title={
+                    productsCartData?.items && productsCartData?.items.length > 0
+                      ? 'Sản Phẩm Mới Thêm'
+                      : undefined
+                  }
+                  className="min-w-[11rem] max-w-sm pt-2">
+                  {!productsCartData || productsCartData?.items.length === 0 ? (
+                    <div className="w-full overflow-hidden px-2 py-14 text-center">
+                      <EmptyCartIcon width="25rem" />
+                      <p className="mt-4 p-2 text-sm text-gray-700">Chưa Có Sản Phẩm</p>
+                    </div>
+                  ) : (
+                    <>
+                      {productsCartData?.items.map(({ product, _id }) => (
+                        <MenuItem
+                          key={_id}
+                          text={product.name}
+                          image={product.image}
+                          price={
+                            product.discount
+                              ? (product.price * (100 - product.discount)) / 100
+                              : product.price
+                          }
+                          to={`/${product.categorySlug}-${product.categoryId}/${product.slug}-${product._id}`}
+                        />
+                      ))}
+                      <div className="flex items-center justify-between p-2">
+                        {productsCartData?.totalItems &&
+                          productsCartData?.totalItems > BRIEF_CART_SIZE && (
+                            <p className="text-xs capitalize text-black/70">
+                              {productsCartData?.totalItems - BRIEF_CART_SIZE} sản phầm nữa trong
+                              giỏ hàng
+                            </p>
                           )}
-                        </>
-                      )
-                    )}
-                  </DropdownMenu>
-                </TooltipContent>
-              </TooltipProvider>
-              <Button
-                className="m-1 flex cursor-pointer items-center rounded-sm bg-primary px-2 py-1 text-white hover:opacity-90 md:px-6 md:py-2"
-                type="submit">
-                <Search className="text-xs sm:text-2xl" size={16} />
-              </Button>
-            </form>
+                        <Button
+                          className="ml-auto rounded-sm bg-primary px-4 py-2 text-white hover:opacity-90"
+                          onClick={() => {
+                            navigate(PATHS.CART_PATH)
+                          }}>
+                          Xem giỏ hàng
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </DropdownMenu>
+              </TooltipContent>
+            </TooltipProvider>
+          )}
+
+          {/* User feature on mobile */}
+          <div className="hidden flex-shrink-0 max-sm:block max-sm:px-1 max-sm:py-2">
+            {profile ? (
+              <Avatar
+                className="h-6 w-6"
+                image={profile.avatar}
+                isLoading={isFetching || isRefetching}
+              />
+            ) : (
+              <Link to={PATHS.CART_PATH} className="relative m-auto block">
+                <User className="h-6 w-6 cursor-pointer" />
+              </Link>
+            )}
           </div>
-        )}
-        {/* Shopping cart */}
-        {!match && (
-          <TooltipProvider placement="bottom-end" mainAxis={-4} keepOpen={false}>
-            <TooltipTrigger asChild>
-              <div className="flex-shrink-0 p-4 max-sm:translate-y-2 max-sm:p-2 max-sm:pb-4">
-                <Link to={PATHS.CART_PATH} className="relative block -translate-x-1">
-                  <ShoppingCart className="cursor-pointer" size={28} />
-                  {/* Badge */}
-                  {productsCartData?.totalItems ? (
-                    <div className="absolute -right-1/3 -top-1/3 h-fit min-w-fit overflow-hidden rounded-full border-2 border-primary bg-white px-1 text-center text-xs text-primary">
-                      {isProductsCartRefetching ? (
-                        <LoadingIcon className="fill-primary text-gray-200" />
-                      ) : (
-                        <>
-                          {productsCartData?.totalItems &&
-                            Math.min(productsCartData?.totalItems, 10)}
-                          {productsCartData?.totalItems && productsCartData?.totalItems > 10 && (
-                            <sup>+</sup>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  ) : null}
-                </Link>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <DropdownMenu
-                title={
-                  productsCartData?.items && productsCartData?.items.length > 0
-                    ? 'Sản Phẩm Mới Thêm'
-                    : undefined
-                }
-                className="min-w-[11rem] max-w-sm pt-2">
-                {!productsCartData || productsCartData?.items.length === 0 ? (
-                  <div className="w-full overflow-hidden px-2 py-14 text-center">
-                    <EmptyCartIcon width="25rem" />
-                    <p className="mt-4 p-2 text-sm text-gray-700">Chưa Có Sản Phẩm</p>
-                  </div>
-                ) : (
-                  <>
-                    {productsCartData?.items.map(({ product, _id }) => (
-                      <MenuItem
-                        key={_id}
-                        text={product.name}
-                        image={product.image}
-                        price={
-                          product.discount
-                            ? (product.price * (100 - product.discount)) / 100
-                            : product.price
-                        }
-                        to={`/${product.categorySlug}-${product.categoryId}/${product.slug}-${product._id}`}
-                      />
-                    ))}
-                    <div className="flex items-center justify-between p-2">
-                      {productsCartData?.totalItems &&
-                        productsCartData?.totalItems > BRIEF_CART_SIZE && (
-                          <p className="text-xs capitalize text-black/70">
-                            {productsCartData?.totalItems - BRIEF_CART_SIZE} sản phầm nữa trong giỏ
-                            hàng
-                          </p>
-                        )}
-                      <Button
-                        className="ml-auto rounded-sm bg-primary px-4 py-2 text-white hover:opacity-90"
-                        onClick={() => {
-                          navigate(PATHS.CART_PATH)
-                        }}>
-                        Xem giỏ hàng
-                      </Button>
-                    </div>
-                  </>
-                )}
-              </DropdownMenu>
-            </TooltipContent>
-          </TooltipProvider>
-        )}
-      </div>
-    </header>
+        </div>
+      </header>
+    </>
   )
 }
 

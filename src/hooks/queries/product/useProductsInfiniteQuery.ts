@@ -5,7 +5,7 @@ import { productServices } from '@/services'
 
 export const useProductsInfiniteQuery = ({ size }: { size?: number } = {}) => {
   return useInfiniteQuery({
-    queryKey: [QUERY_KEYS.product.infinity, { size }],
+    queryKey: [QUERY_KEYS.product.suggest, { size }],
     queryFn: ({ pageParam = 1 }) => productServices.getDailyProducts(pageParam, size),
     keepPreviousData: true,
     staleTime: 5 * 60 * 1000,

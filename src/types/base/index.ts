@@ -56,3 +56,5 @@ export interface IDataResponse<T> extends BaseResponse {
 export interface IDataPaginationResponse<T> extends BaseResponse {
   data: IBaseDataPagination<T>
 }
+
+export type Breakpoint = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | ''

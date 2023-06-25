@@ -3,9 +3,7 @@ import { BANNERS } from '@/data/banner'
 
 import BottomBanner from './BottomBanner'
 
-interface Props {}
-
-const Banner = (props: Props) => {
+const Banner = () => {
   return (
     <>
       {/* Top banner */}
@@ -13,8 +11,10 @@ const Banner = (props: Props) => {
         {/* Top left banner */}
         <div className="h-full flex-shrink-0 basis-2/3 bg-transparent max-sm:basis-full">
           <Carousel
+            swiping
             autoplay
             wrapAround
+            className="max-sm:!h-44"
             defaultControlsConfig={{
               nextButtonClassName:
                 'bg-black/10 px-2 py-4 rounded-r-sm hover:bg-black/25 text-white',

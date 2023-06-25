@@ -27,7 +27,12 @@
   }
 }
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
+  width: 100vw;
   min-height: 100vh;
   line-height: 1.2;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -74,4 +79,10 @@ input {
       calc(51% - 1px) 4px repeat-y;
   -webkit-mask: var(--mask);
   mask: var(--mask);
+}
+
+@media not all and (min-width: 640px) {
+  .slider-container > .slider-frame > .slider-list {
+    height: 100%;
+  }
 }

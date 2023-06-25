@@ -1,10 +1,13 @@
 import { CateBanner } from '@/components'
-import { useCategoryBannerInfinityQuery } from '@/hooks'
+import { useCategoryBannerInfinityQuery, useViewport } from '@/hooks'
 
 const CateSection = () => {
-  const result = useCategoryBannerInfinityQuery(16)
+  const device = useViewport()
+  const size = device === '' ? 0 : device === 'sm' ? 8 : 16
 
-  return <CateBanner header="DANH MỤC" grid {...result} />
+  const result = useCategoryBannerInfinityQuery(size)
+
+  return <CateBanner header="DANH MỤC" grid {...result} size={size} />
 }
 
 export default CateSection

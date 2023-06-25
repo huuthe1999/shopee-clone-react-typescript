@@ -1,4 +1,7 @@
-import { Banner, Button, ProductList, Skeleton } from '@/components'
+import { Fragment } from 'react'
+
+import { Banner, Button, Product, SkeletonProduct } from '@/components'
+import { FAV_PRODUCTS_SIZE } from '@/constants'
 import { useProductsInfiniteQuery } from '@/hooks'
 
 import CateSection from './CateSection'
@@ -6,19 +9,19 @@ import CateSection from './CateSection'
 const Home = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useProductsInfiniteQuery({
-      size: 12
+      size: FAV_PRODUCTS_SIZE
     })
 
   return (
     <>
-      <div className="bg-white py-8">
+      <div className="bg-white pb-4 md:py-8">
         <div className="mx-auto flex max-w-6xl flex-col gap-y-4">
           {/* Banner */}
           <Banner />
           {/* Category section */}
           <CateSection />
           {/* Product section */}
-          <div className="mt-14" id="product-list">
+          <div className="mt-14 max-sm:mt-4" id="product-list">
             {/* Sticky header */}
             <nav className="sticky top-0 z-50 bg-white">
               <ul className="border-b-4 border-primary">
@@ -37,22 +40,20 @@ const Home = () => {
                 </li>
               </ul>
             </nav>
-            {data?.pages.map((page) => (
-              <ProductList
-                className="grid-cols-6"
-                data={page.data.data.items}
-                key={page.data.data.nextPage}
-              />
-            ))}
-            {(isLoading || isFetchingNextPage) && (
-              <div className="mt-2 grid grid-cols-6 gap-2">
-                {Array(12)
-                  .fill(null)
-                  .map((item, index) => (
-                    <Skeleton key={index} />
+            <div className="grid grid-cols-2 gap-2 px-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
+              {data?.pages.map((page) => (
+                <Fragment key={page.data.data.nextPage}>
+                  {page.data.data.items.map((product) => (
+                    <Product key={product._id} {...product} />
                   ))}
-              </div>
-            )}
+                </Fragment>
+              ))}
+              {(isLoading || isFetchingNextPage) &&
+                Array(12)
+                  .fill(null)
+                  .map((item, index) => <SkeletonProduct key={index} />)}
+            </div>
+
             {hasNextPage && (
               <Button
                 disabled={isFetchingNextPage}

@@ -4,6 +4,7 @@ import {
   FloatingArrow,
   FloatingPortal,
   Placement,
+  Strategy,
   arrow,
   autoUpdate,
   flip,
@@ -24,6 +25,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 interface TooltipOptions {
   mainAxis?: number
+  strategy?: Strategy
   initialOpen?: boolean
   placement?: Placement
   open?: boolean
@@ -40,6 +42,7 @@ export function useTooltip({
   placement = 'top',
   click: controlledClick,
   open: controlledOpen,
+  strategy,
   noArrowRef = false,
   keepOpen = true,
   matchRefWidth = false,
@@ -55,15 +58,18 @@ export function useTooltip({
   const data = useFloating({
     placement,
     open,
+    strategy,
     onOpenChange: setOpen,
     whileElementsMounted: autoUpdate,
     middleware: [
       offset(mainAxis ?? 10),
       matchRefWidth &&
         size({
-          apply({ rects, elements }) {
+          apply({ rects, elements, availableHeight, availableWidth }) {
             Object.assign(elements.floating.style, {
-              width: `${rects.reference.width}px`
+              width: `${rects.reference.width}px`,
+              maxWidth: `${availableWidth}px`,
+              maxHeight: `${availableHeight}px`
             })
           }
         }),
@@ -142,6 +148,8 @@ export const TooltipTrigger = React.forwardRef<
   HTMLElement,
   React.HTMLProps<HTMLElement> & { asChild?: boolean }
 >(function TooltipTrigger({ children, asChild = false, ...props }, propRef) {
+  console.log('🚀 ~ TooltipTrigger ~ props:', props)
+
   const context = useTooltipContext()
   const childrenRef = (children as any).ref
   const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef])
@@ -152,8 +160,8 @@ export const TooltipTrigger = React.forwardRef<
       children,
       context.getReferenceProps({
         ref,
-        ...props,
         ...children.props,
+        ...props,
         'data-state': context.open ? 'open' : 'closed'
       })
     )
@@ -193,22 +201,31 @@ export const TooltipContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
               className={className}
               initial={{
                 opacity: 0,
-                scale: 0,
-                transformOrigin: context.middlewareData.arrow?.x
+                scale: noArrowRef ? 0.8 : 0,
+                height: noArrowRef ? 0 : undefined,
+                transformOrigin: noArrowRef
+                  ? undefined
+                  : context.middlewareData.arrow?.x
                   ? `${context.middlewareData.arrow?.x + 14}px -10px`
                   : '95% top'
               }}
               animate={{
                 opacity: 1,
                 scale: 1,
-                transformOrigin: context.middlewareData.arrow?.x
+                height: noArrowRef ? 'auto' : undefined,
+                transformOrigin: noArrowRef
+                  ? undefined
+                  : context.middlewareData.arrow?.x
                   ? `${context.middlewareData.arrow?.x + 14}px -10px`
                   : undefined
               }}
               exit={{
                 opacity: 0,
-                scale: 0,
-                transformOrigin: context.middlewareData.arrow?.x
+                scale: noArrowRef ? undefined : 0,
+                height: noArrowRef ? 0 : undefined,
+                transformOrigin: noArrowRef
+                  ? undefined
+                  : context.middlewareData.arrow?.x
                   ? `${context.middlewareData.arrow?.x + 14}px -10px`
                   : undefined
               }}

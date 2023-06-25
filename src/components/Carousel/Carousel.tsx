@@ -12,22 +12,15 @@ interface CarouselProps extends Partial<InternalCarouselProps> {
 }
 
 const Carousel = ({
-  hoverHiddenControls,
-  autoplayReverse,
-  cellAlign,
-  slideIndex,
-  className,
-  cellSpacing,
-  wrapAround,
   children,
   withoutControls: hiddenControls,
-  slidesToShow,
-  slidesToScroll,
-  autoplay,
+  hoverHiddenControls,
   defaultControlsConfig,
   renderBottomCenterControls,
   beforeSlide,
-  afterSlide
+  afterSlide,
+  wrapAround,
+  ...props
 }: CarouselProps) => {
   const [withoutControls, setWithoutControls] = useState(hiddenControls ?? false)
 
@@ -42,17 +35,10 @@ const Carousel = ({
       role="button"
       tabIndex={0}>
       <NukaCarousel
-        autoplayReverse={autoplayReverse}
-        cellAlign={cellAlign}
-        slideIndex={slideIndex}
-        className={className}
-        cellSpacing={cellSpacing}
+        {...props}
+        wrapAround={wrapAround}
         beforeSlide={beforeSlide}
         afterSlide={afterSlide}
-        slidesToScroll={slidesToScroll}
-        wrapAround={wrapAround}
-        autoplay={autoplay}
-        slidesToShow={slidesToShow}
         autoplayInterval={2000}
         pauseOnHover={false}
         speed={500}
@@ -63,6 +49,7 @@ const Carousel = ({
                 previousSlide={previousSlide}
                 previousDisabled={previousDisabled}
                 className={classNames(
+                  'max-sm:hidden',
                   {
                     hidden: hoverHiddenControls ?? previousDisabled
                   },
@@ -74,7 +61,7 @@ const Carousel = ({
               <ButtonControl
                 previousSlide={previousSlide}
                 previousDisabled={previousDisabled}
-                className={classNames(defaultControlsConfig?.prevButtonClassName)}>
+                className={classNames('max-sm:hidden', defaultControlsConfig?.prevButtonClassName)}>
                 <ChevronLeft strokeWidth={3} size={28} />
               </ButtonControl>
             ) : null}
@@ -88,6 +75,7 @@ const Carousel = ({
                   nextSlide={nextSlide}
                   nextDisabled={nextDisabled}
                   className={classNames(
+                    'max-sm:hidden',
                     {
                       hidden: hoverHiddenControls ?? nextDisabled
                     },
@@ -99,7 +87,10 @@ const Carousel = ({
                 <ButtonControl
                   nextSlide={nextSlide}
                   nextDisabled={nextDisabled}
-                  className={classNames(defaultControlsConfig?.nextButtonClassName)}>
+                  className={classNames(
+                    'max-sm:hidden',
+                    defaultControlsConfig?.nextButtonClassName
+                  )}>
                   <ChevronRight strokeWidth={3} size={28} />
                 </ButtonControl>
               ) : null}

@@ -5,18 +5,20 @@ import { AxiosResponse } from 'axios'
 import classNames from 'classnames'
 
 import { Carousel, CateCard, Skeleton } from '@/components'
-import { SIZE } from '@/constants'
 import { CateCardBanner, ICategory, IDataPaginationResponse, isCategoryResponse } from '@/types'
 
 type Props<T> = UseInfiniteQueryResult<AxiosResponse<T>> & {
   header?: string
   grid?: boolean
+  size: number
 }
 
 const CateBanner = ({
+  size,
   header,
   grid,
-  isLoading,
+  isFetching,
+  isInitialLoading,
   data,
   isStale,
   remove,
@@ -32,8 +34,14 @@ const CateBanner = ({
   }
 
   const renderSkeleton = (
-    <div className="grid grid-cols-8 gap-2 py-2">
-      {[...Array(SIZE)].map((_, index) => (
+    <div
+      className={classNames(
+        'grid h-full grid-cols-4 place-items-center gap-2 sm:grid-cols-6 md:grid-cols-8',
+        {
+          'grid-rows-2': grid
+        }
+      )}>
+      {[...Array(size)].map((_, index) => (
         <Skeleton key={index} />
       ))}
     </div>
@@ -43,7 +51,7 @@ const CateBanner = ({
     if (isStale) {
       remove()
     }
-  }, [])
+  }, [isStale, remove])
 
   const handleFetchNextPage = (index: number) => {
     // Kiểm tra xem nếu next page index > current index ==> Tiếp tục cho fetch data
@@ -55,49 +63,53 @@ const CateBanner = ({
   }
   return (
     <>
-      {data?.pages.length && (
-        <div className="px-6 pb-4">
-          {/* Header */}
-          {header && (
-            <h1 className="bg-transparent py-4 text-lg uppercase text-black/50">{header}</h1>
-          )}
+      <div className="px-6 pb-4">
+        {/* Header */}
+        {header && (
+          <h1 className="bg-transparent py-4 text-lg uppercase text-black/50">{header}</h1>
+        )}
+        {isInitialLoading && renderSkeleton}
+        {data?.pages.length && (
           <Carousel
-            cellSpacing={4}
+            swiping
+            cellSpacing={8}
             afterSlide={(index) => handleFetchNextPage(index)}
             defaultControlsConfig={{
-              pagingDotsContainerClassName: '!top-0 -bottom-3',
+              pagingDotsContainerClassName: isFetching ? '!invisible' : '!top-0 -bottom-3',
               pagingDotsClassName: 'relative translate-y-2',
               nextButtonClassName:
                 'relative border-2 border-gray-400 translate-x-1/2 rounded-full bg-white hover:bg-white text-primary p-2 shadow-[0_1px_12px_0px_rgba(0,0,0,0.12)] scale-55 hover:scale-75 transition-all',
               prevButtonClassName:
                 'relative border-2 border-gray-400 -translate-x-1/2 rounded-full bg-white hover:bg-white text-primary p-2 shadow-[0_1px_12px_0px_rgba(0,0,0,0.12)] scale-55 hover:scale-75 transition-all'
             }}>
-            {isLoading
-              ? renderSkeleton
-              : data?.pages.map((page) => (
-                  <div
-                    key={page.data.data.nextPage}
-                    className={classNames('grid grid-cols-8', {
-                      'grid-rows-2': grid
-                    })}>
-                    {page.data.data.items.map((item) =>
-                      isCategoryResponse(item) ? (
-                        <CateCard
-                          key={item._id}
-                          name={item.name}
-                          link={`${item.slug}-${item._id}`}
-                          image={item.images[0].url}
-                        />
-                      ) : (
-                        <CateCard key={item._id} image={item.image} name={item.text} />
-                      )
-                    )}
-                  </div>
-                ))}
+            {data?.pages.map((page) => (
+              <div
+                key={page.data.data.nextPage}
+                className={classNames(
+                  'grid h-full grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8',
+                  {
+                    'grid-rows-2 place-items-start': grid,
+                    'place-items-baseline': !grid
+                  }
+                )}>
+                {page.data.data.items.map((item) =>
+                  isCategoryResponse(item) ? (
+                    <CateCard
+                      key={item._id}
+                      name={item.name}
+                      link={`${item.slug}-${item._id}`}
+                      image={item.images[0].url}
+                    />
+                  ) : (
+                    <CateCard key={item._id} image={item.image} name={item.text} />
+                  )
+                )}
+              </div>
+            ))}
             {(hasNextPage || isFetchingNextPage) && renderSkeleton}
           </Carousel>
-        </div>
-      )}
+        )}
+      </div>
     </>
   )
 }
