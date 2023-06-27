@@ -2,7 +2,7 @@ import { Dispatch, FormEvent, forwardRef } from 'react'
 
 import classNames from 'classnames'
 import { Search } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
+import { useMatch, useNavigate } from 'react-router-dom'
 
 import { Button, DropdownMenu, MenuItem } from '@/components'
 import { AUTH, BRIEF_CART_SIZE, PATHS } from '@/constants'
@@ -21,6 +21,7 @@ interface Props {
 
 export const SearchInput = forwardRef<HTMLInputElement, Props>(
   ({ onSearch, setValue, value, deferredQuery, className }, ref) => {
+    const matchHomePath = useMatch(PATHS.HOME_PATH)
     const { value: open, toggle, setTrue, setFalse } = useBoolean()
     const history: string[] | null = authUtils.getItem(AUTH.SEARCH_HISTORY)
     const navigate = useNavigate()
@@ -37,7 +38,12 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
       <div className={className}>
         {/* Search */}
         <form
-          className="flex flex-nowrap gap-1 rounded-md bg-white max-sm:flex-row-reverse max-sm:gap-0"
+          className={classNames(
+            'flex flex-nowrap gap-1 rounded-md bg-white max-sm:flex-row-reverse max-sm:gap-0',
+            {
+              'max-sm:bg-neutral-100': !matchHomePath
+            }
+          )}
           onSubmit={onSearch}>
           <TooltipProvider
             placement="bottom"
@@ -58,7 +64,7 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
                 }}
                 type="text"
                 placeholder="Tìm kiếm sản phẩm tại đây"
-                className="rounded-sm pl-4 pr-2 text-black focus:outline focus:outline-2 focus:outline-offset-4 max-sm:pl-0 max-sm:outline-none max-sm:placeholder:text-primary"
+                className="rounded-sm bg-transparent pl-4 pr-2 text-black focus:outline focus:outline-2 focus:outline-offset-4 max-sm:py-2 max-sm:pl-1 max-sm:outline-none max-sm:placeholder:text-primary"
               />
             </TooltipTrigger>
             <TooltipContent

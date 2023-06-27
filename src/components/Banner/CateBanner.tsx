@@ -63,7 +63,7 @@ const CateBanner = ({
   }
   return (
     <>
-      <div className="px-6 pb-4">
+      <div className="px-6 py-2">
         {/* Header */}
         {header && (
           <h1 className="bg-transparent py-4 text-lg uppercase text-black/50">{header}</h1>

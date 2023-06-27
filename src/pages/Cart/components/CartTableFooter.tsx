@@ -55,7 +55,7 @@ export const CartTableFooter = ({
   return (
     <div
       className={classNames(
-        'sticky bottom-0 mb-2 flex gap-x-4 overflow-auto rounded-sm border-2 border-secondary px-5 py-4 text-sm text-zinc-500 shadow',
+        'sticky bottom-0 mb-2 flex gap-x-4 overflow-auto rounded-sm border-2 border-secondary p-2 text-sm text-zinc-500 shadow md:px-5 md:py-4',
         {
           'bg-neutral-100': !isLoading
         }
@@ -65,7 +65,7 @@ export const CartTableFooter = ({
       ) : (
         <>
           {onSelect && (
-            <div className="inline-flex basis-1/2 items-center gap-x-4">
+            <div className="inline-flex basis-auto items-center gap-x-2 lg:basis-1/2 lg:gap-x-4">
               {/* Checkbox */}
               <input
                 id="cart-selected-all"
@@ -81,15 +81,18 @@ export const CartTableFooter = ({
                 <label
                   htmlFor="cart-selected-all"
                   className={classNames(
-                    'line-clamp-1 cursor-pointer rounded-sm bg-white px-4 py-2 text-lg text-black/80 transition-opacity hover:opacity-80'
+                    'line-clamp-1 shrink-0 cursor-pointer rounded-sm bg-white p-2 text-xs text-black/80 transition-opacity hover:opacity-80 md:px-4 md:py-2 md:text-lg'
                   )}>
                   Chọn ({formatNumber(quantity)})
                 </label>
               )}
               <Button
-                className={classNames('rounded-sm bg-white px-4 py-2 transition-opacity', {
-                  'hover:opacity-80': 0
-                })}
+                className={classNames(
+                  'shrink-0 rounded-sm bg-white p-2 transition-opacity md:px-4 md:py-2',
+                  {
+                    'hover:opacity-80': 0
+                  }
+                )}
                 disabled={productsSelected.length === 0}
                 onClick={onMultipleDelete}>
                 Xóa ({productsSelected.length})
@@ -100,15 +103,21 @@ export const CartTableFooter = ({
             </div>
           )}
           <div
-            className={classNames('flex flex-nowrap items-center justify-end gap-x-4', {
-              'basis-1/2 text-center': onSelect,
-              'basis-full text-right': !onSelect
-            })}>
-            <div className="flex flex-nowrap items-center gap-x-2 text-lg">
-              <p className="line-clamp-1 text-black/80">
-                Tổng thanh toán ({productsSelected.length} Sản phẩm):
+            className={classNames(
+              'flex flex-grow flex-nowrap items-center gap-x-4 sm:justify-end',
+              {
+                'basis-1/2 text-center': onSelect,
+                'basis-full text-right': !onSelect
+              }
+            )}>
+            <div className="ml-auto flex flex-wrap items-center justify-end gap-x-2 text-xs sm:flex-row sm:flex-nowrap md:text-lg">
+              <p className="line-clamp-2 shrink-0 text-black/80 md:line-clamp-1">
+                Tổng thanh toán{' '}
+                <span className="block md:inline">({productsSelected.length} Sản phẩm):</span>
               </p>
-              <span className="text-xl text-primary">{formatCurrency(totalPrice)}</span>
+              <span className="line-clamp-1 text-lg text-primary md:text-xl">
+                {formatCurrency(totalPrice)}
+              </span>
             </div>
             <Button
               isLoading={checkoutMutation.isLoading}
@@ -160,7 +169,7 @@ export const CartTableFooter = ({
                 }
               }}
               className={classNames(
-                'line-clamp-1 rounded-sm bg-primary px-4 py-2 text-center text-white transition-opacity',
+                'line-clamp-1 shrink-0 rounded-sm bg-primary p-2 text-center text-white transition-opacity md:px-4 md:py-2',
                 { 'hover:opacity-80': productsSelected.length !== 0 }
               )}>
               {onSelect ? 'Mua hàng' : 'Đặt hàng'}

@@ -21,7 +21,7 @@ export const useOrderQuery = ({ status, page, size, key, enabled }: OrderQueryPr
   return useQuery<AxiosResponse<IDataPaginationResponse<ICart[]>>, AxiosError<BaseResponse>>({
     queryKey: [key ?? QUERY_KEYS.order.list, { status, page, size }],
     queryFn: () => orderServices.getInCart({ status, page, size }),
-    enabled: enabled ? enabled && Boolean(accessToken) : Boolean(accessToken),
+    enabled: enabled !== undefined ? enabled && Boolean(accessToken) : Boolean(accessToken),
     keepPreviousData: true
   })
 }

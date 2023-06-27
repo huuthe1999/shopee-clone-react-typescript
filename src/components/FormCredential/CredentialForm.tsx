@@ -8,7 +8,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useMatch, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { Button } from '@/components'
+import { Button, LogoIcon } from '@/components'
 import { AUTH, PATHS } from '@/constants'
 import { useAuthContext } from '@/contexts'
 import { authServices } from '@/services'
@@ -134,7 +134,12 @@ const CredentialForm = () => {
       className="flex flex-col gap-3 rounded-sm bg-white p-8 shadow-md"
       onSubmit={handleSubmit(handleSubmitForm)}
       noValidate>
-      <h2 className="py-3 text-xl font-medium">{matchLogin ? 'Đăng nhập' : 'Đăng ký'}</h2>
+      <Link to={PATHS.HOME_PATH} className="sm:hidden">
+        <LogoIcon className="mx-auto h-9 fill-primary" />
+      </Link>
+      <h2 className="py-3 text-xl font-medium max-sm:hidden">
+        {matchLogin ? 'Đăng nhập' : 'Đăng ký'}
+      </h2>
       <div>
         <input
           type="text"

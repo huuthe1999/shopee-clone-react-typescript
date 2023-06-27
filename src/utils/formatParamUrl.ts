@@ -1,7 +1,9 @@
 import queryString from 'query-string'
 
+import { TFilterType } from '@/data/category'
+
 export type SearchParamsProps = {
-  name: string
+  name: TFilterType
   value: string | number
   check: boolean
 }

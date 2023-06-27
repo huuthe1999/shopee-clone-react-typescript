@@ -1,12 +1,17 @@
 import { useEffect, useState } from 'react'
 
+import classNames from 'classnames'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronUp } from 'react-feather'
+import { useMatch } from 'react-router-dom'
 
 import { ForwardButton } from '@/components'
+import { PATHS } from '@/constants'
 
 const ButtonMotion = motion(ForwardButton)
+
 const ScrollToTop = () => {
+  const matchHomePath = useMatch(PATHS.HOME_PATH)
   const [visible, setVisible] = useState(false)
 
   const handleScroll = () => {
@@ -42,7 +47,13 @@ const ScrollToTop = () => {
           exit={{ scale: 0, opacity: 0 }}
           whileTap={{ scale: 0.9 }}
           transition={{ type: 'spring', bounce: 0.5, stiffness: 200, damping: 17 }}
-          className="fixed bottom-4 right-5 z-50 rounded-full bg-primary p-2 text-white ring-1 ring-primary"
+          className={classNames(
+            'fixed right-5 z-50 rounded-full bg-primary p-2 text-white ring-1 ring-primary',
+            {
+              'bottom-16': !matchHomePath,
+              'bottom-4': matchHomePath
+            }
+          )}
           onClick={() => {
             handleScroll()
           }}>

@@ -9,6 +9,7 @@ import { Pagination, ProductList } from '@/components'
 import { PAGE, PATHS, PRODUCTS_SIZE } from '@/constants'
 import { DEFAULT_FILTER_DATA } from '@/data/category'
 import { useProductsQuery } from '@/hooks'
+import CategoryFilterMobile from '@/pages/Category/CategoryFilterMobile'
 import { OrderType, SortByType } from '@/types'
 import {
   SearchParamsProps,
@@ -95,7 +96,7 @@ const CategoryPage = () => {
   return (
     <div className="mx-auto h-fit max-w-6xl">
       <div
-        className={classNames('my-2 flex gap-x-4 md:my-16', {
+        className={classNames('flex gap-x-4 sm:my-2 md:my-16', {
           'pointer-events-none opacity-50': isProductsFetching
         })}
         ref={ref}>
@@ -111,13 +112,26 @@ const CategoryPage = () => {
             </div>
           ) : (
             <>
+              {/* Filter button on mobile */}
+              <CategoryFilterMobile
+                hasFilter={hasFilter}
+                headerText="Bộ lọc tìm kiếm"
+                onChangeParam={handleSetParams}>
+                <CategoryFilter
+                  headerText="Bộ lọc tìm kiếm"
+                  hasFilter={hasFilter}
+                  onChangeParam={handleSetParams}
+                  className="px-2 pb-4"
+                />
+              </CategoryFilterMobile>
+
               {/* Filter side */}
               {products.length > 0 && (
                 <div
                   className="hidden min-h-fit basis-1/6 bg-white px-2 pb-2 md:block"
                   style={{ minHeight: ref.current?.clientHeight + 'px' }}>
                   <CategoryFilter
-                    headerText="BỘ LỌC TÌM KIẾM"
+                    headerText="Bộ lọc tìm kiếm"
                     hasFilter={hasFilter}
                     onChangeParam={handleSetParams}
                     className="sticky top-0 z-10"
@@ -148,7 +162,7 @@ const CategoryPage = () => {
                 {/* Product list*/}
                 <ProductList
                   isFetching={isInitialLoading}
-                  className="grid-cols-3 sm:grid-cols-4 lg:grid-cols-5"
+                  className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
                   data={products}
                   onResetParam={handleSetParams}
                   hasFilter={hasFilter}

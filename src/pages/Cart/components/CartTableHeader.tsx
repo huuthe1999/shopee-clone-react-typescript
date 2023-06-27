@@ -13,7 +13,7 @@ export const CartTableHeader = memo(({ isLoading, isCheck, onSelect }: CartTable
   }
 
   return (
-    <div className="mb-2 flex gap-x-4 overflow-auto rounded-sm border border-black/10 bg-white px-5 py-4 text-sm text-zinc-500 shadow">
+    <div className="mb-2 flex gap-x-4 overflow-auto rounded-sm border border-black/10 bg-white px-5 py-4 text-sm text-zinc-500 shadow max-sm:hidden">
       <div className="flex basis-1/2 items-center gap-x-2">
         {/* Checkbox */}
         {isLoading ? (

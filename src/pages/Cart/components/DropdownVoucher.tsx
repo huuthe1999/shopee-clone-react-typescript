@@ -74,11 +74,11 @@ const DropdownVoucher = ({ vouchers, voucherSelected, onSelect }: Props) => {
         {activeVoucher && (
           <span
             className={classNames(
-              'box mr-4 block rounded bg-primary py-0.5 text-center text-xs uppercase text-white'
+              'box mr-4 block rounded bg-primary px-1 py-0.5 text-center text-xs uppercase text-white max-sm:w-fit'
             )}>
-            Giảm
+            Giảm{' '}
             {activeVoucher.type === 0
-              ? activeVoucher.discount.percent + ' ﹪'
+              ? activeVoucher.discount.percent + '﹪'
               : formatCurrency(activeVoucher.discount.price)}
           </span>
         )}

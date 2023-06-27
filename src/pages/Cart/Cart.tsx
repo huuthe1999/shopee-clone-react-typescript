@@ -215,7 +215,7 @@ const Cart = () => {
                 </>
               ) : productsCartData ? (
                 <>
-                  <span className="text-xl">
+                  <span className="text-sm md:text-xl">
                     Có
                     <span className="font-bold text-primary">
                       {` ${productsCartData.totalItems} `}

@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
 import { PATHS } from '@/constants'
 import { useAuthContext } from '@/contexts'
@@ -6,7 +6,6 @@ import { useAuthContext } from '@/contexts'
 const ProtectedRoute = () => {
   // const isLogging = authUtils.getItem(AUTH.IS_LOGGING)
   const { accessToken } = useAuthContext()
-  const navigate = useNavigate()
   const location = useLocation()
 
   return accessToken ? (

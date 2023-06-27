@@ -1,21 +1,8 @@
-import { HTMLAttributes } from 'react'
-
 import classNames from 'classnames'
 import { useSearchParams } from 'react-router-dom'
 
-import { SearchParamsProps } from '@/utils'
-
 import CateItemSection from './CateItemSection'
-
-interface CateSectionProps extends HTMLAttributes<HTMLElement> {
-  type: string
-  name: string
-  data: {
-    _id: string | number
-    name: React.ReactNode
-  }[]
-  onChangeParam: (params?: SearchParamsProps) => void
-}
+import { CateSectionProps } from './type'
 
 const CateSection = ({ type, name, data, onChangeParam, className }: CateSectionProps) => {
   const [searchParams] = useSearchParams()

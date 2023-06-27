@@ -147,8 +147,8 @@ export const CartTableRow = memo(
     }
 
     return (
-      <div className="flex gap-x-4 overflow-auto rounded-sm bg-white px-5 py-4 text-sm text-zinc-500 shadow">
-        <div className="flex basis-1/2 items-center gap-x-2">
+      <div className="flex flex-col gap-x-4 gap-y-2 overflow-auto rounded-sm bg-white p-2 text-sm text-zinc-500 shadow sm:flex-row sm:px-5 sm:py-4">
+        <div className="flex basis-1/2 items-center gap-x-2 max-sm:gap-x-3">
           {/* Checkbox or out of stock*/}
           {isInValidOrder ? (
             <span className="shrink-0 rounded-xl bg-slate-400 px-2 py-1 text-xxs/3 uppercase text-white">
@@ -195,47 +195,49 @@ export const CartTableRow = memo(
             </Link>
           )}
 
-          <div className="flex-grow text-black/80">
-            {!onCheck || isInValidOrder ? (
-              <span
-                className={classNames('mb-1 line-clamp-2', {
-                  'line-through opacity-30': onCheck
-                })}>
-                {name}
-              </span>
-            ) : (
-              <Link
-                to={`/${categorySlug}-${categoryId}/${productSlug}-${productId}`}
-                className="mb-1 line-clamp-2">
-                {name}
-              </Link>
-            )}
-            <img src={voucherImg} alt="vouchers_img" className="h-5 w-fit" />
-            {isStale && (
-              <span className="inline shrink-0 rounded-sm border border-primary px-1.5 py-0.5 text-xxs capitalize text-primary">
-                Số lượng sản phẩm đã được cập nhật mới
-              </span>
-            )}
-          </div>
-
-          <div className="flex shrink-0 flex-col gap-y-4">
-            <Suspense
-              fallback={
-                <div className="dots mx-auto animate-[dots_1s_linear_infinite] text-center" />
-              }>
-              {onCheck && !isInValidOrder && vouchers.length > 0 && (
-                <DropdownVoucher
-                  vouchers={vouchers}
-                  voucherSelected={voucherSelected}
-                  onSelect={handleSetVoucher}
-                />
+          <div className="flex gap-y-1 max-sm:flex-col">
+            <div className="flex-grow text-black/80">
+              {!onCheck || isInValidOrder ? (
+                <span
+                  className={classNames('mb-1 line-clamp-2', {
+                    'line-through opacity-30': onCheck
+                  })}>
+                  {name}
+                </span>
+              ) : (
+                <Link
+                  to={`/${categorySlug}-${categoryId}/${productSlug}-${productId}`}
+                  className="mb-1 line-clamp-2">
+                  {name}
+                </Link>
               )}
-            </Suspense>
+              <img src={voucherImg} alt="vouchers_img" className="h-5 w-fit" />
+              {isStale && (
+                <span className="inline shrink-0 rounded-sm border border-primary px-1.5 py-0.5 text-xxs capitalize text-primary">
+                  Số lượng sản phẩm đã được cập nhật mới
+                </span>
+              )}
+            </div>
+
+            <div className="flex shrink-0 gap-y-3 max-sm:gap-2 sm:flex-col">
+              <Suspense
+                fallback={
+                  <div className="dots mx-auto animate-[dots_1s_linear_infinite] text-center" />
+                }>
+                {onCheck && !isInValidOrder && vouchers.length > 0 && (
+                  <DropdownVoucher
+                    vouchers={vouchers}
+                    voucherSelected={voucherSelected}
+                    onSelect={handleSetVoucher}
+                  />
+                )}
+              </Suspense>
+            </div>
           </div>
         </div>
 
-        <div className="flex basis-1/2 flex-nowrap items-center gap-x-2 text-center">
-          <div className="gap-x flex basis-1/4 flex-col">
+        <div className="flex basis-1/2 flex-nowrap items-center gap-2 text-center max-sm:flex-col max-sm:items-end">
+          <div className="gap-x flex basis-1/4 flex-col gap-2 max-sm:flex-row">
             {isInValidOrder ? (
               <span className="line-clamp-1 w-full break-all text-sm text-black/[0.54]">
                 {formatCurrency(0)}

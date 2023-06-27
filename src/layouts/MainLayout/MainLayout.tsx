@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Outlet, ScrollRestoration } from 'react-router-dom'
 
-import { MyErrorBoundary, Spinner } from '@/components'
+import { MyErrorBoundary, ScrollToTop, Spinner } from '@/components'
 import { useRefreshTokenQuery } from '@/hooks'
 import { Footer, MainHeader } from '@/layouts'
 
@@ -21,6 +21,7 @@ const MainLayout = () => {
           </MyErrorBoundary>
         </main>
         <Footer />
+        <ScrollToTop />
         <ScrollRestoration />
       </div>
     </>

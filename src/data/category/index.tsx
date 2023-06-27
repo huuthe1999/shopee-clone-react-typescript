@@ -153,3 +153,16 @@ export const FILTER_LIST = [
     ]
   }
 ]
+
+export type TFilterType =
+  | 'page'
+  | 'sortBy'
+  | 'order'
+  | 'filters'
+  | 'facet'
+  | 'minPrice'
+  | 'maxPrice'
+  | 'locations'
+  | 'status'
+  | 'shippingOptions'
+  | 'ratingFilter'

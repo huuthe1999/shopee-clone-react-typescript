@@ -76,7 +76,7 @@ const CategoryFilterPrice = () => {
   return (
     <section className="mt-2 border-b border-black/30 text-sm text-black/[0.87]">
       <p>Khoảng Giá</p>
-      <div className="flex flex-nowrap items-center gap-x-1 py-4">
+      <div className="flex flex-nowrap items-center gap-x-1 py-4 max-sm:justify-center">
         <input
           value={value.from}
           onChange={handleChange}

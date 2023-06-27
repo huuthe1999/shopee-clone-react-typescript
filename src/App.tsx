@@ -2,7 +2,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ToastContainer } from 'react-toastify'
 
-import { ScrollToTop } from '@/components'
 import { queryClientConfig } from '@/config/query'
 import { RouterElementProvider } from '@/contexts'
 
@@ -13,7 +12,7 @@ function App() {
       {/* Provide the client to your App */}
       <QueryClientProvider client={queryClient}>
         <RouterElementProvider />
-        <ReactQueryDevtools initialIsOpen={false} position="bottom-left" />
+        <ReactQueryDevtools initialIsOpen={false} position="top-right" />
       </QueryClientProvider>
       <ToastContainer
         limit={3}
@@ -25,7 +24,6 @@ function App() {
         newestOnTop
         closeOnClick
       />
-      <ScrollToTop />
     </div>
   )
 }

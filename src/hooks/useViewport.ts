@@ -18,7 +18,7 @@ export function useViewport() {
         device = 'lg'
       } else if (width >= 1024 && width < 1280) {
         device = 'xl'
-      } else if (width >= 1280 && width < 1536) {
+      } else if (width >= 1280) {
         device = '2xl'
       } else {
         device = '' // Default to the largest breakpoint

@@ -5,7 +5,7 @@ import { Filter } from 'react-feather'
 import { useSearchParams } from 'react-router-dom'
 
 import { Button, CateSection, PingIcon } from '@/components'
-import { FILTER_LIST } from '@/data/category'
+import { FILTER_LIST, TFilterType } from '@/data/category'
 import { useProvincesQuery, useSubCategoryBySlugQuery } from '@/hooks'
 import { IBaseItem } from '@/types'
 import { SearchParamsProps } from '@/utils'
@@ -32,7 +32,7 @@ function CategoryFilter({ headerText, hasFilter, className, onChangeParam }: Pro
 
   // Filter data
   const subCategoriesObject = {
-    type: 'facet',
+    type: 'facet' as TFilterType,
     name: 'Theo Danh Mục',
     data: subCategories || []
   }
@@ -52,7 +52,7 @@ function CategoryFilter({ headerText, hasFilter, className, onChangeParam }: Pro
     }) || []
 
     return {
-      type: 'locations',
+      type: 'locations' as TFilterType,
       name: 'Nơi bán',
       data: sortLocationSelected
     }
@@ -60,9 +60,9 @@ function CategoryFilter({ headerText, hasFilter, className, onChangeParam }: Pro
   }, [searchParams.get('locations'), locationData])
 
   return (
-    <div className={classNames('flex flex-col gap-y-2', [className])}>
+    <div className={classNames('relative flex flex-col gap-y-2', [className])}>
       {/* Header name */}
-      <div className="flex gap-x-2 py-2 pt-5">
+      <div className="flex gap-x-2 py-2 pt-5 max-sm:hidden">
         <span className="relative">
           {hasFilter && <PingIcon />}
           <Filter size={16} />
@@ -81,17 +81,22 @@ function CategoryFilter({ headerText, hasFilter, className, onChangeParam }: Pro
         className="mb-1 max-h-44 overflow-y-auto"
       />
 
-      {/* Default filter */}
-
       {/* Range price */}
       <CategoryFilterPrice />
 
-      {FILTER_LIST.map((cateSection) => (
-        <CateSection key={cateSection.type} {...cateSection} onChangeParam={onChangeParam} />
-      ))}
+      {FILTER_LIST.map((cateSection) => {
+        return (
+          <CateSection
+            key={cateSection.type}
+            {...cateSection}
+            type={cateSection.type as TFilterType}
+            onChangeParam={onChangeParam}
+          />
+        )
+      })}
 
       <Button
-        className="mx-auto mt-2 w-full rounded-sm bg-primary py-1 text-sm uppercase text-white"
+        className="mx-auto mt-2 w-full rounded-sm bg-primary py-1 text-sm uppercase text-white max-sm:hidden"
         disabled={!hasFilter}
         onClick={() => onChangeParam()}>
         Xoá tất cả

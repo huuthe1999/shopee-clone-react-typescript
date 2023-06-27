@@ -11,11 +11,11 @@ const CateCard = ({ image, name, link = PATHS.HOME_PATH }: CateCardProps) => {
   return (
     <Link to={link} className="h-full w-full">
       <div className="m-auto flex flex-col items-center justify-center transition-transform hover:-translate-y-1">
-        <div className="h-full w-full shrink-0 overflow-hidden rounded-2xl px-2 md:px-4 lg:px-6">
+        <div className="h-full w-full shrink-0 overflow-hidden rounded-2xl px-2 max-sm:mt-2 md:px-4 lg:px-6">
           <img
             src={image}
             alt="banner-img"
-            className="aspect-square w-full lg:p-2"
+            className="aspect-square w-full sm:p-3 lg:p-2"
             onError={(e) => {
               e.currentTarget.onerror = null
               e.currentTarget.src = '/images/default-image-product.png'

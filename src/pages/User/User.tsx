@@ -15,7 +15,7 @@ const User = () => {
 
   const navigate = useNavigate()
 
-  if (PATHS.USER_PATTERN.test(pathname)) {
+  if (/^\/user(\/account)?$/.test(pathname)) {
     // Automatically redirect from relative "/user" to "/user/profile"
     return <Navigate to={PATHS.USER_PROFILE_PATH} replace />
   }
