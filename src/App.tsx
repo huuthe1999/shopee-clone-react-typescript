@@ -15,6 +15,7 @@ function App() {
         <ReactQueryDevtools initialIsOpen={false} position="top-right" />
       </QueryClientProvider>
       <ToastContainer
+        className="z-[99999]"
         limit={3}
         position="top-right"
         autoClose={1000}

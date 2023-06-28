@@ -38,6 +38,7 @@ const pathShowSearchInput = [
   PATHS.PRODUCT_DETAIL_PATH
 ]
 const pathHideSearchInput = [PATHS.CART_PATH, PATHS.CHECKOUT_PATH]
+const pathHideCart = [PATHS.CHECKOUT_PATH]
 const pathShowName = [PATHS.CART_PATH, PATHS.CHECKOUT_PATH]
 
 const MainHeader = () => {
@@ -61,6 +62,7 @@ const MainHeader = () => {
   )
 
   const hideSearchInput = pathHideSearchInput.includes(pathname)
+  const hideCart = pathHideCart.includes(pathname)
   const showPathName = pathShowName.includes(pathname)
 
   const profile = data?.data.data
@@ -228,59 +230,61 @@ const MainHeader = () => {
           )}
 
           {/* Shopping cart */}
-          <TooltipProvider placement="bottom-end" keepOpen={false}>
-            <TooltipTrigger asChild className="block p-2 max-sm:hidden">
-              {renderCart}
-            </TooltipTrigger>
-            <TooltipContent>
-              <DropdownMenu
-                title={
-                  productsCartData?.items && productsCartData?.items.length > 0
-                    ? 'Sản Phẩm Mới Thêm'
-                    : undefined
-                }
-                className="min-w-[11rem] max-w-sm pt-2">
-                {!productsCartData || productsCartData?.items.length === 0 ? (
-                  <div className="w-full overflow-hidden px-2 py-14 text-center">
-                    <EmptyCartIcon width="25rem" />
-                    <p className="mt-4 p-2 text-sm text-gray-700">Chưa Có Sản Phẩm</p>
-                  </div>
-                ) : (
-                  <>
-                    {productsCartData?.items.map(({ product, _id }) => (
-                      <MenuItem
-                        key={_id}
-                        text={product.name}
-                        image={product.image}
-                        price={
-                          product.discount
-                            ? (product.price * (100 - product.discount)) / 100
-                            : product.price
-                        }
-                        to={`/${product.categorySlug}-${product.categoryId}/${product.slug}-${product._id}`}
-                      />
-                    ))}
-                    <div className="flex items-center justify-between p-2">
-                      {productsCartData?.totalItems &&
-                        productsCartData?.totalItems > BRIEF_CART_SIZE && (
-                          <p className="text-xs capitalize text-black/70">
-                            {productsCartData?.totalItems - BRIEF_CART_SIZE} sản phầm nữa trong giỏ
-                            hàng
-                          </p>
-                        )}
-                      <Button
-                        className="ml-auto rounded-sm bg-primary px-4 py-2 text-white hover:opacity-90"
-                        onClick={() => {
-                          navigate(PATHS.CART_PATH)
-                        }}>
-                        Xem giỏ hàng
-                      </Button>
+          {!hideCart && (
+            <TooltipProvider placement="bottom-end" keepOpen={false}>
+              <TooltipTrigger asChild className="block p-2 max-sm:hidden">
+                {renderCart}
+              </TooltipTrigger>
+              <TooltipContent>
+                <DropdownMenu
+                  title={
+                    productsCartData?.items && productsCartData?.items.length > 0
+                      ? 'Sản Phẩm Mới Thêm'
+                      : undefined
+                  }
+                  className="min-w-[11rem] max-w-sm pt-2">
+                  {!productsCartData || productsCartData?.items.length === 0 ? (
+                    <div className="w-full overflow-hidden px-2 py-14 text-center">
+                      <EmptyCartIcon width="25rem" />
+                      <p className="mt-4 p-2 text-sm text-gray-700">Chưa Có Sản Phẩm</p>
                     </div>
-                  </>
-                )}
-              </DropdownMenu>
-            </TooltipContent>
-          </TooltipProvider>
+                  ) : (
+                    <>
+                      {productsCartData?.items.map(({ product, _id }) => (
+                        <MenuItem
+                          key={_id}
+                          text={product.name}
+                          image={product.image}
+                          price={
+                            product.discount
+                              ? (product.price * (100 - product.discount)) / 100
+                              : product.price
+                          }
+                          to={`/${product.categorySlug}-${product.categoryId}/${product.slug}-${product._id}`}
+                        />
+                      ))}
+                      <div className="flex items-center justify-between p-2">
+                        {productsCartData?.totalItems &&
+                          productsCartData?.totalItems > BRIEF_CART_SIZE && (
+                            <p className="text-xs capitalize text-black/70">
+                              {productsCartData?.totalItems - BRIEF_CART_SIZE} sản phầm nữa trong
+                              giỏ hàng
+                            </p>
+                          )}
+                        <Button
+                          className="ml-auto rounded-sm bg-primary px-4 py-2 text-white hover:opacity-90"
+                          onClick={() => {
+                            navigate(PATHS.CART_PATH)
+                          }}>
+                          Xem giỏ hàng
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </DropdownMenu>
+              </TooltipContent>
+            </TooltipProvider>
+          )}
 
           {/* Slot for filter */}
           {matchCategoryPath && <div className="h-8 w-12 sm:hidden"></div>}

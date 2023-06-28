@@ -41,10 +41,11 @@ export const useAddressesQuery = () => {
     queryKey: [QUERY_KEYS.address.list],
     queryFn: addressServices.getAddresses,
     select: useCallback((data: AxiosResponse<IDataResponse<IAddress[]>>) => {
-      const addresses = data.data.data
+      const addresses = data.data.data.slice()
       const defaultAddress = addresses.findIndex((address) => address.isDefault)
       if (defaultAddress !== -1) {
         addresses.unshift(addresses.splice(defaultAddress, 1)[0])
+
         return {
           ...data,
           data: {

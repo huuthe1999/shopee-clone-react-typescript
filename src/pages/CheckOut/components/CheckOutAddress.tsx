@@ -28,7 +28,7 @@ const CheckOutAddress = () => {
 
   return (
     <>
-      <div className="flex w-full flex-col gap-y-3 rounded-b-sm bg-white p-3 md:p-6">
+      <div className="flex w-full flex-col gap-y-3 rounded-b-sm bg-white p-3 shadow-md md:p-6">
         <div className="flex flex-row flex-nowrap items-center gap-x-2 text-primary">
           <MapPin className="fill-primary text-white" />
           <p className="text-sm md:text-lg">Địa Chỉ Nhận Hàng</p>
@@ -84,19 +84,28 @@ const CheckOutAddress = () => {
         open={value}
         onSubmit={() => {
           const addressIdSelected = methods.getValues('addressSelected')
-          if (addressIdSelected === addressSelected?._id) {
-            setValue(false)
-            return
-          }
-          setDefaultOrSelectedAddressMutation.mutate(
-            { id: addressIdSelected, type: 1 },
-            {
-              onSettled() {
-                setValue(false)
-                methods.reset()
-              }
+          const type = methods.getValues('type')
+          console.log('🚀 ~ CheckOutAddress ~ type:', type)
+
+          if (type === 2) {
+            if (addressIdSelected === addressSelected?._id) {
+              setValue(false)
+              return
             }
-          )
+            setDefaultOrSelectedAddressMutation.mutate(
+              { id: addressIdSelected, type: 1 },
+              {
+                onSettled() {
+                  setValue(false)
+                  methods.reset()
+                }
+              }
+            )
+          }
+        }}
+        onCancel={() => {
+          setValue(false)
+          methods.reset()
         }}>
         <React.Suspense
           fallback={<div className="dots mx-auto animate-[dots_1s_linear_infinite] text-center" />}>

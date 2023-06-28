@@ -26,5 +26,5 @@ export interface IAddress extends IBaseAddress {
 export interface IAddressSelect {
   addressSelected: string
   address: string
-  type: 0 | 1 | 2 //0:update - 1:delete - 2:select
+  type: 0 | 1 | 2 | 3 //0:update - 1:delete - 2:select - 3:Create new
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import classNames from 'classnames'
@@ -34,6 +34,7 @@ const Address = ({ className, disableSelect }: { className?: string; disableSele
   const methodsFormContext = useFormContext<IAddressSelect>()
 
   const addressSelect = methodsFormContext.watch('addressSelected')
+
   const addressId = methodsFormContext.watch('address')
   const type = methodsFormContext.watch('type')
 
@@ -48,7 +49,7 @@ const Address = ({ className, disableSelect }: { className?: string; disableSele
       fillAddress: false
     },
     resolver:
-      type === 0
+      type === 0 || type === 3
         ? yupResolver(addressFormSchema.pick(['name', 'phone', 'address', 'fillAddress']))
         : undefined,
     mode: 'all',
@@ -60,28 +61,36 @@ const Address = ({ className, disableSelect }: { className?: string; disableSele
     type !== 2 ? address._id === addressId : address._id === addressSelect
   )
 
-  const handleReset = useCallback(() => {
-    setValue(false)
+  const handleReset = () => {
     methods.reset()
-    methodsFormContext.reset()
+    methodsFormContext.setValue('type', 2)
     setHeaderText('')
-  }, [methods, methodsFormContext, setValue])
+    setValue(false)
+  }
 
-  const handleSubmitForm = async (data: TAddressForm) => {
-    if (addressId) {
+  const handleSubmitForm = (data: TAddressForm) => {
+    console.log('🚀 ~ handleSubmitForm ~ data:', data, type)
+
+    // Update or delete
+    if (type === 0 || type === 1) {
       updateAddressMutate.mutate(
         {
           ...data,
           _id: addressId,
-          actionType: type as 0 | 1
+          actionType: type
         },
         {
           onSettled() {
-            handleReset()
+            // handleReset()
+            methods.reset()
+            methodsFormContext.reset()
+            setHeaderText('')
+            setValue(false)
           }
         }
       )
-    } else {
+    } else if (type === 3) {
+      // Thêm địa chỉ mới
       addressMutate.mutate(
         {
           ...data,
@@ -90,7 +99,11 @@ const Address = ({ className, disableSelect }: { className?: string; disableSele
         },
         {
           onSettled() {
-            handleReset()
+            // handleReset()
+            methods.reset()
+            methodsFormContext.reset()
+            setHeaderText('')
+            setValue(false)
           }
         }
       )
@@ -102,51 +115,49 @@ const Address = ({ className, disableSelect }: { className?: string; disableSele
   }
 
   useEffect(() => {
-    if (type === 2) {
-      return
-    }
+    if (type === 0 || type === 1) {
+      setHeaderText(type === 0 ? 'Cập nhật địa chỉ' : 'Xóa địa chỉ')
+      setValue(true)
+      if (addressId && addressSelected) {
+        const { name, phone, address, province, district, ward } = addressSelected
+        if (type === 0) {
+          methods.setValue('name', name, {
+            shouldValidate: true,
+            shouldDirty: true,
+            shouldTouch: true
+          })
+          methods.setValue('phone', phone, {
+            shouldValidate: true,
+            shouldDirty: true,
+            shouldTouch: true
+          })
+          methods.setValue('address', address, {
+            shouldValidate: true,
+            shouldDirty: true,
+            shouldTouch: true
+          })
+          methods.setValue('province', province, {
+            shouldValidate: true,
+            shouldDirty: true,
+            shouldTouch: true
+          })
+          methods.setValue('district', district, {
+            shouldValidate: true,
+            shouldDirty: true,
+            shouldTouch: true
+          })
+          methods.setValue('ward', ward, {
+            shouldValidate: true,
+            shouldDirty: true,
+            shouldTouch: true
+          })
 
-    setHeaderText(type === 0 ? 'Cập nhật địa chỉ' : 'Xóa địa chỉ')
-    setValue(true)
-    if (addressId && addressSelected) {
-      const { name, phone, address, province, district, ward } = addressSelected
-      if (type === 0) {
-        methods.setValue('name', name, {
-          shouldValidate: true,
-          shouldDirty: true,
-          shouldTouch: true
-        })
-        methods.setValue('phone', phone, {
-          shouldValidate: true,
-          shouldDirty: true,
-          shouldTouch: true
-        })
-        methods.setValue('address', address, {
-          shouldValidate: true,
-          shouldDirty: true,
-          shouldTouch: true
-        })
-        methods.setValue('province', province, {
-          shouldValidate: true,
-          shouldDirty: true,
-          shouldTouch: true
-        })
-        methods.setValue('district', district, {
-          shouldValidate: true,
-          shouldDirty: true,
-          shouldTouch: true
-        })
-        methods.setValue('ward', ward, {
-          shouldValidate: true,
-          shouldDirty: true,
-          shouldTouch: true
-        })
-
-        methods.setValue('fillAddress', true, {
-          shouldValidate: true,
-          shouldDirty: true,
-          shouldTouch: true
-        })
+          methods.setValue('fillAddress', true, {
+            shouldValidate: true,
+            shouldDirty: true,
+            shouldTouch: true
+          })
+        }
       }
     }
   }, [addressId, setValue, methods, addressSelected, addressSelect, type])
@@ -160,6 +171,7 @@ const Address = ({ className, disableSelect }: { className?: string; disableSele
           [className]
         )}
         onClick={() => {
+          methodsFormContext.setValue('type', 3)
           setValue(true)
           setHeaderText('Địa chỉ mới')
         }}>
@@ -197,7 +209,9 @@ const Address = ({ className, disableSelect }: { className?: string; disableSele
           cancelText="Hủy"
           open={value}
           onSubmit={methods.handleSubmit(handleSubmitForm, handleErrorForm)}
-          onCancel={handleReset}>
+          onCancel={() => {
+            handleReset()
+          }}>
           <React.Suspense
             fallback={<div className="dots mx-auto animate-[dots_1s_linear_infinite]" />}>
             {type !== 1 ? (

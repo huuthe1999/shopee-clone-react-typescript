@@ -1,7 +1,7 @@
 import { startTransition } from 'react'
 
 import classNames from 'classnames'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 import { Button } from '@/components'
 
@@ -29,16 +29,18 @@ export function TabButton({ disabled, isActive, label, onClick }: Props) {
           }}>
           {label}
         </Button>
-        {isActive && (
-          <motion.span
-            className="absolute bottom-0 left-0 h-0.5 w-full bg-primary"
-            layoutId="underline"
-            transition={{
-              type: 'tween',
-              duration: 0.2
-            }}
-          />
-        )}
+        <AnimatePresence>
+          {isActive && (
+            <motion.span
+              className="absolute bottom-0 left-0 h-0.5 w-full bg-primary"
+              layoutId="tab-underline"
+              transition={{
+                type: 'tween',
+                duration: 0.2
+              }}
+            />
+          )}
+        </AnimatePresence>
       </li>
     </>
   )
