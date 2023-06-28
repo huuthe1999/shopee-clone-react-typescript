@@ -74,14 +74,22 @@ const ProductDetail = () => {
         </div>
         {/* Content */}
 
-        <div className="mt-6 grid grid-cols-12 gap-x-8 gap-y-4 bg-white p-4">
+        <div className="mt-2 grid grid-cols-12 bg-white p-4 sm:mt-6 sm:gap-x-8 sm:gap-y-4">
           <div className="col-span-12 md:col-span-5">
-            <ProductCarousel
-              images={productData?.images}
-              key={productData?.name}
-              isLoading={isFetchingProductQueryData}
-            />
+            {isFetchingProductQueryData ? (
+              <div
+                className={classNames('relative w-full animate-pulse overflow-hidden pt-[100%]')}>
+                <img
+                  src={'/images/loading-image-product.png'}
+                  alt={'default_image'}
+                  className="absolute left-0 top-0 h-full w-full object-cover"
+                />
+              </div>
+            ) : (
+              productData && <ProductCarousel images={productData.images} />
+            )}
           </div>
+
           {isFetchingProductQueryData ? (
             <div className="col-span-12 flex animate-pulse flex-col gap-y-6 p-2 md:col-span-7">
               <p className="h-12 w-full rounded-sm bg-gray-200" />
@@ -93,7 +101,7 @@ const ProductDetail = () => {
             </div>
           ) : productData ? (
             <div className="col-span-12 flex flex-col gap-y-6 p-2 md:col-span-7">
-              <h1 className="gap-x-2 text-xl capitalize">
+              <h1 className="text-md gap-x-2 capitalize sm:text-xl">
                 {productData.shopType !== 0 && (
                   <span
                     className={classNames(
@@ -167,14 +175,16 @@ const ProductDetail = () => {
               </div>
               {/* Vouchers */}
               {productData.vouchers.length > 0 && (
-                <div className="flex items-center gap-x-4 text-sm">
-                  <span className="max-w-[6.875rem] text-neutral-500">Mã Giảm Giá Của Shop</span>
+                <div className="flex items-center gap-x-4 text-sm max-sm:justify-between">
+                  <span className="shrink-0 text-neutral-500 sm:max-w-[6.875rem]">
+                    Mã Giảm Giá Của Shop
+                  </span>
                   {productData.vouchers.map((voucher) => {
                     return (
                       <span
                         key={voucher._id}
                         className={classNames(
-                          'wave mr-1 block rounded px-2.5 py-0.5 text-sm font-medium uppercase',
+                          'wave mr-1 block rounded px-2.5 py-0.5 text-sm font-medium capitalize',
                           {
                             'bg-red-100 text-red-700': productData.shopType === 1,
                             'bg-primary text-white': productData.shopType !== 1
@@ -216,10 +226,10 @@ const ProductDetail = () => {
             <p className="h-6 w-2/3 rounded-sm bg-gray-200" />
           </div>
         ) : productData && productData.description ? (
-          <div className="bg-white p-6">
+          <div className="bg-white p-3 sm:p-6">
             <h1 className="bg-neutral-100 p-4 text-xl uppercase">MÔ TẢ SẢN PHẨM</h1>
             <p
-              className="mt-8 whitespace-pre-wrap leading-loose text-black/[0.8]"
+              className="mt-4 whitespace-pre-wrap break-words leading-loose text-black/[0.8] sm:mt-8"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(productData.description)
               }}
@@ -229,7 +239,7 @@ const ProductDetail = () => {
 
         {/* May like product */}
         <Suspense fallback={<Spinner />}>
-          <div className="p-6">
+          <div className="p-2 sm:p-6">
             <h1 className="py-4 text-xl uppercase">CÓ THỂ BẠN CŨNG THÍCH</h1>
             <ProductList
               skeletonSize={FAV_PRODUCTS_SIZE}

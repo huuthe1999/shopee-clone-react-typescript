@@ -3433,10 +3433,10 @@ npm-run-path@^5.1.0:
   dependencies:
     path-key "^4.0.0"
 
-nuka-carousel@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/nuka-carousel/-/nuka-carousel-6.0.1.tgz#03f3c68686070437184295c0c5ec4045f389aae5"
-  integrity sha512-iA6tI30kAXVVkNmS8wFRpjkFALktgtsOhWGIJnZTywT5h82aRX6+OQ6weuxkd0SL7tCUGfXvmdW2N5l94Jcbqg==
+nuka-carousel@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/nuka-carousel/-/nuka-carousel-6.0.3.tgz#75ecbf5d3a8f538e84f53d220c3092abc56335ef"
+  integrity sha512-DYxCTp4xIv9/vfrfOr9FAmYizMr7AefL7mbqsBaBTwdrZ77mAsR/SNZtk+/KHJSuH+9gZLrugj/RC6qM8MJr+Q==
 
 object-assign@^4.0.1, object-assign@^4.1.1:
   version "4.1.1"

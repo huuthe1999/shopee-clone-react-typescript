@@ -17,8 +17,6 @@ const Carousel = ({
   hoverHiddenControls,
   defaultControlsConfig,
   renderBottomCenterControls,
-  beforeSlide,
-  afterSlide,
   wrapAround,
   ...props
 }: CarouselProps) => {
@@ -37,8 +35,6 @@ const Carousel = ({
       <NukaCarousel
         {...props}
         wrapAround={wrapAround}
-        beforeSlide={beforeSlide}
-        afterSlide={afterSlide}
         autoplayInterval={2000}
         pauseOnHover={false}
         speed={500}
