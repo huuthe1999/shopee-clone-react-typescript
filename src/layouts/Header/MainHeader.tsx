@@ -37,7 +37,7 @@ const pathShowSearchInput = [
   PATHS.CATEGORY_PATH,
   PATHS.PRODUCT_DETAIL_PATH
 ]
-const pathHideSearchInput = [PATHS.CART_PATH]
+const pathHideSearchInput = [PATHS.CART_PATH, PATHS.CHECKOUT_PATH]
 const pathShowName = [PATHS.CART_PATH, PATHS.CHECKOUT_PATH]
 
 const MainHeader = () => {

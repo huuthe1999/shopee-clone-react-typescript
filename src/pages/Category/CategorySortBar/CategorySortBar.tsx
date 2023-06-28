@@ -66,11 +66,14 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
   const renderSortBar = SORT_BY_LIST.map(({ text, type, isDropdown }) => {
     return (
       <li
-        className={classNames('cursor-pointer rounded-md bg-white text-neutral-600 transition', {
-          'text-white': sortBy === type,
-          // 'hover:opacity-80': sortBy !== type,
-          'max-sm:flex-grow': isDropdown
-        })}
+        className={classNames(
+          'cursor-pointer rounded-md bg-white text-neutral-600 transition max-sm:flex-1',
+          {
+            'text-white': sortBy === type,
+            // 'hover:opacity-80': sortBy !== type,
+            'max-sm:flex-grow': isDropdown
+          }
+        )}
         key={type}>
         {isDropdown ? (
           <div className="relative">
@@ -154,7 +157,7 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
         ) : (
           <Button
             disabled={sortBy === type}
-            className={classNames('relative rounded-md px-4 py-2', {
+            className={classNames('relative rounded-md p-2 sm:px-4 sm:py-2', {
               '!opacity-100': sortBy === type
             })}
             style={{

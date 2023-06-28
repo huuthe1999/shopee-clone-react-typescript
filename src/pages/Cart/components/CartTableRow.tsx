@@ -257,7 +257,10 @@ export const CartTableRow = memo(
           </div>
           <div className="basis-1/4">
             {isInValidOrder ? (
-              <span className="opacity-30">{amount}</span>
+              <span className="opacity-30">
+                <span className="sm:hidden">x</span>
+                {amount}
+              </span>
             ) : onCheck ? (
               <Suspense
                 fallback={
@@ -279,7 +282,10 @@ export const CartTableRow = memo(
                 </>
               </Suspense>
             ) : (
-              <span>{amount}</span>
+              <span>
+                <span className="sm:hidden">x</span>
+                {amount}
+              </span>
             )}
           </div>
           <div

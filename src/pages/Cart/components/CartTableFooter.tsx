@@ -55,7 +55,7 @@ export const CartTableFooter = ({
   return (
     <div
       className={classNames(
-        'sticky bottom-0 mb-2 flex gap-x-4 overflow-auto rounded-sm border-2 border-secondary p-2 text-sm text-zinc-500 shadow md:px-5 md:py-4',
+        'sticky bottom-0 z-[9001] mb-2 flex gap-x-2 overflow-auto rounded-sm border-2 border-secondary p-2 text-sm text-zinc-500 shadow sm:gap-x-4 md:px-5 md:py-4',
         {
           'bg-neutral-100': !isLoading
         }
@@ -104,7 +104,7 @@ export const CartTableFooter = ({
           )}
           <div
             className={classNames(
-              'flex flex-grow flex-nowrap items-center gap-x-4 sm:justify-end',
+              'flex flex-grow flex-nowrap items-center gap-x-2 sm:justify-end sm:gap-x-4',
               {
                 'basis-1/2 text-center': onSelect,
                 'basis-full text-right': !onSelect

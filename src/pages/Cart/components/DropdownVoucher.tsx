@@ -19,7 +19,7 @@ const DropdownVoucher = ({ vouchers, voucherSelected, onSelect }: Props) => {
     <>
       <TooltipProvider placement="bottom-end" click keepOpen={false}>
         <TooltipTrigger asChild>
-          <div className="flex cursor-pointer flex-nowrap items-center gap-x-2 font-semibold text-primary">
+          <div className="flex shrink-0 cursor-pointer flex-nowrap items-center gap-x-2 font-semibold text-primary">
             <span>Mã khuyến mãi</span>
             <ChevronDown size={16} />
           </div>
@@ -70,17 +70,17 @@ const DropdownVoucher = ({ vouchers, voucherSelected, onSelect }: Props) => {
           </div>
         </TooltipContent>
       </TooltipProvider>
-      <div className="min-h-[1.25rem]">
+      <div className="line-clamp-1 h-[1.25rem]">
         {activeVoucher && (
-          <span
+          <p
             className={classNames(
-              'box mr-4 block rounded bg-primary px-1 py-0.5 text-center text-xs uppercase text-white max-sm:w-fit'
+              'box block break-all rounded bg-primary px-1 py-0.5 text-center text-xs capitalize text-white max-sm:w-fit sm:mr-4'
             )}>
             Giảm{' '}
             {activeVoucher.type === 0
               ? activeVoucher.discount.percent + '﹪'
               : formatCurrency(activeVoucher.discount.price)}
-          </span>
+          </p>
         )}
       </div>
     </>

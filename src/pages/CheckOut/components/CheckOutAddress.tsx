@@ -28,17 +28,19 @@ const CheckOutAddress = () => {
 
   return (
     <>
-      <div className="flex w-full flex-col gap-y-3 rounded-b-sm bg-white p-6">
+      <div className="flex w-full flex-col gap-y-3 rounded-b-sm bg-white p-3 md:p-6">
         <div className="flex flex-row flex-nowrap items-center gap-x-2 text-primary">
           <MapPin className="fill-primary text-white" />
-          <p className="text-lg">Địa Chỉ Nhận Hàng</p>
+          <p className="text-sm md:text-lg">Địa Chỉ Nhận Hàng</p>
           <Button
-            className="rounded-sm border border-primary bg-primary px-2 py-1 text-center capitalize text-white transition-colors hover:bg-secondary"
+            className="rounded-sm border border-primary bg-primary px-2 py-1 text-center capitalize text-white transition-colors hover:bg-secondary max-sm:ml-auto"
             onClick={() => {
               setValue(true)
             }}>
-            <Plus className="float-left" />
-            <span className="my-auto inline-block text-base capitalize">Danh sách địa chỉ</span>
+            <Plus className="float-left max-md:h-5 max-md:w-5" />
+            <span className="my-auto inline-block text-xs capitalize md:text-base">
+              Danh sách địa chỉ
+            </span>
           </Button>
         </div>
         {isLoading ? (
@@ -50,11 +52,11 @@ const CheckOutAddress = () => {
           </div>
         ) : (
           addressSelected && (
-            <div className="flex flex-row items-center gap-x-3">
+            <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
               <b>
                 {addressSelected.name} (+84) {addressSelected.phone.slice(1)}
               </b>
-              <p className="capitalize">
+              <p className="line-clamp-2 break-words capitalize sm:line-clamp-1">
                 {[
                   addressSelected.address,
                   addressSelected.ward.name,
