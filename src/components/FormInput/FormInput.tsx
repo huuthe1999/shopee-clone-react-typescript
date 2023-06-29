@@ -15,16 +15,7 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
 
 export const FormInput = forwardRef<HTMLInputElement, Props>(
   (
-    {
-      invalid,
-      isDirty,
-      label,
-      isShowError = true,
-      showLabel = false,
-      errorMessage,
-      rightIcon,
-      ...props
-    },
+    { invalid, label, isShowError = true, showLabel = false, errorMessage, rightIcon, ...props },
     ref
   ) => {
     return (

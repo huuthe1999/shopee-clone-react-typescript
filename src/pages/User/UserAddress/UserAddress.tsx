@@ -18,14 +18,14 @@ const UserAddress = () => {
   return (
     <div className="relative pb-4">
       {/* Header */}
-      <div className="flex flex-wrap justify-between border-b border-zinc-200 px-7 py-4">
+      <div className="flex flex-wrap justify-between border-b border-zinc-200 p-3 sm:px-7 sm:py-4">
         <h1 className="text-lg capitalize text-zinc-800">Địa chỉ của tôi</h1>
       </div>
-      <div className="px-7 py-4">
+      <div className="p-2 sm:px-7 sm:py-4">
         <React.Suspense
           fallback={<div className="dots mx-auto animate-[dots_1s_linear_infinite] text-center" />}>
           <FormProvider {...methods}>
-            <Address className="absolute right-7 top-4" disableSelect />
+            <Address className="absolute right-3 top-3 sm:right-7 sm:top-4" disableSelect />
           </FormProvider>
         </React.Suspense>
       </div>

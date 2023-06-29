@@ -96,7 +96,7 @@ function CategoryFilter({ headerText, hasFilter, className, onChangeParam }: Pro
       })}
 
       <Button
-        className="mx-auto mt-2 w-full rounded-sm bg-primary py-1 text-sm uppercase text-white max-sm:hidden"
+        className="mx-auto mt-2 w-full rounded-sm bg-primary py-1 text-sm uppercase text-white max-lg:hidden"
         disabled={!hasFilter}
         onClick={() => onChangeParam()}>
         Xoá tất cả

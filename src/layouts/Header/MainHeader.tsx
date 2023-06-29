@@ -37,9 +37,23 @@ const pathShowSearchInput = [
   PATHS.CATEGORY_PATH,
   PATHS.PRODUCT_DETAIL_PATH
 ]
-const pathHideSearchInput = [PATHS.CART_PATH, PATHS.CHECKOUT_PATH]
-const pathHideCart = [PATHS.CHECKOUT_PATH]
-const pathShowName = [PATHS.CART_PATH, PATHS.CHECKOUT_PATH]
+const pathHideSearchInput = [PATHS.CART_PATH, PATHS.CHECKOUT_PATH, PATHS.USER_PURCHASE_PATH]
+const pathHideCart = [
+  PATHS.CHECKOUT_PATH,
+  PATHS.CART_PATH,
+  PATHS.USER_PROFILE_PATH,
+  PATHS.USER_ADDRESS_PATH,
+  PATHS.USER_PASSWORD_PATH,
+  PATHS.USER_PURCHASE_PATH
+]
+const pathShowName = [
+  PATHS.CART_PATH,
+  PATHS.CHECKOUT_PATH,
+  PATHS.USER_PROFILE_PATH,
+  PATHS.USER_ADDRESS_PATH,
+  PATHS.USER_PASSWORD_PATH,
+  PATHS.USER_PURCHASE_PATH
+]
 
 const MainHeader = () => {
   const { pathname } = useLocation()
@@ -194,7 +208,7 @@ const MainHeader = () => {
             }}
           />
           {showPathName && (
-            <p className="m-auto line-clamp-1 flex-1 break-all text-black/80 sm:hidden">
+            <p className="m-auto line-clamp-1 flex-1 break-all text-lg text-black/80 sm:hidden">
               {namePage}
             </p>
           )}

@@ -55,7 +55,6 @@ export const ProductPurchase = ({
   }, [])
 
   const handlePurchase = useCallback(() => {
-    console.log('111111')
     if (accessToken) {
       addToCartMutate(
         {
@@ -99,11 +98,11 @@ export const ProductPurchase = ({
         </div>
       </div>
       {/* Cart & Buy now */}
-      <div className="flex gap-x-4">
+      <div className="flex gap-x-4 max-sm:justify-end">
         <Button
           disabled={isOutOfStock || isLoading}
           className={classNames(
-            'text-md flex flex-nowrap items-center gap-x-2 rounded-sm border bg-neutral-100 p-2 capitalize transition hover:bg-neutral-50 max-sm:flex-1 max-sm:text-xs sm:px-4 sm:py-3',
+            'text-md flex flex-nowrap items-center gap-x-2 rounded-sm border bg-neutral-100 p-2 capitalize transition hover:bg-neutral-50 max-sm:text-xs sm:px-4 sm:py-3',
             {
               'border-primary text-primary': shopType !== 1,
               'border-red-700 text-red-700': shopType === 1
@@ -115,7 +114,7 @@ export const ProductPurchase = ({
             {isOutOfStock ? 'Tạm thời hết hàng' : 'Thêm Vào Giỏ Hàng'}
           </span>
         </Button>
-        {!isOutOfStock && (
+        {/* {!isOutOfStock && (
           <Button
             disabled={isLoading}
             className={classNames(
@@ -127,7 +126,7 @@ export const ProductPurchase = ({
             )}>
             Mua Ngay
           </Button>
-        )}
+        )} */}
       </div>
     </>
   )

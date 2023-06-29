@@ -5,7 +5,7 @@ import queryString from 'query-string'
 import { AlertOctagon } from 'react-feather'
 import { Navigate, useLocation, useMatch, useParams, useSearchParams } from 'react-router-dom'
 
-import { Pagination, ProductList } from '@/components'
+import { Pagination, ProductList, SkeletonProduct } from '@/components'
 import { PAGE, PATHS, PRODUCTS_SIZE } from '@/constants'
 import { DEFAULT_FILTER_DATA } from '@/data/category'
 import { useProductsQuery } from '@/hooks'
@@ -38,6 +38,7 @@ const CategoryPage = () => {
 
   const {
     data,
+    isLoading: isProductsLoading,
     isFetching: isProductsFetching,
     isInitialLoading
   } = useProductsQuery({
@@ -96,10 +97,71 @@ const CategoryPage = () => {
   return (
     <div className="mx-auto h-fit max-w-6xl">
       <div
-        className={classNames('flex gap-x-4 sm:my-2 md:my-16', {
+        className={classNames('flex gap-x-4 sm:my-2 md:my-8 lg:my-16', {
           'pointer-events-none opacity-50': isProductsFetching
         })}
         ref={ref}>
+        {isProductsLoading && (
+          <>
+            <div className="flex flex-col gap-y-3 divide-y-2 divide-gray-300 bg-white max-sm:hidden md:basis-1/6">
+              <div className="bg-gray-300 py-2 pt-5" />
+              <div className="flex flex-col gap-y-1 py-2">
+                <p className="bg-gray-300 py-1 pt-5" />
+                <div className="bg-gray-300 py-2 pt-5" />
+                <div className="bg-gray-300 py-2 pt-5" />
+                <div className="bg-gray-300 py-2 pt-5" />
+              </div>
+              <div className="flex flex-col gap-y-1 py-2">
+                <p className="bg-gray-300 py-1 pt-5" />
+                <div className="bg-gray-300 py-2 pt-5" />
+                <div className="bg-gray-300 py-2 pt-5" />
+                <div className="bg-gray-300 py-2 pt-5" />
+              </div>
+              <div className="flex flex-col gap-y-1 py-2">
+                <p className="bg-gray-300 py-1 pt-5" />
+                <div className="bg-gray-300 py-2 pt-5" />
+                <div className="bg-gray-300 py-2 pt-5" />
+                <div className="bg-gray-300 py-2 pt-5" />
+              </div>
+              <div className="flex flex-col gap-y-1 py-2">
+                <p className="bg-gray-300 py-1 pt-5" />
+                <div className="bg-gray-300 py-2 pt-5" />
+                <div className="bg-gray-300 py-2 pt-5" />
+                <div className="bg-gray-300 py-2 pt-5" />
+              </div>
+              <div className="flex flex-col gap-y-1 py-2">
+                <p className="bg-gray-300 py-1 pt-5" />
+                <div className="bg-gray-300 py-2 pt-5" />
+                <div className="bg-gray-300 py-2 pt-5" />
+                <div className="bg-gray-300 py-2 pt-5" />
+              </div>
+            </div>
+            <div className="basis-full md:basis-5/6">
+              <div className="flex h-full flex-col">
+                <div className="flex items-center gap-x-3 bg-black/5 px-5 py-3">
+                  <p className="bg-gray-300 px-7 py-3 max-sm:hidden" />
+                  <div className="rounded-md bg-gray-300 px-8 py-4 max-sm:flex-1" />
+                  <div className="rounded-md bg-gray-300 px-8 py-4 max-sm:flex-1" />
+                  <div className="rounded-md bg-gray-300 px-8 py-4 max-sm:flex-1" />
+                  <div className="rounded-md bg-gray-300 px-8 py-4 max-sm:flex-1 sm:hidden" />
+                  <div className="rounded-md bg-gray-300 px-28 py-4 max-sm:hidden" />
+                  <div className="ml-auto flex items-center gap-x-2 max-sm:hidden">
+                    <span className="rounded-md bg-gray-300 px-5 py-4" />
+                    <div className="rounded-md bg-gray-300 px-5 py-5" />
+                    <div className="rounded-md bg-gray-300 px-5 py-5" />
+                  </div>
+                </div>
+                <div className="mt-2 grid grid-cols-2 place-items-center gap-2 p-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                  {Array(PRODUCTS_SIZE)
+                    .fill(null)
+                    .map((_, index) => (
+                      <SkeletonProduct key={index} />
+                    ))}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
         {products ? (
           products.length === 0 && pathname === PATHS.SEARCH_PATH ? (
             <div className="mx-auto">
@@ -128,7 +190,7 @@ const CategoryPage = () => {
               {/* Filter side */}
               {products.length > 0 && (
                 <div
-                  className="hidden min-h-fit basis-1/6 bg-white px-2 pb-2 md:block"
+                  className="hidden min-h-fit basis-1/6 bg-white px-2 pb-2 lg:block"
                   style={{ minHeight: ref.current?.clientHeight + 'px' }}>
                   <CategoryFilter
                     headerText="Bộ lọc tìm kiếm"
@@ -140,9 +202,9 @@ const CategoryPage = () => {
               )}
               {/* Product list aside*/}
               <div
-                className={classNames('flex basis-full flex-col md:basis-5/6', {
-                  'md:basis-full': products.length === 0,
-                  'md:basis-5/6': products.length > 0
+                className={classNames('flex basis-full flex-col', {
+                  'lg:basis-full': products.length === 0,
+                  'lg:basis-5/6': products.length > 0
                 })}>
                 {searchParams.get('keyword') && (
                   <p className="py-6">
@@ -154,10 +216,26 @@ const CategoryPage = () => {
                 )}
                 {/* Sort bar */}
                 {products.length > 0 && (
-                  <CategorySortBar
-                    className="bg-black/[0.03]"
-                    pageCount={data?.data.data.totalPages ?? 1}
-                  />
+                  <div className="relative">
+                    <CategorySortBar
+                      className="bg-black/[0.03]"
+                      pageCount={data?.data.data.totalPages ?? 1}
+                    />
+                    <div className="absolute right-5 top-3.5 z-[100] rounded-sm bg-white px-2 text-primary max-sm:hidden lg:hidden">
+                      <CategoryFilterMobile
+                        hasFilter={hasFilter}
+                        headerText="Bộ lọc tìm kiếm"
+                        className="flex shrink-0 flex-nowrap items-end p-1"
+                        onChangeParam={handleSetParams}>
+                        <CategoryFilter
+                          headerText="Bộ lọc tìm kiếm"
+                          hasFilter={hasFilter}
+                          onChangeParam={handleSetParams}
+                          className="px-2 pb-4"
+                        />
+                      </CategoryFilterMobile>
+                    </div>
+                  </div>
                 )}
                 {/* Product list*/}
                 <ProductList

@@ -13,13 +13,14 @@ const UserPurchaseRow = ({
 }: ICartCompleted) => {
   const date = new Date(updatedAt)
   return (
-    <div className="flex flex-col gap-y-1 divide-y divide-gray-200 overflow-auto rounded-sm bg-white px-5 py-4 text-sm text-zinc-500 shadow">
-      <div className="flex flex-nowrap items-stretch justify-between text-sm text-teal-500">
-        <span className="line-clamp-1 break-all">Gửi từ {province.name}</span>
-        <div className="flex flex-nowrap items-stretch justify-end gap-x-1">
-          <Truck className="inline-block" size={18} />
+    <div className="flex flex-col gap-y-1 divide-y divide-gray-200 overflow-auto rounded-sm bg-white px-2 py-3 text-sm text-zinc-500 shadow sm:px-5 sm:py-4">
+      <div className="flex flex-nowrap items-stretch justify-between gap-x-4 text-sm text-teal-500">
+        <span className="line-clamp-1 shrink-0 break-all">Gửi từ {province.name}</span>
+
+        <p className="text-end">
+          <Truck className="mr-1 inline-block" size={18} />
           Đơn hàng được đặt lúc {date.toLocaleDateString()}, {date.toLocaleTimeString()}
-        </div>
+        </p>
       </div>
       <div className="flex gap-x-4 py-2">
         <div className="flex w-full flex-nowrap items-center gap-x-2">

@@ -8,20 +8,25 @@ import { Button, PingIcon } from '@/components'
 import { useBoolean } from '@/hooks'
 
 interface Props {
+  className?: string
   hasFilter: boolean
   headerText: string
   children: React.ReactNode
   onChangeParam: () => void
 }
 
-const CategoryFilterMobile = ({ hasFilter, headerText, children, onChangeParam }: Props) => {
+const CategoryFilterMobile = ({
+  hasFilter,
+  headerText,
+  children,
+  onChangeParam,
+  className = 'fixed right-2 top-3 z-[100] flex shrink-0 flex-nowrap items-end p-1 text-primary sm:hidden'
+}: Props) => {
   const { value: open, setTrue, setFalse } = useBoolean()
 
   return (
     <>
-      <Button
-        className="fixed right-2 top-3 z-[100] flex shrink-0 flex-nowrap items-end p-1 text-primary sm:hidden"
-        onClick={setTrue}>
+      <Button className={className} onClick={setTrue}>
         <span className="relative">
           {hasFilter && <PingIcon className="right-0.5" />}
           <Filter className="h-6 w-6" />

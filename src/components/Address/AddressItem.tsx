@@ -25,7 +25,7 @@ const AddressItem = ({
   const setDefaultOrSelectedAddressMutate = useSetDefaultOrSelectedAddressMutation()
 
   return (
-    <div className="relative flex flex-nowrap items-baseline gap-x-3 py-4 pr-2">
+    <div className="relative flex flex-nowrap items-baseline gap-x-3 py-4">
       {/* Checkbox */}
       {!disableSelect && (
         <input
@@ -39,16 +39,16 @@ const AddressItem = ({
       )}
       <label
         htmlFor={_id}
-        className={classNames('text-md flex-grow text-black/[0.54]', {
+        className={classNames('sm:text-md flex-grow text-xs text-black/[0.54]', {
           'cursor-pointer': !disableSelect
         })}>
-        <div className="flex items-center">
+        <div className="flex items-baseline sm:items-center">
           <span className="text-black/[0.87]">{name}</span>
           <span className="ml-2 border-l-[2px] border-black/[0.54] pl-2">(+84) {phone}</span>
-          <div className="ml-auto flex flex-col items-center gap-2">
-            <div className=" flex flex-wrap gap-2">
+          <div className="ml-auto flex shrink-0 flex-col items-center gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button
-                className="p-1 text-sm text-blue-500"
+                className="p-1 text-xs text-blue-500 sm:text-sm"
                 onClick={() => {
                   setValue('address', _id)
                   setValue('type', 0)
@@ -57,7 +57,7 @@ const AddressItem = ({
               </Button>
               {!isDefault && disableSelect && (
                 <Button
-                  className="p-1 text-sm text-blue-500"
+                  className="p-1 text-xs text-blue-500 sm:text-sm"
                   onClick={() => {
                     setValue('address', _id)
                     setValue('type', 1)
@@ -73,7 +73,7 @@ const AddressItem = ({
                 }}
                 disabled={isDefault}
                 className={classNames(
-                  'rounded-sm border border-black/[0.26] px-2 py-1 text-sm hover:bg-black/[0.02]',
+                  'rounded-sm border border-black/[0.26] px-2 py-1 text-xs hover:bg-black/[0.02] sm:text-sm',
                   {
                     'pointer-events-auto cursor-not-allowed opacity-70': isDefault
                   }
@@ -88,7 +88,7 @@ const AddressItem = ({
           {ward.name}, {district.name}, {province.name}
         </p>
         {isDefault && (
-          <span className="shrink-0 rounded-sm border border-primary px-1.5 py-0.5 text-xxs capitalize text-primary">
+          <span className="mt-1 inline-block shrink-0 rounded-sm border border-primary px-1.5 py-0.5 text-xxs capitalize text-primary">
             Mặc định
           </span>
         )}

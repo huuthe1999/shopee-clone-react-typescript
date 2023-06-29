@@ -175,11 +175,11 @@ const Address = ({ className, disableSelect }: { className?: string; disableSele
           setValue(true)
           setHeaderText('Địa chỉ mới')
         }}>
-        <Plus className="float-left" />
-        <span className="my-auto inline-block text-base">Thêm Địa Chỉ Mới</span>
+        <Plus className="float-left max-sm:h-5 max-sm:w-5" />
+        <span className="my-auto inline-block text-xs sm:text-base">Thêm Địa Chỉ Mới</span>
       </Button>
 
-      <div className="container mx-auto flex max-h-[28rem] flex-col divide-y-2 overflow-y-auto">
+      <div className="mx-auto flex max-h-[28rem] flex-col divide-y-2 overflow-y-auto sm:container">
         {addressesData?.length === 0 ? (
           <div>
             <img

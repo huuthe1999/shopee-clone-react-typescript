@@ -191,12 +191,12 @@ const CategorySortBar = ({ pageCount, className }: Props) => {
       )}>
       {/* Sort bar */}
       <div className="flex w-full items-center gap-x-2">
-        <span className="max-sm:hidden">Sắp xếp theo</span>
+        <span className="hidden md:inline">Sắp xếp theo</span>
         <ul className="flex flex-1 shrink flex-nowrap gap-2 text-center">{renderSortBar}</ul>
       </div>
       {/* Pagination */}
       {pageCount > 1 && (
-        <div className="flex items-center justify-end gap-2 self-stretch max-sm:hidden">
+        <div className="flex items-center justify-end gap-2 self-stretch max-lg:hidden">
           <p className="my-auto flex flex-nowrap px-2">
             <span className="line-clamp-1 text-primary">{page + 1}</span>
             <span className="line-clamp-1">/{pageCount}</span>

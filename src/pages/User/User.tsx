@@ -22,10 +22,10 @@ const User = () => {
 
   return (
     <>
-      <div className="mx-auto flex min-h-[16rem] max-w-6xl flex-col gap-4 py-4 md:flex-row">
+      <div className="mx-auto flex min-h-[16rem] max-w-6xl flex-col gap-4 py-2 sm:py-4 md:flex-row">
         <div className="shrink-0 basis-full md:basis-[11.25rem]">
           {/* Edit profile */}
-          <div className="flex flex-nowrap gap-x-2 py-4">
+          <div className="flex flex-nowrap items-center gap-2 py-4 max-sm:flex-col">
             <Link
               to={PATHS.USER_PROFILE_PATH}
               className="h-12 w-12 shrink-0 overflow-hidden rounded-full border-primary ring-1 ring-primary ring-offset-1 ring-offset-secondary">

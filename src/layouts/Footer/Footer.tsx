@@ -34,7 +34,10 @@ const Footer = () => {
     <footer className="shrink-0 border-t-4 border-primary bg-neutral-100 p-1">
       <div className="mx-auto flex max-w-6xl flex-row flex-wrap">
         {renderItems}
-        <div className="flex w-full flex-wrap border-t-2 border-zinc-300 py-8 text-sm text-neutral-500">
+        <div className="flex w-full flex-wrap border-t-2 border-zinc-300 py-4 text-sm text-neutral-500 sm:py-8">
+          <p className="basis-full py-2 text-center font-bold text-primary sm:text-lg">
+            Trang web chỉ phục vụ cho nhu cầu học tập
+          </p>
           <div className="basis-1/3 pr-1 text-center max-md:basis-full">
             © 2023 Shopee. Tất cả các quyền được bảo lưu.
           </div>

@@ -69,12 +69,12 @@ const ProductDetail = () => {
           'pointer-events-none opacity-50': isFetchingProductQueryData
         })}>
         {/* Breadcrumb */}
-        <div className="mt-4">
+        <div className="mt-4 p-2">
           <BreadCrumb data={breadCrumb} isLoading={isFetchingProductQueryData} />
         </div>
         {/* Content */}
 
-        <div className="mt-2 grid grid-cols-12 bg-white p-4 sm:mt-6 sm:gap-x-8 sm:gap-y-4">
+        <div className="mt-2 grid grid-cols-12 bg-white p-2 sm:mt-6 sm:gap-x-8 sm:gap-y-4 sm:p-4">
           <div className="col-span-12 md:col-span-5">
             {isFetchingProductQueryData ? (
               <div
@@ -245,7 +245,7 @@ const ProductDetail = () => {
               skeletonSize={FAV_PRODUCTS_SIZE}
               isFetching={isInitialLoading}
               data={productFavData?.items}
-              className="grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6"
+              className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
             />
           </div>
         </Suspense>

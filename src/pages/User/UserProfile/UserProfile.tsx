@@ -87,7 +87,7 @@ const UserProfile = () => {
       </div>
       {/* Body */}
       <form
-        className="flex flex-col gap-x-6 gap-y-4 pb-6 pt-4 md:flex-row"
+        className="flex flex-col-reverse gap-x-6 gap-y-4 pb-6 pt-4 md:flex-row"
         onSubmit={handleSubmit(handleSubmitForm)}>
         <div className="flex basis-full flex-col gap-y-4 md:basis-2/3">
           <FormInput
@@ -218,7 +218,7 @@ const UserProfile = () => {
           </div>
         </div>
         <div className="flex basis-full flex-col md:basis-1/3">
-          <div className="flex flex-col flex-nowrap items-center gap-y-3 border-l border-zinc-200 px-6">
+          <div className="flex flex-col flex-nowrap items-center gap-y-3 border-l border-zinc-200 px-6 max-sm:border-none">
             <label
               htmlFor="file"
               className={classNames('cursor-pointer', {

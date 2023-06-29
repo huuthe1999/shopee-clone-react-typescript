@@ -14,12 +14,18 @@ export interface OrderQueryProps {
   page?: number
   size: number
 }
-export const useOrderQuery = ({ status, page, size, key, enabled }: OrderQueryProps) => {
+export const useOrderQuery = ({
+  status,
+  page,
+  size,
+  key = QUERY_KEYS.order.list,
+  enabled
+}: OrderQueryProps) => {
   useAxiosPrivate()
   const { accessToken } = useAuthContext()
 
   return useQuery<AxiosResponse<IDataPaginationResponse<ICart[]>>, AxiosError<BaseResponse>>({
-    queryKey: [key ?? QUERY_KEYS.order.list, { status, page, size }],
+    queryKey: [key, { status, page, size }],
     queryFn: () => orderServices.getInCart({ status, page, size }),
     enabled: enabled !== undefined ? enabled && Boolean(accessToken) : Boolean(accessToken),
     keepPreviousData: true

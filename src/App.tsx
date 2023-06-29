@@ -12,7 +12,7 @@ function App() {
       {/* Provide the client to your App */}
       <QueryClientProvider client={queryClient}>
         <RouterElementProvider />
-        <ReactQueryDevtools initialIsOpen={false} position="top-right" />
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-left" />
       </QueryClientProvider>
       <ToastContainer
         className="z-[99999]"

@@ -1,4 +1,4 @@
-import { Bell, ChevronDown, Facebook, Globe, HelpCircle, Instagram } from 'react-feather'
+import { Bell, ChevronDown, Facebook, HelpCircle, Instagram } from 'react-feather'
 import { Link } from 'react-router-dom'
 
 import { INavItem } from '@/components'
@@ -49,13 +49,13 @@ export const RIGHT_NAV: INavItem[] = [
     text: 'Hỗ trợ',
     leftIcon: <HelpCircle size={16} />
   },
-  {
-    id: 3,
-    menuItems: [{ text: 'Tiếng việt' }, { text: 'English' }],
-    text: 'Tiếng việt',
-    leftIcon: <Globe size={16} />,
-    rightIcon: <ChevronDown size={16} />
-  },
+  // {
+  //   id: 3,
+  //   menuItems: [{ text: 'Tiếng việt' }, { text: 'English' }],
+  //   text: 'Tiếng việt',
+  //   leftIcon: <Globe size={16} />,
+  //   rightIcon: <ChevronDown size={16} />
+  // },
   {
     id: 4,
     to: PATHS.LOGIN_PATH,
