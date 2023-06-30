@@ -1,12 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'react-toastify'
-
 import { Modal } from '@/components'
 import { EVENT_MODALS } from '@/constants'
-import { useAuthContext, useTooltipContext } from '@/contexts'
-import { useBoolean } from '@/hooks'
-import { authServices } from '@/services'
-import { authUtils } from '@/utils'
+import { useTooltipContext } from '@/contexts'
+import { useBoolean, useLogOut } from '@/hooks'
 
 import MenuItem from './MenuItem'
 import { MenuItemProps } from './type'
@@ -20,28 +15,14 @@ const MenuItemWithModal = ({
 }: Omit<MenuItemProps, 'onClick'>) => {
   const { setOpen } = useTooltipContext()
   const { value, setTrue, setValue } = useBoolean()
-  const queryClient = useQueryClient()
-  const logoutMutation = useMutation({
-    mutationFn: authServices.logoutUser
-  })
-  const { handleResetAuth } = useAuthContext()
+  const logoutMutation = useLogOut()
 
   const handleSubmit = async () => {
     if (eventModal === EVENT_MODALS.LOGOUT_EVENT) {
-      logoutMutation.mutate(undefined, {
-        onSuccess({ data }) {
-          if (data.isSuccess) {
-            //Reset auth
-            authUtils.clearAll()
-            handleResetAuth()
-
-            queryClient.clear()
-            // navigate(PATHS.LOGIN_PATH, { replace: true })
-            // Close modal
-            setValue(false)
-            // Toast message
-            toast.success(data.message)
-          }
+      await logoutMutation.mutateAsync(undefined, {
+        onSettled() {
+          // Close modal
+          setValue(false)
         }
       })
     }

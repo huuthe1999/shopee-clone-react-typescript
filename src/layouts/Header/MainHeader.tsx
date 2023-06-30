@@ -27,9 +27,9 @@ import { AUTH, BRIEF_CART_SIZE, PATHNAMES, PATHS, QUERY_KEYS } from '@/constants
 import { TooltipContent, TooltipProvider, TooltipTrigger, useAuthContext } from '@/contexts'
 import { LEFT_NAV, RIGHT_NAV } from '@/data/header'
 import { useDebounce, useOrderQuery, useProfileQuery } from '@/hooks'
-import { saveSearchHistory } from '@/utils'
+import { saveSearchHistory, splittingId } from '@/utils'
 
-import { SearchInput } from './components'
+import { LogOutButton, SearchInput } from './components'
 
 const pathShowSearchInput = [
   PATHS.HOME_PATH,
@@ -213,6 +213,9 @@ const MainHeader = () => {
             </p>
           )}
 
+          {/* Log out button on mobile */}
+          {profile && pathname.includes(PATHS.USER_PATH) && <LogOutButton />}
+
           {/* Logo */}
           <ol className={classNames('shrink-0 self-start max-sm:hidden')}>
             <NavItem
@@ -301,7 +304,7 @@ const MainHeader = () => {
           )}
 
           {/* Slot for filter */}
-          {matchCategoryPath && <div className="h-8 w-12 sm:hidden"></div>}
+          {matchCategoryPath && splittingId(pathname) && <div className="h-8 w-12 sm:hidden"></div>}
         </div>
       </header>
 
