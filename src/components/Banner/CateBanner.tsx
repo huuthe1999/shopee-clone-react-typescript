@@ -36,7 +36,7 @@ const CateBanner = ({
   const renderSkeleton = (
     <div
       className={classNames(
-        'grid h-full grid-cols-4 place-items-center gap-2 sm:grid-cols-6 md:grid-cols-8',
+        'grid h-full grid-cols-4 place-items-center gap-2 sm:grid-cols-6 md:grid-cols-9',
         {
           'grid-rows-2': grid
         }
@@ -86,7 +86,7 @@ const CateBanner = ({
               <div
                 key={page.data.data.nextPage}
                 className={classNames(
-                  'grid h-full grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8',
+                  'grid h-full grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-9',
                   {
                     'grid-rows-2 place-items-start': grid,
                     'place-items-baseline': !grid
