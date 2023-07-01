@@ -2,12 +2,13 @@ import { Fragment, Suspense, lazy, useCallback, useEffect, useState } from 'reac
 
 import classNames from 'classnames'
 import { ChevronLeft, ChevronRight } from 'react-feather'
+import { Helmet } from 'react-helmet'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import emptyCheckout from '@/assets/images/emptyCheckout.png'
 import { Button, Modal, ProductList, Spinner } from '@/components'
-import { CART_SIZE, FAV_PRODUCTS_SIZE, PAGE } from '@/constants'
+import { CART_SIZE, FAV_PRODUCTS_SIZE, PAGE, PATHS } from '@/constants'
 import { useBoolean, useFavProductsQuery, useOrderQuery, useUpdateCartMutation } from '@/hooks'
 import { IProductSelected } from '@/types'
 import { formatSearchParamUrl } from '@/utils'
@@ -188,6 +189,11 @@ const Cart = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Giỏ hàng</title>
+        <meta name="description" content="Giỏ hàng" data-react-helmet="true" />
+        <link rel="canonical" href={PATHS.CART_PATH} data-react-helmet="true" />
+      </Helmet>
       <div
         className={classNames('mx-auto flex max-w-6xl flex-col gap-y-4 py-5', {
           'pointer-events-none opacity-60': isFetchingProductsCart

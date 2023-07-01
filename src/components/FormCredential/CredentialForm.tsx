@@ -4,6 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
 import { Eye, EyeOff } from 'react-feather'
+import { Helmet } from 'react-helmet'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useMatch, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -130,83 +131,106 @@ const CredentialForm = () => {
   }
 
   return (
-    <form
-      className="flex flex-col gap-3 rounded-sm bg-white p-8 shadow-md"
-      onSubmit={handleSubmit(handleSubmitForm)}
-      noValidate>
-      <Link to={PATHS.HOME_PATH} className="sm:hidden">
-        <LogoIcon className="mx-auto h-9 fill-primary" />
-      </Link>
-      <h2 className="py-3 text-xl font-medium max-sm:hidden">
-        {matchLogin ? 'Đăng nhập' : 'Đăng ký'}
-      </h2>
-      <div>
-        <input
-          type="text"
-          placeholder="Email"
-          className={styleInput('email')}
-          {...register('email')}
+    <>
+      <Helmet>
+        <title>
+          {matchLogin
+            ? 'Đăng nhập tài khoản - Mua sắm Online | Shopee Việt Nam'
+            : 'Đăng ký ngay | Shopee Việt Nam'}
+        </title>
+        <meta
+          name="description"
+          content={
+            matchLogin
+              ? 'Đăng nhập Tài khoản Shopee và tận hưởng ưu đãi độc quyền với giá cả hấp dẫn trên Shopee Việt Nam!'
+              : 'Đăng ký tài khoản hôm nay và nhận ngay vô số deal và voucher độc quyền dành cho khách hàng mới trên Shopee Việt Nam!'
+          }
+          data-react-helmet="true"
         />
-        {renderError('email')}
-      </div>
-      <div>
-        <div className="relative">
+        <link
+          rel="canonical"
+          href={matchLogin ? PATHS.LOGIN_PATH : PATHS.REGISTER_PATH}
+          data-react-helmet="true"
+        />
+      </Helmet>
+      <form
+        className="flex flex-col gap-3 rounded-sm bg-white p-8 shadow-md"
+        onSubmit={handleSubmit(handleSubmitForm)}
+        noValidate>
+        <Link to={PATHS.HOME_PATH} className="sm:hidden">
+          <LogoIcon className="mx-auto h-9 fill-primary" />
+        </Link>
+        <h1 className="py-3 text-xl font-medium max-sm:hidden">
+          {matchLogin ? 'Đăng nhập' : 'Đăng ký'}
+        </h1>
+        <div>
           <input
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Mật khẩu"
-            className={styleInput('password')}
-            autoComplete="on"
-            {...register('password')}
+            type="text"
+            placeholder="Email"
+            className={styleInput('email')}
+            {...register('email')}
           />
-          {renderShowPassword(showPassword, handleShowPassword)}
+          {renderError('email')}
         </div>
-        {renderError('password')}
-      </div>
-      {!matchLogin && (
         <div>
           <div className="relative">
             <input
-              type={showConfirmPassword ? 'text' : 'password'}
-              placeholder="Nhập lại mật khẩu"
-              className={styleInput('confirmPassword')}
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Mật khẩu"
+              className={styleInput('password')}
               autoComplete="on"
-              {...register('confirmPassword')}
+              {...register('password')}
             />
-            {renderShowPassword(showConfirmPassword, handleShowConfirmPassword)}
+            {renderShowPassword(showPassword, handleShowPassword)}
           </div>
-          {renderError('confirmPassword')}
+          {renderError('password')}
         </div>
-      )}
+        {!matchLogin && (
+          <div>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                placeholder="Nhập lại mật khẩu"
+                className={styleInput('confirmPassword')}
+                autoComplete="on"
+                {...register('confirmPassword')}
+              />
+              {renderShowPassword(showConfirmPassword, handleShowConfirmPassword)}
+            </div>
+            {renderError('confirmPassword')}
+          </div>
+        )}
 
-      {/* Button */}
-      <Button
-        type="submit"
-        isLoading={isSubmitting}
-        disabled={!isValid || isSubmitting}
-        className={classNames(
-          'flex items-center justify-center rounded-sm bg-primary py-3 uppercase text-white',
-          {
-            'cursor-not-allowed opacity-80': !isValid || isSubmitting,
-            'cursor-pointer hover:opacity-90': isValid && !isSubmitting
-          }
-        )}>
-        {matchLogin ? 'Đăng nhập' : 'Đăng ký'}
-      </Button>
+        {/* Button */}
+        <Button
+          type="submit"
+          isLoading={isSubmitting}
+          disabled={!isValid || isSubmitting}
+          className={classNames(
+            'flex items-center justify-center rounded-sm bg-primary py-3 uppercase text-white',
+            {
+              'cursor-not-allowed opacity-80': !isValid || isSubmitting,
+              'cursor-pointer hover:opacity-90': isValid && !isSubmitting
+            }
+          )}>
+          {matchLogin ? 'Đăng nhập' : 'Đăng ký'}
+        </Button>
 
-      {/* Divide */}
-      <div className="relative mt-1 h-[1px] bg-neutral-300 text-neutral-400">
-        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-1">
-          Hoặc
-        </span>
-      </div>
+        {/* Divide */}
+        <div className="relative mt-1 h-[1px] bg-neutral-300 text-neutral-400">
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-1">
+            Hoặc
+          </span>
+        </div>
 
-      {/* Link */}
-      <Link
-        to={matchLogin ? PATHS.REGISTER_PATH : PATHS.LOGIN_PATH}
-        className="mx-auto mt-1 text-sm text-primary hover:text-orange-400">
-        {!matchLogin ? 'Đăng nhập' : 'Đăng ký'}
-      </Link>
-    </form>
+        {/* Link */}
+        <Link
+          to={matchLogin ? PATHS.REGISTER_PATH : PATHS.LOGIN_PATH}
+          className="mx-auto mt-1 text-sm text-primary hover:text-orange-400">
+          {!matchLogin ? 'Đăng nhập' : 'Đăng ký'}
+        </Link>
+      </form>
+    </>
   )
 }
 

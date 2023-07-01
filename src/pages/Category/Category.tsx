@@ -3,6 +3,7 @@ import { useRef } from 'react'
 import classNames from 'classnames'
 import queryString from 'query-string'
 import { AlertOctagon } from 'react-feather'
+import { Helmet } from 'react-helmet'
 import { Navigate, useLocation, useMatch, useParams, useSearchParams } from 'react-router-dom'
 
 import { Pagination, ProductList, SkeletonProduct } from '@/components'
@@ -96,6 +97,19 @@ const CategoryPage = () => {
 
   return (
     <div className="mx-auto h-fit max-w-6xl">
+      <Helmet>
+        <title>
+          {matchSearchPage
+            ? 'Kết quả tìm kiếm cho từ khoá "' + searchParams.get('keyword') + '"'
+            : `Mua sắm online sản phẩm ${categorySlug?.substring(
+                0,
+                categorySlug.lastIndexOf('-')
+              )} giá
+          tốt`}
+        </title>
+        <meta name="description" content="Danh sách sản phẩm" data-react-helmet="true" />
+        <link rel="canonical" href={pathname} data-react-helmet="true" />
+      </Helmet>
       <div
         className={classNames('flex gap-x-4 sm:my-2 md:my-8 lg:my-16', {
           'pointer-events-none opacity-50': isProductsFetching

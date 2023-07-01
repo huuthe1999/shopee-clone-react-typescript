@@ -1,7 +1,9 @@
 import { Fragment } from 'react'
 
+import { Helmet } from 'react-helmet'
+
 import { Banner, Button, Product, SkeletonProduct } from '@/components'
-import { FAV_PRODUCTS_SIZE } from '@/constants'
+import { FAV_PRODUCTS_SIZE, PATHS } from '@/constants'
 import { useProductsInfiniteQuery } from '@/hooks'
 
 import CateSection from './CateSection'
@@ -14,6 +16,15 @@ const Home = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Shopee - Trang web thương mại điện tử Việt Nam</title>
+        <meta
+          name="description"
+          content="Mua sắm trực tuyến hàng triệu sản phẩm ở tất cả ngành hàng. Đây là trang web chỉ phục vụ cho nhu cầu học tập"
+          data-react-helmet="true"
+        />
+        <link rel="canonical" href={PATHS.HOME_PATH} data-react-helmet="true" />
+      </Helmet>
       <div className="bg-white pb-4 md:py-8">
         <div className="mx-auto flex max-w-6xl flex-col gap-y-4">
           {/* Banner */}

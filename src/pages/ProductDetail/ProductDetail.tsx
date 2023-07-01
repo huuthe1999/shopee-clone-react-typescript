@@ -4,7 +4,8 @@ import { Rating, Star } from '@smastrom/react-rating'
 import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
 import DOMPurify from 'dompurify'
-import { Navigate, useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
+import { Navigate, useLocation, useParams } from 'react-router-dom'
 
 import { BreadCrumb, BreadCrumbItem, Spinner } from '@/components'
 import { FAV_PRODUCTS_SIZE, PATHS, QUERY_KEYS } from '@/constants'
@@ -19,7 +20,7 @@ const ProductList = lazy(() => import('@/components/Product/ProductList'))
 
 const ProductDetail = () => {
   const { productSlug } = useParams()
-
+  const { pathname } = useLocation()
   const productId = splittingId(productSlug) as string
   const { data: productQueryData, isFetching: isFetchingProductQueryData } = useQuery({
     queryKey: [QUERY_KEYS.product.detail, productId],
@@ -64,6 +65,18 @@ const ProductDetail = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{productData?.name}</title>
+        <meta
+          name="description"
+          content={
+            productData?.name +
+            '. Mua hàng qua mạng uy tín, tiện lợi. Shopee đảm bảo nhận hàng, hoặc được hoàn lại tiền Giao Hàng Miễn Phí. XEM NGAY!'
+          }
+          data-react-helmet="true"
+        />
+        <link rel="canonical" href={pathname} data-react-helmet="true" />
+      </Helmet>
       <div
         className={classNames('mx-auto flex max-w-6xl flex-col', {
           'pointer-events-none opacity-50': isFetchingProductQueryData
@@ -227,7 +240,7 @@ const ProductDetail = () => {
           </div>
         ) : productData && productData.description ? (
           <div className="bg-white p-3 sm:p-6">
-            <h1 className="bg-neutral-100 p-4 text-xl uppercase">MÔ TẢ SẢN PHẨM</h1>
+            <h2 className="bg-neutral-100 p-4 text-xl uppercase">MÔ TẢ SẢN PHẨM</h2>
             <p
               className="mt-4 whitespace-pre-wrap break-words leading-loose text-black/[0.8] sm:mt-8"
               dangerouslySetInnerHTML={{
@@ -240,7 +253,7 @@ const ProductDetail = () => {
         {/* May like product */}
         <Suspense fallback={<Spinner />}>
           <div className="p-2 sm:p-6">
-            <h1 className="py-4 text-xl uppercase">CÓ THỂ BẠN CŨNG THÍCH</h1>
+            <h2 className="py-4 text-xl uppercase">CÓ THỂ BẠN CŨNG THÍCH</h2>
             <ProductList
               skeletonSize={FAV_PRODUCTS_SIZE}
               isFetching={isInitialLoading}

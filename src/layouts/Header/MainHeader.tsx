@@ -225,7 +225,7 @@ const MainHeader = () => {
                 <div className="flex items-end text-white">
                   <Home className="hidden max-sm:block" size={28} />
                   <LogoIcon className="fill-white max-sm:hidden sm:h-12" />
-                  {!matchHomePath && (
+                  {showPathName && (
                     <span className="ml-4 border-l-2 border-l-white pl-4 text-2xl">{namePage}</span>
                   )}
                 </div>

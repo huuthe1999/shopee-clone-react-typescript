@@ -3,6 +3,7 @@ import { useCategoryBannerInfinityQuery, useViewport } from '@/hooks'
 
 const CateSection = () => {
   const device = useViewport()
+
   const size = device === '' ? 0 : device === 'sm' ? 8 : 16
 
   const result = useCategoryBannerInfinityQuery(size)

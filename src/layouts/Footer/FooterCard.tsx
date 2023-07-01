@@ -28,7 +28,7 @@ const FooterCard = ({ cardItem, isLastItem }: Props) => {
   return (
     <>
       <section>
-        <h6 className="my-6 text-xs font-bold text-neutral-700">{cardItem.title}</h6>
+        <h2 className="my-6 text-xs font-bold text-neutral-700">{cardItem.title}</h2>
         <ul className="flex flex-wrap gap-x-2">{renderChildren}</ul>
       </section>
     </>
