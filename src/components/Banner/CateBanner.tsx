@@ -35,12 +35,11 @@ const CateBanner = ({
 
   const renderSkeleton = (
     <div
-      className={classNames(
-        'grid h-full grid-cols-4 place-items-center gap-2 sm:grid-cols-6 md:grid-cols-9',
-        {
-          'grid-rows-2': grid
-        }
-      )}>
+      className={classNames('grid h-full grid-cols-4 place-items-center gap-2 sm:grid-cols-6', {
+        'grid-rows-2': grid,
+        'md:grid-cols-9': size < 10,
+        'md:grid-cols-8': size >= 10
+      })}>
       {[...Array(size)].map((_, index) => (
         <Skeleton key={index} />
       ))}
@@ -85,13 +84,12 @@ const CateBanner = ({
             {data?.pages.map((page) => (
               <div
                 key={page.data.data.nextPage}
-                className={classNames(
-                  'grid h-full grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-9',
-                  {
-                    'grid-rows-2 place-items-start': grid,
-                    'place-items-baseline': !grid
-                  }
-                )}>
+                className={classNames('grid h-full grid-cols-4 gap-2 sm:grid-cols-6', {
+                  'grid-rows-2 place-items-start': grid,
+                  'place-items-baseline': !grid,
+                  'md:grid-cols-9': size < 10,
+                  'md:grid-cols-8': size >= 10
+                })}>
                 {page.data.data.items.map((item) =>
                   isCategoryResponse(item) ? (
                     <CateCard

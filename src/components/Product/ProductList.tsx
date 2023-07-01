@@ -27,7 +27,7 @@ const ProductList = ({
   onResetParam
 }: ProductListProps) => {
   return (
-    <div className={classNames('mt-2 grid place-items-center gap-2 p-1', [className])}>
+    <div className={classNames('mt-2 grid place-items-stretch gap-2 p-1', [className])}>
       {isFetching &&
         Array(skeletonSize)
           .fill(null)
