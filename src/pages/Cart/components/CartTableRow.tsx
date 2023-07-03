@@ -195,7 +195,7 @@ export const CartTableRow = memo(
             </Link>
           )}
 
-          <div className="flex gap-y-1 max-sm:flex-col">
+          <div className="flex gap-1 max-sm:flex-col">
             <div className="flex-grow text-black/80">
               {!onCheck || isInValidOrder ? (
                 <span
@@ -212,7 +212,7 @@ export const CartTableRow = memo(
                 </Link>
               )}
               <img src={voucherImg} alt="vouchers_img" className="h-5 w-fit" />
-              {isStale && (
+              {isStale && quantity > 0 && (
                 <span className="inline shrink-0 rounded-sm border border-primary px-1.5 py-0.5 text-xxs capitalize text-primary">
                   Số lượng sản phẩm đã được cập nhật mới
                 </span>

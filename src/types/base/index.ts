@@ -53,6 +53,10 @@ export interface IDataResponse<T> extends BaseResponse {
   data: T
 }
 
+export interface IErrorResponse<T> extends BaseResponse {
+  errors: T
+}
+
 export interface IDataPaginationResponse<T> extends BaseResponse {
   data: IBaseDataPagination<T>
 }

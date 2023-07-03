@@ -73,7 +73,6 @@ const UserPassword = () => {
         <FormInput
           {...register('password')}
           showLabel
-          isDirty={!!dirtyFields.password}
           invalid={!!errors.password}
           label="Mật khẩu mới"
           type={showPassword ? 'text' : 'password'}
@@ -86,7 +85,6 @@ const UserPassword = () => {
         <FormInput
           {...register('confirmPassword')}
           showLabel
-          isDirty={!!dirtyFields.confirmPassword}
           invalid={!!errors.confirmPassword}
           label="Xác nhận mật khẩu"
           type={showConfirmPassword ? 'text' : 'password'}

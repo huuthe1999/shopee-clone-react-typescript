@@ -2,25 +2,31 @@ import { Fragment, Suspense, lazy, useCallback, useEffect, useState } from 'reac
 
 import classNames from 'classnames'
 import { ChevronLeft, ChevronRight } from 'react-feather'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import emptyCheckout from '@/assets/images/emptyCheckout.png'
 import { Button, Modal, ProductList, Spinner } from '@/components'
-import { CART_SIZE, FAV_PRODUCTS_SIZE, PAGE, PATHS } from '@/constants'
+import { AUTH, CART_SIZE, FAV_PRODUCTS_SIZE, PAGE, PATHS } from '@/constants'
 import { useBoolean, useFavProductsQuery, useOrderQuery, useUpdateCartMutation } from '@/hooks'
 import { IProductSelected } from '@/types'
-import { formatSearchParamUrl } from '@/utils'
+import { authUtils, formatSearchParamUrl } from '@/utils'
 
 import { CartTableFooter, CartTableHeader, CartTableRow, CartTableRowSkeleton } from './components'
 
 const ModalConfirm = lazy(() => import('@/components/Modal/ModalConfirm'))
 
 const Cart = () => {
+  const productsCartPersistData: IProductSelected[] | undefined = authUtils.getItem(
+    AUTH.CART_CHECKOUT
+  )
   const [searchParams, setSearchParams] = useSearchParams()
   const [productSelected, setProductSelected] = useState<string | undefined>()
-  const [productsSelected, setProductsSelected] = useState<Array<IProductSelected>>([])
+  const [productsSelected, setProductsSelected] = useState<Array<IProductSelected>>(
+    productsCartPersistData || []
+  )
+
   const { value, setValue } = useBoolean()
   const [typeDelete, setTypeDelete] = useState<0 | 1>(0)
 
@@ -48,7 +54,8 @@ const Cart = () => {
   const productsData = productsCartData?.items.map((product) => ({
     ...product,
     amount: Math.min(product.amount, product.product.quantity),
-    isStale: product.amount > product.product.quantity ? true : false
+    isStale:
+      product.amount > product.product.quantity || product.product.quantity === 0 ? true : false
   }))
 
   const handleDeleteProduct = useCallback(
@@ -100,16 +107,18 @@ const Cart = () => {
               (productCart) => !prevProductsSelected.some((item) => item._id === productCart._id)
             ) || []
           // Trả về những phần tử đã lưu trước đó + những phần tử mới không trùng lặp
-          return prevProductsSelected.concat(
-            restProductsSelected.map((productCart) => ({
-              ...productCart,
-              totalPriceItem:
-                (productCart.product.price *
-                  (100 - productCart.product.discount) *
-                  productCart.amount) /
-                100
-            }))
-          )
+          return prevProductsSelected
+            .concat(
+              restProductsSelected.map((productCart) => ({
+                ...productCart,
+                totalPriceItem:
+                  (productCart.product.price *
+                    (100 - productCart.product.discount) *
+                    productCart.amount) /
+                  100
+              }))
+            )
+            .filter((item) => item.product.quantity > 0)
         })
       } else {
         // Loại bỏ những phần tử ở trang hiện tại
@@ -143,9 +152,11 @@ const Cart = () => {
         )
       })
 
-  const isCheck = productsData?.every((productCart) =>
-    productsSelected.some((productSelect) => productSelect._id === productCart._id)
-  )
+  const isCheck = productsData
+    ?.filter((item) => !item.isStale)
+    .every((productCart) =>
+      productsSelected.some((productSelect) => productSelect._id === productCart._id)
+    )
 
   const handleSetPrevPage = () => {
     const newParamsObject = formatSearchParamUrl({
@@ -254,6 +265,7 @@ const Cart = () => {
             </div>
             <CartTableHeader
               key={page}
+              disabled={productsData?.filter((item) => !item.isStale).length === 0}
               isLoading={isLoadingProductsCart}
               onSelect={handleSelectAllProduct}
               isCheck={isCheck}
@@ -263,7 +275,7 @@ const Cart = () => {
               isCheck={isCheck}
               isLoading={isLoadingProductsCart}
               productsSelected={productsSelected}
-              quantity={productsData?.length}
+              quantity={productsData?.filter((item) => !item.isStale).length}
               onSelect={handleSelectAllProduct}
               onMultipleDelete={handleDeleteMultipleProduct}
             />

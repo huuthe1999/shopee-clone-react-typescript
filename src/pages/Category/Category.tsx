@@ -3,7 +3,7 @@ import { useRef } from 'react'
 import classNames from 'classnames'
 import queryString from 'query-string'
 import { AlertOctagon } from 'react-feather'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { Navigate, useLocation, useMatch, useParams, useSearchParams } from 'react-router-dom'
 
 import { Pagination, ProductList, SkeletonProduct } from '@/components'

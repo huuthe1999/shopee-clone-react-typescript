@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 
 import { Banner, Button, Product, SkeletonProduct } from '@/components'
 import { FAV_PRODUCTS_SIZE, PATHS } from '@/constants'

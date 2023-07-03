@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   invalid: boolean
-  isDirty: boolean
   label?: string
   isShowError?: boolean
   showLabel?: boolean

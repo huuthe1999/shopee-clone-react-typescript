@@ -42,3 +42,10 @@ export interface ICartCompleted extends IProductOrdered, Pick<ICart, 'amount' | 
   updatedAt: string
   product: Pick<IProduct, 'name' | 'image' | 'price' | 'discount' | 'province'>
 }
+
+export type TCartCheckOut =
+  | {
+      status: 'fulfilled'
+      value: string
+    }
+  | { status: 'rejected'; reason: string }

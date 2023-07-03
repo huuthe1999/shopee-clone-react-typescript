@@ -6,7 +6,7 @@ import { Button } from '@/components'
 import { AUTH, PATHS } from '@/constants'
 import { useAddressesQuery, useCheckoutMutation } from '@/hooks'
 import { IProductSelected } from '@/types'
-import { authUtils, formatCurrency, formatNumber } from '@/utils'
+import { authUtils, formatCurrency } from '@/utils'
 
 interface Props {
   isLoading?: boolean
@@ -68,24 +68,29 @@ export const CartTableFooter = ({
             <div className="inline-flex basis-auto items-center gap-x-2 lg:basis-1/2 lg:gap-x-4">
               {/* Checkbox */}
               <input
+                disabled={quantity === 0}
                 id="cart-selected-all"
                 checked={isCheck}
                 onChange={handleChange}
                 type="checkbox"
-                className={
-                  'h-[1.125rem] w-[1.125rem] shrink-0 cursor-pointer rounded border-gray-300 px-2 text-primary accent-primary'
-                }
+                className={classNames(
+                  'h-[1.125rem] w-[1.125rem] shrink-0 rounded border-gray-300 px-2 text-primary accent-primary',
+                  {
+                    'cursor-not-allowed': quantity === 0,
+                    'cursor-pointer': quantity !== 0
+                  }
+                )}
               />
 
-              {quantity && (
+              {quantity && quantity > 0 ? (
                 <label
                   htmlFor="cart-selected-all"
                   className={classNames(
                     'line-clamp-1 shrink-0 cursor-pointer rounded-sm bg-white p-2 text-xs text-black/80 transition-opacity hover:opacity-80 md:px-4 md:py-2 md:text-lg'
                   )}>
-                  Chọn ({formatNumber(quantity)})
+                  Chọn ({productsSelected.length})
                 </label>
-              )}
+              ) : null}
               <Button
                 className={classNames(
                   'shrink-0 rounded-sm bg-white p-2 transition-opacity md:px-4 md:py-2',

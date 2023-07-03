@@ -27,7 +27,7 @@ const AddressFormInput = ({
   const [isFocus, setIsFocus] = useState(false)
   const {
     field,
-    fieldState: { error, invalid, isDirty }
+    fieldState: { error, invalid }
   } = useController(rest)
 
   return (
@@ -45,7 +45,6 @@ const AddressFormInput = ({
           setIsFocus(false)
         }}
         invalid={invalid}
-        isDirty={isDirty}
         isShowError={!isFocus}
         errorMessage={error?.message}
       />

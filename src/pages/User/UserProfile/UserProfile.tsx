@@ -94,7 +94,6 @@ const UserProfile = () => {
             showLabel
             readOnly
             defaultValue={profile?.email}
-            isDirty={true}
             invalid={false}
             label="Email"
             disabled
@@ -103,7 +102,6 @@ const UserProfile = () => {
           <FormInput
             {...register('name')}
             showLabel
-            isDirty={!!dirtyFields.name}
             invalid={!!errors.name}
             label="Tên hiển thị"
             errorMessage={errors.name?.message}
@@ -112,7 +110,6 @@ const UserProfile = () => {
           <FormInput
             {...register('phone')}
             showLabel
-            isDirty={!!dirtyFields.phone}
             invalid={!!errors.phone}
             label="Số điện thoại"
             errorMessage={errors.phone?.message}

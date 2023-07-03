@@ -12,6 +12,7 @@ import {
   ICart,
   IDataPaginationResponse,
   IDataResponse,
+  IErrorResponse,
   IProductOrdered,
   IProductSelected
 } from '@/types'
@@ -148,7 +149,11 @@ export const useCheckoutMutation = () => {
   useAxiosPrivate()
   const queryClient = useQueryClient()
 
-  return useMutation<AxiosResponse<BaseResponse>, AxiosError<BaseResponse>, IProductOrdered[]>({
+  return useMutation<
+    AxiosResponse<BaseResponse>,
+    AxiosError<IErrorResponse<string[]>>,
+    IProductOrdered[]
+  >({
     mutationFn: (data) => orderServices.checkoutCart(data),
     onSuccess(data) {
       toast.success(data.data.message)
@@ -167,6 +172,15 @@ export const useCheckoutMutation = () => {
       })
     },
     onError(error) {
+      const productsCartData: IProductSelected[] | undefined = authUtils.getItem(AUTH.CART_CHECKOUT)
+
+      const invalidOrder = error.response?.data.errors
+
+      const updateProductsCartPersisted =
+        productsCartData?.filter((item) => !invalidOrder?.includes(item._id)) || []
+
+      authUtils.setItem(AUTH.CART_CHECKOUT, updateProductsCartPersisted)
+
       toast.error(error.response?.data.message)
     }
   })

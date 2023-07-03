@@ -4,7 +4,7 @@ import { Rating, Star } from '@smastrom/react-rating'
 import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
 import DOMPurify from 'dompurify'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { Navigate, useLocation, useParams } from 'react-router-dom'
 
 import { BreadCrumb, BreadCrumbItem, Spinner } from '@/components'
@@ -176,7 +176,7 @@ const ProductDetail = () => {
                 {productData.discount > 0 && (
                   <span
                     className={classNames(
-                      'mr-1 rounded px-2.5 py-0.5 text-xs font-medium text-white',
+                      'mr-1 shrink-0 rounded px-2.5 py-0.5 text-xs font-medium text-white',
                       {
                         'bg-red-700': productData.shopType === 1,
                         'bg-primary': productData.shopType !== 1
