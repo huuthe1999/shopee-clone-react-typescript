@@ -1,4 +1,4 @@
-function ErrorBoundaryIcon() {
+export function ErrorBoundaryIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -588,5 +588,3 @@ function ErrorBoundaryIcon() {
     </svg>
   )
 }
-
-export default ErrorBoundaryIcon
