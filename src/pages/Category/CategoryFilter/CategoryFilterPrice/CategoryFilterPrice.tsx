@@ -84,6 +84,7 @@ const CategoryFilterPrice = () => {
           type="text"
           name="from"
           id="from"
+          inputMode="numeric"
           placeholder="₫ Từ"
           className="basis-2/5 rounded-sm border border-black/[0.26] px-1 py-1"
         />
@@ -95,6 +96,7 @@ const CategoryFilterPrice = () => {
           type="text"
           name="to"
           id="to"
+          inputMode="numeric"
           placeholder="₫ Đến"
           className="basis-2/5 rounded-sm border border-black/[0.26] px-1 py-1"
         />
