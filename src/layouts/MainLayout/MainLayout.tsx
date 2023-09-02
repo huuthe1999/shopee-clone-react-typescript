@@ -11,7 +11,7 @@ const MainLayout = () => {
 
   return (
     <>
-      <div className="overflow-x-hidden bg-orange-500">
+      <div className="overflow-x-hidden bg-orange-500 max-sm:hidden">
         <div className="animate-marquee whitespace-nowrap py-2">
           <span className="text-xs font-bold text-white/80 sm:text-lg">
             Trang web chỉ phục vụ cho nhu cầu học tập

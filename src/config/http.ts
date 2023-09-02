@@ -16,7 +16,7 @@ class Http {
   constructor() {
     this.instance = axios.create({
       baseURL: import.meta.env.VITE_BASE_URL,
-      timeout: 10000,
+      timeout: 20000,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -30,7 +30,7 @@ class AuthHttp {
   constructor() {
     this.instance = axios.create({
       baseURL: import.meta.env.VITE_BASE_URL,
-      timeout: 10000,
+      timeout: 20000,
       headers: {
         'Content-Type': 'application/json'
       },
